@@ -1,0 +1,105 @@
+<?php
+
+namespace Hirudo\Core\Context;
+
+use Hirudo\Core\Util\RequestBinder;
+
+/**
+ * This object represents the actual request.
+ *
+ * @author Virtualidad
+ *
+ */
+abstract class Request {
+
+    private $requestAttributes = array();
+
+    /**
+     *
+     * @var Session
+     */
+    private $session;
+
+    function __construct() {
+        
+    }
+
+    public function setAttribute($key, $value) {
+        $this->requestAttributes[$key] = $value;
+    }
+
+    public function getAttribute($key, $default = null) {
+        return $this->getVar($this->requestAttributes, $key, $default);
+    }
+
+    public function removeAttribute($key) {
+        $attr = null;
+        if (isset($this->requestAttributes[$key])) {
+            $attr = $this->requestAttributes[$key];
+            unset($this->requestAttributes[$key]);
+        }
+
+        return $attr;
+    }
+
+    public function bind(&$object) {
+        $binder = new RequestBinder();
+        $binder->bind($object);
+    }
+
+    /**
+     * Retrieves a value from $_GET.
+     * 
+     * @param string $name The $_GET index.
+     * @param mixed $default A default value that will be returned if $_GET doesn't have a value for the given index.
+     * @return mixed The value corresponding to the $name index in the $_GET array.
+     */
+    public abstract function get($name, $default = null);
+
+    public abstract function post($name, $default = null);
+
+    public abstract function file($name, $default = null);
+
+    public abstract function cookie($name, $default = null);
+
+    public abstract function env($name, $default = null);
+
+    public abstract function server($name, $default = null);
+
+    public abstract function getURI();
+
+    /**
+     * Determines if there is any data in the $_POST array.
+     * @return bool <code>true</code> if there is POST data.
+     */
+    public abstract function submitted();
+
+    protected function getVar(&$collection, $index, $default = null) {
+        $result = $default;
+
+        if (array_key_exists($index, $collection)) {
+            $result = $collection[$index];
+        }
+
+        return $result;
+    }
+
+    /**
+     *
+     * @return Session
+     */
+    public function getSession() {
+        return $this->session;
+    }
+
+    /**
+     *
+     * @param Session $session
+     *
+     * @import SessionClass
+     */
+    public function setSession(Session &$session) {
+        $this->session = $session;
+    }
+
+}
