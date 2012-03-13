@@ -1,5 +1,9 @@
 <?php
+
 namespace Hirudo\Libs\Lang;
+
+use \LogicException as LogicException;
+use \RecursiveDirectoryIterator as RecursiveDirectoryIterator;
 
 class InvalidPathException extends LogicException {
 

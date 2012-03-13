@@ -9,7 +9,7 @@ if (!defined("HIRUDO_ROOT")) {
 }
 
 if (!defined("HIRUDO_LIBS_DIR")) {
-    define("HIRUDO_LIBS_DIR", HIRUDO_ROOT . DS . 'Hirudo' . DS . 'libs');
+    define("HIRUDO_LIBS_DIR", HIRUDO_ROOT . DS . 'framework' . DS . 'libs');
 }
 
 //A file loader helper.
@@ -20,9 +20,9 @@ use Hirudo\Libs\Lang\Loader as Loader;
 Loader::Config(HIRUDO_ROOT, DS);
 //Load some useful classes.
 Loader::using(array(
-    "libs::ClassLoader::UniversalClassLoader",
-    "libs::Lang::Enum",
-    "underscore::libs::smarty::Smarty.class",
+    "framework::libs::Symfony::Component::ClassLoader::UniversalClassLoader",
+    "framework::libs::Lang::Enum",
+    "framework::libs::smarty::Smarty.class",
 ));
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
@@ -30,13 +30,14 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 $loader = new UniversalClassLoader();
 
 $loader->registerNamespaces(array(
-    "Symfony\Component" => Loader::toSinglePath("libs::Symfony::Component", ""),
-    "Doctrine\Common" => Loader::toSinglePath("libs::Doctrine::Common", ""),
-    "Hirudo\Core" => Loader::toSinglePath("hirudo::Core", ""),
-    "Hirudo\Libs" => Loader::toSinglePath("libs", "")
+    "Hirudo" => Loader::toSinglePath("framework", ""),
+    "Symfony\\Component" => Loader::toSinglePath("framework::libs", ""),
+    "Doctrine\\Common" => Loader::toSinglePath("framework::libs", ""),
+    "Hirudo\\Libs" => Loader::toSinglePath("framework::libs", ""),
 ));
 
-$loader->useIncludePath(true);
+// TODO: Fix the autoloader configuration to make this unnecesary.
+Loader::using("framework::Hirudo::Core::Annotations::*");
 
 $loader->register();
 ?>

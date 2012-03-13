@@ -1,5 +1,7 @@
 <?php
 /*
+ *  $Id$
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -17,38 +19,78 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Common\Annotations;
+namespace Doctrine\Common\Cache;
 
 /**
- * Description of AnnotationException
+ * Array cache driver.
  *
+ * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link    www.doctrine-project.org
  * @since   2.0
  * @author  Benjamin Eberlei <kontakt@beberlei.de>
  * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
  * @author  Jonathan Wage <jonwage@gmail.com>
  * @author  Roman Borschel <roman@code-factory.org>
+ * @author  David Abdemoulaie <dave@hobodave.com>
  */
-class AnnotationException extends \Exception
+class ArrayCache extends CacheProvider
 {
     /**
-     * Creates a new AnnotationException describing a Syntax error.
-     *
-     * @param string $message Exception message
-     * @return AnnotationException
+     * @var array $data
      */
-    public static function syntaxError($message)
+    private $data = array();
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doFetch($id)
     {
-        return new self('[Syntax Error] ' . $message);
+        return (isset($this->data[$id])) ? $this->data[$id] : false;
     }
 
     /**
-     * Creates a new AnnotationException describing a Semantical error.
-     *
-     * @param string $message Exception message
-     * @return AnnotationException
+     * {@inheritdoc}
      */
-    public static function semanticalError($message)
+    protected function doContains($id)
     {
-        return new self('[Semantical Error] ' . $message);
+        return isset($this->data[$id]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doSave($id, $data, $lifeTime = 0)
+    {
+        $this->data[$id] = $data;
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doDelete($id)
+    {
+        unset($this->data[$id]);
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doFlush()
+    {
+        $this->data = array();
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doGetStats()
+    {
+        return null;
     }
 }

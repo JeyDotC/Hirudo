@@ -1,5 +1,9 @@
 <?php
 
+namespace Hirudo\Core\Annotations;
+
+use Doctrine\Common\Annotations\Annotation\Target;
+
 /**
  * Description of Export
  *
@@ -8,12 +12,14 @@
  * @Annotation
  * @Target({"CLASS", "METHOD", "PROPERTY"})
  */
-class Export {
+final class Export {
+
     /**
-     *
+     * 
      * @var string 
      */
-    public $serviceId = "";
+    public $id = "";
+
 }
 
 ?>
