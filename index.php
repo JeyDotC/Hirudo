@@ -41,6 +41,7 @@ $annotationReader = new AnnotationReader();
 
 $annotations = $annotationReader->getClassAnnotations($reflected);
 $annotations2 = $annotationReader->getMethodAnnotations($reflected->getMethod("foo"));
+
 //TODO: [debug] Borrar esta linea.
 var_dump($annotations);
 var_dump($annotations2);
