@@ -3,6 +3,7 @@
 namespace Hirudo\Core\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\Target;
+
 /**
  * Description of Import
  *
