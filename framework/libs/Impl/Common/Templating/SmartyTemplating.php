@@ -1,16 +1,20 @@
 <?php
 
-namespace Hirudo\Core;
+namespace Hirudo\Libs\Impl\Common\Templating;
+
+use Hirudo\Core\TemplatingInterface;
+use Hirudo\Core\Annotations\Export;
+
+\Hirudo\Libs\Lang\Loader::using("framework::libs::smarty::Smarty.class");
 
 /**
  * Has the only smarty instance. Allows adding variables to the view and 
  * rendering any view from the module.
  *
- * @export TemplatesManager
- * @export-metadata singleinstance
- * @export-metadata static-factory:instance
+ * @Export(id="templating", factory="instance")
+ * 
  */
-class TemplatesManager {
+class SmartyTemplating implements TemplatingInterface {
 
     /**
      *
@@ -53,17 +57,17 @@ class TemplatesManager {
 
     /**
      *
-     * @var TemplatesManager
+     * @var SmartyTemplating
      */
     private static $instance;
 
     /**
      *
-     * @return TemplatesManager
+     * @return SmartyTemplating
      */
     public static function instance() {
         if (!self::$instance) {
-            self::$instance = new TemplatesManager();
+            self::$instance = new SmartyTemplating();
         }
 
         return self::$instance;

@@ -22,7 +22,6 @@ Loader::Config(HIRUDO_ROOT, DS);
 Loader::using(array(
     "framework::libs::Symfony::Component::ClassLoader::UniversalClassLoader",
     "framework::libs::Lang::Enum",
-    "framework::libs::smarty::Smarty.class",
 ));
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;

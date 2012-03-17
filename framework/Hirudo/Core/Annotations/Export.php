@@ -20,6 +20,12 @@ final class Export {
      */
     public $id = "";
 
+    /**
+     *
+     * @var string 
+     */
+    public $factory = "";
+
 }
 
 ?>

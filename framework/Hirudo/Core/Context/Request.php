@@ -96,7 +96,7 @@ abstract class Request {
      *
      * @param Session $session
      *
-     * @import SessionClass
+     * @Import(id="session")
      */
     public function setSession(Session &$session) {
         $this->session = $session;

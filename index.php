@@ -3,46 +3,41 @@
 require_once 'init.php';
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Hirudo\Core\Annotations\Export;
-use Hirudo\Core\Annotations\Import;
+use Hirudo\Core\Annotations\Export as Export;
+use Hirudo\Core\Annotations\Import as Import;
+use Hirudo\Libs\Lang\Loader as Loader;
+use Symfony\Component\DependencyInjection\ContainerBuilder as ContainerBuilder;
 
-class MyTestClass {
+function registerImpl($classes) {
+    $containerBuilder = new ContainerBuilder();
+    $annotationReader = new AnnotationReader();
 
-    /**
-     *
-     * @var type 
-     * @Import(id="X")
-     */
-    public $property;
+//    $autoloader = new Symfony\Component\ClassLoader\MapClassLoader($classes);
+//    $autoloader->register();
 
-}
-
-/**
- * 
- * @Export(id="X") 
- */
-class MyExporterTestClass {
-
-    /**
-     *
-     * @var type 
-     * @Import(id="Y")
-     */
-    function foo() {
-        echo "Foo";
+    foreach ($classes as $class => $path) {
+        Loader::using($path);
+        /* @var $annotation Export */
+        $annotation = $annotationReader->getClassAnnotation(new ReflectionClass($class), "Hirudo\Core\Annotations\Export");
+        $definition = $containerBuilder->register($annotation->id, $class);
+        if (!empty($annotation->factory)) {
+            $definition->setFactoryClass($class)->setFactoryMethod($annotation->factory);
+        }
     }
-
 }
 
-$myExporterTestClass = new MyExporterTestClass();
-$reflected = new ReflectionClass($myExporterTestClass);
-
-$annotationReader = new AnnotationReader();
-
-$annotations = $annotationReader->getClassAnnotations($reflected);
-$annotations2 = $annotationReader->getMethodAnnotations($reflected->getMethod("foo"));
-
-//TODO: [debug] Borrar esta linea.
-var_dump($annotations);
-var_dump($annotations2);
+\registerImpl(array(
+    //The request data.
+    'Hirudo\Libs\Impl\StandAlone\SARequest' => "framework::libs::Impl::StandAlone::SARequest",
+    //The URL builder.
+    'Hirudo\Libs\Impl\StandAlone\SARouting' => "framework::libs::Impl::StandAlone::SARouting",
+    //The session Manager.
+    'Hirudo\Libs\Impl\StandAlone\SASession' => "framework::libs::Impl::StandAlone::SASession",
+    //The current user.
+    'Hirudo\Libs\Impl\StandAlone\SAPrincipal' => "framework::libs::Impl::StandAlone::SAPrincipal",
+    //The configuration manager.
+    'Hirudo\Libs\Impl\StandAlone\SAppConfig' => "framework::libs::Impl::StandAlone::SAppConfig",
+    //The templating system.
+    'Hirudo\Libs\Impl\Common\Templating\SmartyTemplating' => "framework::libs::Impl::Common::Templating::SmartyTemplating",
+));
 ?>
