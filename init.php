@@ -20,8 +20,8 @@ use Hirudo\Libs\Lang\Loader as Loader;
 Loader::Config(HIRUDO_ROOT, DS);
 //Load some useful classes.
 Loader::using(array(
-    "framework::libs::Symfony::Component::ClassLoader::UniversalClassLoader",
-    "framework::libs::Lang::Enum",
+    "framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader",
+    "framework::hirudo::Hirudo::Lang::Enum",
 ));
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
@@ -29,10 +29,9 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 $loader = new UniversalClassLoader();
 
 $loader->registerNamespaces(array(
-    "Hirudo" => Loader::toSinglePath("framework", ""),
-    "Symfony\\Component" => Loader::toSinglePath("framework::libs", ""),
-    "Doctrine\\Common" => Loader::toSinglePath("framework::libs", ""),
-    "Hirudo\\Libs" => Loader::toSinglePath("framework::libs", ""),
+    "Hirudo" => Loader::toSinglePath("framework::hirudo", ""),
+    "Symfony\\Component" => Loader::toSinglePath("framework::libs::symfony-components", ""),
+    "Doctrine\\Common" => Loader::toSinglePath("framework::libs::doctrine-common", ""),
 ));
 
 // TODO: Fix the autoloader configuration to make this unnecesary.
