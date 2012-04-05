@@ -7,6 +7,7 @@ use Hirudo\Core\Context\ModulesContext;
 use Hirudo\Lang\Loader as Loader;
 use Hirudo\Core\Context\Request;
 use Hirudo\Core\Annotations\Import;
+use Hirudo\Core\Context\Routing;
 
 /**
  * A module represents a single use case in the business logic.
@@ -64,7 +65,7 @@ abstract class Module {
     /**
      * A helper class for managing urls.
      * 
-     * @var Context\Routing
+     * @var Routing
      */
     protected $route;
 
@@ -236,6 +237,7 @@ abstract class Module {
         $this->currentUser = $this->context->getCurrentUser();
         $this->request = $this->context->getRequest();
         $this->route = $this->context->getRouting();
+        $this->route->setModuleName($this->name);
     }
 
     private function getViewParts($view) {

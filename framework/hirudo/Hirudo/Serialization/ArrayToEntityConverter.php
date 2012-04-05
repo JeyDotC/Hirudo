@@ -2,6 +2,7 @@
 
 namespace Hirudo\Serialization;
 
+use \ReflectionClass;
 /**
  */
 class ArrayToEntityConverter {

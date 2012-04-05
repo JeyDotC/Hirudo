@@ -44,7 +44,7 @@ abstract class Request {
 
     public function bind(&$object, $bindings = null) {
         $binder = new RequestBinder();
-        $binder->bind($object);
+        $binder->bind($object, $bindings);
     }
 
     /**
