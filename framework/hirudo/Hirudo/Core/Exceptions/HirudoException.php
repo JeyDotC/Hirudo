@@ -2,12 +2,13 @@
 
 namespace Hirudo\Core\Exceptions;
 
+use Hirudo\Core\Context\ModuleCall;
 /**
  * Description of HirudoException
  *
  * @author JeyDotC
  */
-class HirudoException extends Exception {
+class HirudoException extends \Exception {
 
     /**
      *

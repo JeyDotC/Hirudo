@@ -2,12 +2,12 @@
 
 namespace Hirudo\Core\Context;
 
-use Hirudo\Core\Context\ModuleCall;
-use Hirudo\Core\Context\Principal;
-use Hirudo\Core\Context\Session;
-use Hirudo\Core\Context\Request;
-use Hirudo\Core\Context\AppConfig;
-use Hirudo\Core\Context\Routing;
+use Hirudo\Core\Context\ModuleCall,
+    Hirudo\Core\Context\Principal,
+    Hirudo\Core\Context\Session,
+    Hirudo\Core\Context\Request,
+    Hirudo\Core\Context\AppConfig,
+    Hirudo\Core\Context\Routing;
 use Hirudo\Core\Annotations\Import;
 
 /**
@@ -57,7 +57,7 @@ class ModulesContext {
      */
     public static function instance() {
         if (!self::$instance) {
-            self::$instance = new DefaultModulesContext();
+            self::$instance = new ModulesContext();
         }
 
         return self::$instance;
@@ -66,8 +66,10 @@ class ModulesContext {
     /**
      *
      * @param Principal $user
+     * 
+     * @Import(id="principal")
      */
-    public function setUser(Principal &$user) {
+    public function setUser(Principal $user) {
         $this->user = $user;
     }
 
@@ -90,6 +92,7 @@ class ModulesContext {
     /**
      *
      * @param Session $session
+     * @Import(id="session")
      */
     public function setSession(Session $session) {
         $this->session = $session;
@@ -98,8 +101,9 @@ class ModulesContext {
     /**
      *
      * @param Request $request 
+     * @Import(id="request")
      */
-    public function setRequest(Request &$request) {
+    public function setRequest(Request $request) {
         $this->request = $request;
     }
 
@@ -111,6 +115,10 @@ class ModulesContext {
         return $this->request;
     }
 
+    /**
+     *
+     * @return AppConfig 
+     */
     public function &getConfig() {
         return $this->config;
     }
@@ -118,6 +126,7 @@ class ModulesContext {
     /**
      *
      * @param AppConfig $config 
+     * @Import(id="config")
      */
     public function setConfig(AppConfig $config) {
         $this->config = $config;
@@ -130,8 +139,10 @@ class ModulesContext {
     /**
      *
      * @param Routing $routing 
+     * @Import(id="routing")
      */
     public function setRouting(Routing $routing) {
         $this->routing = $routing;
     }
+
 }

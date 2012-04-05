@@ -3,12 +3,11 @@
 namespace Hirudo\Impl\StandAlone;
 
 use Hirudo\Core\Context\Routing as Routing;
-use Impl\StandAlone\lib\JURI as JURI;
-use Hirudo\Core\Annotations\Export as Export;
+use Hirudo\Impl\StandAlone\lib\JURI;
 
 /**
  * 
- * @Export(id="router")
+ * @Hirudo\Core\Annotations\Export(id="routing")
  */
 class SARouting extends Routing {
 

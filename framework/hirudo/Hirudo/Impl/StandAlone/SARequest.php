@@ -2,8 +2,9 @@
 
 namespace Hirudo\Impl\StandAlone;
 
-use Hirudo\Core\Context\Request as Request;
-use Hirudo\Core\Annotations\Export as Export;
+use Hirudo\Core\Context\Request as Request,
+    Hirudo\Core\Context\ModuleCall;
+use Hirudo\Core\Annotations\Export;
 
 /**
  * Description of SARequest
@@ -63,6 +64,20 @@ class SARequest extends Request {
 
     public function submitted() {
         return isset($_POST) && count($_POST) > 0;
+    }
+
+    public function buildModuleCall() {
+        $task = $this->get("task", "index");
+        
+        $controllerParts = explode(".", $this->get("controller", ""));
+        $app = $controllerParts[0];
+        $module = "";
+        
+        if(count($controllerParts)>1){
+            $module = $controllerParts[1];
+        }
+        
+        return new ModuleCall($app, $module, $task);
     }
 
 }

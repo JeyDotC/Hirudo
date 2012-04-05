@@ -3,11 +3,13 @@
 namespace Hirudo\Core\DependencyInjection;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Hirudo\Core\Annotations\Export as Export;
-use Hirudo\Core\Annotations\Import as Import;
-use Hirudo\Libs\Lang\Loader as Loader;
-use Symfony\Component\DependencyInjection\ContainerBuilder as ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Hirudo\Lang\Loader as Loader;
+use Symfony\Component\DependencyInjection\ContainerBuilder,
+    Symfony\Component\DependencyInjection\ContainerAware;
+
+//A quick fix for a weird issue with the autoloader when dealing with annotations.
+Loader::using("framework::hirudo::Hirudo::Core::Annotations::Import");
+Loader::using("framework::hirudo::Hirudo::Core::Annotations::Export");
 
 /**
  * Description of AnnotationLoader
@@ -19,26 +21,27 @@ class AnnotationLoader extends ContainerAware {
     private $annotationReader;
 
     function __construct() {
-        $this->setContainer(new \ContainerBuilder());
+        $this->setContainer(new ContainerBuilder());
         $this->annotationReader = new AnnotationReader();
     }
 
     public function addServices(array $implementationClasses) {
-        foreach ($implementationClasses as $class => $path) {
-            Loader::using($path);
+        foreach ($implementationClasses as $class) {
             /* @var $annotation Export */
-            $annotation = $this->annotationReader->getClassAnnotation(new ReflectionClass($class), "Hirudo\Core\Annotations\Export");
-            $definition = $this->container->register($annotation->id, $class);
-            if (!empty($annotation->factory)) {
-                $definition->setFactoryClass($class)->setFactoryMethod($annotation->factory);
+            $annotation = $this->annotationReader->getClassAnnotation(new \ReflectionClass($class), "Hirudo\Core\Annotations\Export");
+            if ($annotation) {
+                $definition = $this->container->register($annotation->id, $class);
+                if (!empty($annotation->factory)) {
+                    $definition->setFactoryClass($class)->setFactoryMethod($annotation->factory);
+                }
             }
         }
     }
 
     public function resolveDependencies($object) {
-        $contextReflection = new \ReflectionClass($object);
+        $objectReflection = new \ReflectionClass($object);
 
-        foreach ($contextReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as /* @var $method \ReflectionMethod */$method) {
+        foreach ($objectReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as /* @var $method \ReflectionMethod */$method) {
             /* @var $annotation \Import */
             $annotation = $this->annotationReader->getMethodAnnotation($method, "Hirudo\Core\Annotations\Import");
             if ($annotation) {

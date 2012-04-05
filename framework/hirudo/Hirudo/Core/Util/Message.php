@@ -1,11 +1,14 @@
 <?php
 
+namespace Hirudo\Core\Util;
+
 /**
  * A simple notification representation wich consists on a title, a message
  * and a type, being the latter normally used as a CSS class.
  */
 class Message {
     //Some basic message types.
+
     const INFO = "info";
     const WARNING = "warning";
     const DOWLOAD = "download";

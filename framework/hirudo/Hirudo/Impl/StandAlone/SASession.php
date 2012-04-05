@@ -3,10 +3,9 @@
 namespace Hirudo\Impl\StandAlone;
 
 use Hirudo\Core\Context\Session as Session;
-use Hirudo\Core\Annotations\Export as Export;
 
 /**
- * @Export(id="session")
+ * @Hirudo\Core\Annotations\Export(id="session")
  */
 class SASession implements Session {
 

@@ -42,7 +42,7 @@ abstract class Request {
         return $attr;
     }
 
-    public function bind(&$object) {
+    public function bind(&$object, $bindings = null) {
         $binder = new RequestBinder();
         $binder->bind($object);
     }
@@ -67,6 +67,14 @@ abstract class Request {
     public abstract function server($name, $default = null);
 
     public abstract function getURI();
+
+    /**
+     * Creates a ModuleCall from request parameters, generally from the URL,
+     * the way this done depends on how this class interprets the URLs. 
+     * 
+     * @return ModuleCall An instance of ModuleCall based on this class interpretation of the URL
+     */
+    public abstract function buildModuleCall();
 
     /**
      * Determines if there is any data in the $_POST array.

@@ -3,14 +3,14 @@
 namespace Hirudo\Impl\StandAlone;
 
 use Hirudo\Core\Context\AppConfig as AppConfig;
-use Hirudo\Core\Annotations\Export as Export;
+use Hirudo\Lang\Loader;
 
 /**
  * Description of SAppConfig 
  *
  * @author JeyDotC
  * 
- * @Export(id="Config")
+ * @Hirudo\Core\Annotations\Export(id="Config")
  * 
  */
 class SAppConfig extends AppConfig {
@@ -30,7 +30,11 @@ class SAppConfig extends AppConfig {
     }
 
     protected function load() {
-        $json = file_get_contents(Loader::toSinglePath("config", ".json"));
+        $path = Loader::toSinglePath("config", ".json");
+        $json = "{}";
+        if (file_exists($path)) {
+            $json = file_get_contents(Loader::toSinglePath("config", ".json"));
+        }
         $this->document = JSON::Decode($json, true);
     }
 

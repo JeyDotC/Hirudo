@@ -2,6 +2,8 @@
 
 namespace Hirudo\Core\Exceptions;
 
+use Hirudo\Core\Context\ModuleCall;
+
 class ModuleNotFoundException extends HirudoException {
 
     public function __construct($module, $app) {

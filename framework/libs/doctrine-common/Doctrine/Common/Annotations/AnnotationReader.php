@@ -231,7 +231,7 @@ final class AnnotationReader implements Reader {
     public function getMethodAnnotation(ReflectionMethod $method,
             $annotationName) {
         $annotations = $this->getMethodAnnotations($method);
-
+        
         foreach ($annotations as $annotation) {
             if ($annotation instanceof $annotationName) {
                 return $annotation;

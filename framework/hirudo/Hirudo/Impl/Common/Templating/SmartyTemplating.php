@@ -3,7 +3,7 @@
 namespace Hirudo\Impl\Common\Templating;
 
 use Hirudo\Core\TemplatingInterface;
-use Hirudo\Core\Annotations\Export;
+use Hirudo\Core\Context\ModulesContext;
 
 \Hirudo\Lang\Loader::using("framework::libs::smarty::Smarty.class");
 
@@ -11,7 +11,7 @@ use Hirudo\Core\Annotations\Export;
  * Has the only smarty instance. Allows adding variables to the view and 
  * rendering any view from the module.
  *
- * @Export(id="templating", factory="instance")
+ * @Hirudo\Core\Annotations\Export(id="templating", factory="instance")
  * 
  */
 class SmartyTemplating implements TemplatingInterface {
@@ -23,8 +23,9 @@ class SmartyTemplating implements TemplatingInterface {
     private $smarty;
 
     function __construct() {
-        $this->smarty = new Smarty();
-        Loader::using("ext::smarty-plugins::*");
+        $this->smarty = new \Smarty();
+        $this->smarty->addPluginsDir("");
+        
         $isDebuging = ModulesContext::instance()->getConfig()->get("debug");
         if ($isDebuging) {
             $this->smarty->caching = false;

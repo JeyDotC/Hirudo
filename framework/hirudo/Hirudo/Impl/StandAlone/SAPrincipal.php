@@ -4,12 +4,10 @@ namespace Hirudo\Impl\StandAlone;
 
 use Hirudo\Core\Context\Principal as Principal;
 use Hirudo\Core\Context\Session as Session;
-use Hirudo\Core\Annotations\Export as Export;
-use Hirudo\Core\Annotations\Import as Import;
 
 /**
  *
- * @Export(id="principal", factory="instance")
+ * @Hirudo\Core\Annotations\Export(id="principal", factory="instance")
  * 
  */
 class SAPrincipal extends Principal {
@@ -50,7 +48,7 @@ class SAPrincipal extends Principal {
      *
      * @param Session $session 
      * 
-     * @Import(id="session")
+     * @Hirudo\Core\Annotations\Import(id="session")
      */
     public function setSession(Session $session) {
         $this->session = $session;
