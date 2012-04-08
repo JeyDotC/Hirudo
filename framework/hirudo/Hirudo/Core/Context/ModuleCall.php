@@ -33,6 +33,16 @@ class ModuleCall {
         $this->task = $task;
         $this->lastUnhandledException = $lastUnhandledException;
     }
+    
+    /**
+     *
+     * @param string $string
+     * @return \Hirudo\Core\Context\ModuleCall 
+     */
+    public static function fromString($string){
+        $parts = explode("::", $string);
+        return new ModuleCall($parts[0], $parts[1], $parts[2]);
+    }
 
     public function getApp() {
         return $this->app;

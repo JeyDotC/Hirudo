@@ -24,12 +24,10 @@ class SmartyTemplating implements TemplatingInterface {
 
     function __construct() {
         $this->smarty = new \Smarty();
-        $this->smarty->addPluginsDir("");
-        
+        $this->smarty->addPluginsDir(dirname(__FILE__) . "/SmartyTemplatingPlugins");
+
         $isDebuging = ModulesContext::instance()->getConfig()->get("debug");
-        if ($isDebuging) {
-            $this->smarty->caching = false;
-        }
+        $this->smarty->caching = !$isDebuging;
     }
 
     /**

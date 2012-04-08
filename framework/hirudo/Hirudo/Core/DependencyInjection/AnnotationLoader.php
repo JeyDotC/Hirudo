@@ -45,7 +45,9 @@ class AnnotationLoader extends ContainerAware {
             /* @var $annotation \Import */
             $annotation = $this->annotationReader->getMethodAnnotation($method, "Hirudo\Core\Annotations\Import");
             if ($annotation) {
-                $method->invoke($object, $this->container->get($annotation->id));
+                $requestedObject = $this->container->get($annotation->id);
+                $this->resolveDependencies($requestedObject);
+                $method->invoke($object, $requestedObject);
             }
         }
     }

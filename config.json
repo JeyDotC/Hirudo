@@ -2,5 +2,5 @@
     "businessRoot": "src",
     "debug": true,
     "onModuleNotFound": "SampleApp::FrontPage::index",
-    "onError": "SampleApp::FrontPage::index"
+    "onError": "SampleApp::ErrorPage::index"
 }

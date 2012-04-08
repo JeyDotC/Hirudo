@@ -3,6 +3,7 @@
 namespace Hirudo\Core\Context;
 
 use Hirudo\Core\Util\RequestBinder;
+use Hirudo\Core\Annotations\Import;
 
 /**
  * This object represents the actual request.
@@ -106,7 +107,7 @@ abstract class Request {
      *
      * @Import(id="session")
      */
-    public function setSession(Session &$session) {
+    public function setSession(Session $session) {
         $this->session = $session;
     }
 

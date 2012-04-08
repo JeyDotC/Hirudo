@@ -55,7 +55,7 @@ final class Loader {
      * @param string|array $file The path or paths to the files with the format 
      * specified above.
      * 
-     * @param string $extension = "php" An optional extension to be applied when 
+     * @param string $extension = ".php" An optional extension to be applied when 
      * a file  doesn't belong to the group of files found from the <code>*</code> 
      * operator.
      * 

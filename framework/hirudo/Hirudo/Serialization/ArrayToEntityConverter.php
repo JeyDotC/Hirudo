@@ -3,7 +3,9 @@
 namespace Hirudo\Serialization;
 
 use \ReflectionClass;
+
 /**
+ * 
  */
 class ArrayToEntityConverter {
 
@@ -60,6 +62,7 @@ class ArrayToEntityConverter {
 
     private function setValue(&$reflectionClass, &$objectInstance, $name, $value) {
         if ($reflectionClass->hasProperty($name)) {
+            /* @var $property ReflectionProperty */
             $property = $reflectionClass->getProperty($name);
 
             if ($property->isPublic()) {
@@ -80,8 +83,8 @@ class ArrayToEntityConverter {
             $property = $reflectionClass->getProperty($name);
             $doc = $property->getDocComment();
             $type = $this->getTypeFromDoc($doc);
-
-            if ($this->typeIsPrimitive($type) || $array == null) {
+            
+            if ($array == null || $this->typeIsPrimitive($type)) {
                 $this->setValue($reflectionClass, $objectInstance, $name, $array);
             } else if (class_exists($type)) {
                 $resultingObject = $this->convertObject($array, $type);

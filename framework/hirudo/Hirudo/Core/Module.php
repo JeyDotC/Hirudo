@@ -8,18 +8,13 @@ use Hirudo\Lang\Loader as Loader;
 use Hirudo\Core\Context\Request;
 use Hirudo\Core\Annotations\Import;
 use Hirudo\Core\Context\Routing;
+use Hirudo\Core\Exceptions\HirudoException;
 
 /**
  * A module represents a single use case in the business logic.
  * 
  */
 abstract class Module {
-
-    /**
-     *
-     * @var Exceptions\HirudoException The last ocurred exception. 
-     */
-    private $lastUnhandledException;
 
     /**
      *
@@ -92,6 +87,16 @@ abstract class Module {
      */
     protected function assign($name, $value) {
         $this->view->assign($name, $value);
+    }
+    
+    /**
+     *
+     * @param array $array 
+     */
+    protected function assignMany(array $array) {
+        foreach ($array as $name => $value) {
+            $this->assign($name, $value);
+        }
     }
 
     /**
@@ -170,7 +175,7 @@ abstract class Module {
         $this->module["task"] = $this->currentTask;
         $this->module["context"] = $this->context;
         $this->module["views"] = "{$this->getModuleDir($this->appName, $this->name)}" . "views" . DS;
-        $this->module["businessRoot"] = Loader::toSinglePath($this->context->getConfig()->get("businessRoot"), DS);
+        $this->module["businessRoot"] = Loader::toSinglePath($this->context->getConfig()->get("businessRoot", "src"), DS);
         $this->module["baseURL"] = $this->route->getBaseURL();
 
         $this->assign("Module", $this->module);
@@ -244,7 +249,7 @@ abstract class Module {
         $viewParts = array("app" => $this->appName, "module" => $this->name, "view" => $this->currentTask,);
 
         if (!empty($view)) {
-            $viewPartsFound = explode(":", $view);
+            $viewPartsFound = explode("::", $view);
             $count = count($viewPartsFound);
 
             if ($count == 3) {
@@ -268,7 +273,7 @@ abstract class Module {
      * @return string The directory that contains this module. 
      */
     public function getModuleDir($appName, $name) {
-        $base = $this->context->getConfig()->get("businessRoot");
+        $base = $this->context->getConfig()->get("businessRoot", "src");
         if (!empty($base)) {
             $base .= "::";
         }
@@ -297,14 +302,10 @@ abstract class Module {
 
     /**
      *
-     * @return UnderscoreException 
+     * @return HirudoException 
      */
     public function getLastUnhandledException() {
-        return $this->lastUnhandledException;
-    }
-
-    public function setLastUnhandledException(UnderscoreException $lastUnhandledException) {
-        $this->lastUnhandledException = $lastUnhandledException;
+        return $this->context->getCurrentCall()->getLastUnhandledException();
     }
 
     private function getUnqualifiedClassName($qualifiedClassName) {

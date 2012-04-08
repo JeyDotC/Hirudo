@@ -35,4 +35,5 @@ $loader->registerNamespaces(array(
 AnnotationRegistry::registerLoader(array($loader, "loadClass"));
 AnnotationRegistry::registerAutoloadNamespace("Hirudo\Core\Annotations", Loader::toSinglePath("framework::hirudo::Hirudo::Core::Annotations", ""));
 $loader->register();
+Hirudo\Core\ModulesManager::setAutoLoader($loader);
 ?>

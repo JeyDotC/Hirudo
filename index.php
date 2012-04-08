@@ -19,5 +19,5 @@ $manager = new ModulesManager(array(
             'Hirudo\Impl\Common\Templating\SmartyTemplating',
         ));
 
-$manager->run();
+echo $manager->run();
 ?>
