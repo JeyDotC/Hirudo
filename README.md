@@ -83,7 +83,7 @@ is due to the need to know the absolute path to the root folder.
 
 ### Where to go now
 
-If you are willing to know how to make an application in Hirudo, the *src/* folder
+If you are willing to know how to make an application in Hirudo, the [src/](/JeyDotC/Hirudo/tree/master/src) folder
 is your place, there you will find a sample application that tests some of the
 Hirudo framework features and a neat *README.md* file with some explanations.
 
