@@ -2,11 +2,12 @@
 
 namespace Hirudo\Impl\Joomla;
 
-use Hirudo\Core\Context\Session as Session;
+use Hirudo\Core\Context\Session;
+use Hirudo\Core\Annotations\Export;
 
 /**
  * 
- * @Export(id="session"Class")
+ * @Export(id="session")
  */
 class JoomlaSession implements Session {
 
@@ -19,7 +20,7 @@ class JoomlaSession implements Session {
      * @return JSession
      */
     private function &getSessionObject() {
-        $session = JFactory::getSession();
+        $session = \JFactory::getSession();
         return $session;
     }
 

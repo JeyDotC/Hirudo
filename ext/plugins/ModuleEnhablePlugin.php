@@ -3,6 +3,7 @@
 use Hirudo\Core\Events\BeforeTaskEventListener;
 use Hirudo\Core\Events\BeforeTaskEvent;
 use Hirudo\Core\Context\ModulesContext;
+use Hirudo\Core\Context\ModuleCall;
 
 /**
  * Description of ModuleEnhablePlugin
@@ -19,7 +20,7 @@ class ModuleEnhablePlugin extends BeforeTaskEventListener {
         if (array_key_exists($moduleName, $modulesConfig)) {
             $moduleConfig = $modulesConfig[$moduleName];
             if (array_key_exists("disabled", $moduleConfig)) {
-                $e->replaceCall($moduleConfig["action"]);
+                $e->replaceCall(ModuleCall::fromString($moduleConfig["action"]));
                 $e->stopPropagation();
             }
         }

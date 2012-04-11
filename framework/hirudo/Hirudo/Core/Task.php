@@ -2,6 +2,8 @@
 
 namespace Hirudo\Core;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+
 /**
  * Description of Task
  *
@@ -14,12 +16,22 @@ class Task {
      * @var \ReflectionMethod
      */
     private $reflectionMethod;
+    private $annotationReader;
     private $getParams = array();
     private $postParams = array();
     private $paramValues = array();
 
-    function __construct(\ReflectionMethod $reflectionMethod) {
+    /**
+     *
+     * @var Module
+     */
+    private $module;
+
+    function __construct(\ReflectionMethod $reflectionMethod,
+            \Hirudo\Core\Module $owner) {
+        $this->annotationReader = new AnnotationReader();
         $this->reflectionMethod = $reflectionMethod;
+        $this->module = $owner;
         foreach ($this->reflectionMethod->getParameters() as /* @var $parameter \ReflectionParameter */$parameter) {
 
             $this->paramValues[$parameter->name] = $parameter->isOptional() ? $parameter->getDefaultValue() : null;
@@ -43,13 +55,29 @@ class Task {
     public function setParamValue($paramName, $value) {
         $this->paramValues[$paramName] = $value;
     }
-    
+
     public function getParamValue($paramName) {
         return $this->paramValues[$paramName];
     }
-    
-    public function invoke($object) {
-        $this->reflectionMethod->invokeArgs($object, $this->paramValues);
+
+    public function invoke() {
+        $this->reflectionMethod->invokeArgs($this->module, $this->paramValues);
+    }
+
+    public function getTaskAnnotations() {
+        return $this->annotationReader->getMethodAnnotations($this->reflectionMethod);
+    }
+
+    public function getTaskAnnotation($annotationName) {
+        return $this->annotationReader->getMethodAnnotation($this->reflectionMethod, $annotationName);
+    }
+
+    /**
+     *
+     * @return Module
+     */
+    public function getModule() {
+        return $this->module;
     }
 
 }

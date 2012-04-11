@@ -119,7 +119,7 @@ abstract class Module {
         $this->onModuleReady();
 
         $reflection = new \ReflectionClass($this);
-        $task = new Task($reflection->getMethod($this->currentTask));
+        $task = new Task($reflection->getMethod($this->currentTask), $this);
 
         return $task;
     }

@@ -14,7 +14,7 @@ class JoomlaHelper {
      * @return JApplication
      */
     public static function getMainframe() {
-        return JFactory::getApplication();
+        return \JFactory::getApplication();
     }
 
 }

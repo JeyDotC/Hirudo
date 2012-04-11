@@ -3,10 +3,11 @@
 namespace Hirudo\Impl\Joomla;
 
 use Hirudo\Core\Context\Principal as Principal;
+use Hirudo\Core\Annotations\Export;
 
 /**
  *
- * Export(id="principal", factory="instance")
+ * @Export(id="principal", factory="instance")
  */
 class JoomlaPrincipal extends Principal {
 
@@ -22,7 +23,7 @@ class JoomlaPrincipal extends Principal {
      */
     public static function instance() {
         if (!self::$instance) {
-            self::$instance = new JPrincipal();
+            self::$instance = new JoomlaPrincipal();
         }
 
         return self::$instance;
@@ -35,12 +36,12 @@ class JoomlaPrincipal extends Principal {
 
     function __construct() {
         parent::__construct();
-        $this->jUser = JFactory::getUser();
+        $this->jUser = \JFactory::getUser();
         $this->setName($this->jUser->username);
         $this->setCredential($this->jUser->password);
 
         if (!$this->isAnonimous()) {
-            $session = JFactory::getSession();
+            $session = \JFactory::getSession();
             $extraData = $session->get("__ExtraData", array());
             foreach ($extraData as $key => $value) {
                 $this->getData()->add($key, $value);

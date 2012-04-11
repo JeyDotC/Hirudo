@@ -110,7 +110,7 @@ class ModulesManager extends EventDispatcher {
             return $this->executeCall($event->getCall());
         }
 
-        $task->invoke($module);
+        $task->invoke();
         return $module->getRendered();
     }
     

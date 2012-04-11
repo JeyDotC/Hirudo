@@ -23,7 +23,7 @@ jimport('joomla.application.component.view');
 /**
  * HTML View class for the underscore component
  */
-class JawFrontView_ extends JView {
+class hirudoimpljoomlajoomlafrontView_ extends JView {
 
     function display($tpl = null) {
         $document = &JFactory::getDocument();

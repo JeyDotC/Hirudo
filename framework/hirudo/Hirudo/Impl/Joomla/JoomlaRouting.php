@@ -1,7 +1,9 @@
 <?php
 
 namespace Hirudo\Impl\Joomla;
+
 use Hirudo\Core\Context\Routing as Routing;
+use Hirudo\Core\Annotations\Export;
 
 require_once "JoomlaHelper.php";
 
@@ -13,8 +15,8 @@ class JoomlaRouting extends Routing {
     public function appAction($app, $module, $task = "index", $params = array()) {
         $mainframe = JoomlaHelper::getMainframe();
 
-        $itemId = JRequest::getVar("Itemid", 2);
-        $uri = JURI::getInstance();
+        $itemId = \JRequest::getVar("Itemid", 2);
+        $uri = \JURI::getInstance();
         $query = $uri->getQuery(true);
 
         $query["option"] = $mainframe->scope;
@@ -33,7 +35,7 @@ class JoomlaRouting extends Routing {
     }
 
     public function getBaseURL() {
-        $uri = JURI::getInstance();
+        $uri = \JURI::getInstance();
         return $uri->toString();
     }
 

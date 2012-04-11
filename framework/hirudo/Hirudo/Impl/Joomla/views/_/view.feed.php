@@ -1,12 +1,10 @@
 <?php
 
 /**
- * Joomla! 1.5 component Acaweb
+ * Joomla! 1.5 component
  *
  * @version $Id: view.html.php 2010-12-27 22:34:44 svn $
- * @author Departamento de Educación Virtual
  * @package Joomla
- * @subpackage Acaweb
  * @license Copyright (c) 2010 - All Rights Reserved
  *
  * None
@@ -23,7 +21,7 @@ jimport('joomla.application.component.view');
 /**
  * HTML View class for the underscore component
  */
-class JawFrontView_ extends JView {
+class hirudoimpljoomlajoomlafrontView_ extends JView {
 }
 
 ?>

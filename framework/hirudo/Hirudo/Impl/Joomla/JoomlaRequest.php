@@ -3,6 +3,8 @@
 namespace Hirudo\Impl\Joomla;
 
 use Hirudo\Core\Context\Request as Request;
+use Hirudo\Core\Context\ModuleCall;
+use Hirudo\Core\Annotations\Export;
 
 /**
  * Description of JoomlaRequest
@@ -33,35 +35,49 @@ class JoomlaRequest extends Request {
     }
 
     public function get($name, $default = null) {
-        return JRequest::getVar($name, $default, "GET");
+        return \JRequest::getVar($name, $default, "GET");
     }
 
     public function post($name, $default = null) {
-        return JRequest::getVar($name, $default, "POST");
+        return \JRequest::getVar($name, $default, "POST");
     }
 
     public function file($name, $default = null) {
-        return JRequest::getVar($name, $default, "FILES");
+        return \JRequest::getVar($name, $default, "FILES");
     }
 
     public function cookie($name, $default = null) {
-        return JRequest::getVar($name, $default, "COOKIE");
+        return \JRequest::getVar($name, $default, "COOKIE");
     }
 
     public function env($name, $default = null) {
-        return JRequest::getVar($name, $default, "ENV");
+        return \JRequest::getVar($name, $default, "ENV");
     }
 
     public function server($name, $default = null) {
-        return JRequest::getVar($name, $default, "SERVER");
+        return \JRequest::getVar($name, $default, "SERVER");
     }
 
     public function getURI() {
-        return JRequest::getURI();
+        return \JRequest::getURI();
     }
 
     public function submitted() {
         return isset($_POST) && count($_POST) > 0;
+    }
+
+    public function buildModuleCall() {
+        $task = $this->get("task", "index");
+
+        $controllerParts = explode(".", $this->get("controller", ""));
+        $app = $controllerParts[0];
+        $module = "";
+
+        if (count($controllerParts) > 1) {
+            $module = $controllerParts[1];
+        }
+
+        return new ModuleCall($app, $module, $task);
     }
 
 }

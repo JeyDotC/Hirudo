@@ -12,6 +12,8 @@ use Hirudo\Core\Context\Session as Session;
  */
 class SAPrincipal extends Principal {
 
+    private $isAnonimous = true;
+
     /**
      *
      * @var Session
@@ -20,13 +22,13 @@ class SAPrincipal extends Principal {
 
     /**
      *
-     * @var JPrincipal
+     * @var SAPrincipal
      */
     private static $instance;
 
     /**
      *
-     * @return JPrincipal
+     * @return SAPrincipal
      */
     public static function instance() {
         if (!self::$instance) {
@@ -41,7 +43,7 @@ class SAPrincipal extends Principal {
     }
 
     public function isAnonimous() {
-        throw new Exception("Not implemented yet");
+        return $this->isAnonimous;
     }
 
     /**
@@ -52,14 +54,14 @@ class SAPrincipal extends Principal {
      */
     public function setSession(Session $session) {
         $this->session = $session;
-//        if ($this->session->has("__Principal")) {
-//            $principalData = $this->session->get("__Principal");
-//            $this->setName($principalData["name"]);
-//            $this->setCredential($principalData["credential"]);
-//            $this->setPermissions($principalData["permissions"]);
-//        }
+        if ($this->session->has("__Principal")) {
+            $principalData = $this->session->get("__Principal");
+            $this->setName($principalData["name"]);
+            $this->setCredential($principalData["credential"]);
+            $this->setPermissions($principalData["permissions"]);
+            $this->isAnonimous = false;
+        }
     }
-
 }
 
 ?>

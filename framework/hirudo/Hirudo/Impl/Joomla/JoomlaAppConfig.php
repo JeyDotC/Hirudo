@@ -3,6 +3,7 @@
 namespace Hirudo\Impl\Joomla;
 
 use Hirudo\Core\Context\AppConfig as AppConfig;
+use Hirudo\Core\Annotations\Export;
 
 require_once "JoomlaHelper.php";
 

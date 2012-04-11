@@ -2,12 +2,14 @@
 
 namespace Hirudo\Impl\Joomla;
 
+use Hirudo\Core\ModulesManager;
+
 defined('_JEXEC') or die('Restricted access');
 
 require_once "JoomlaHelper.php";
 
 function joomlaAutoloader($class) {
-    if (JLoader::load($class)) {
+    if (\JLoader::load($class)) {
         return true;
     }
     return false;
@@ -18,7 +20,7 @@ function joomlaAutoloader($class) {
  * the __autoload function instead of registering one via the spl_autoload_register
  * function.
  */
-spl_autoload_register("joomlaAutoloader");
+spl_autoload_register("Hirudo\Impl\Joomla\joomlaAutoloader");
 
 jimport('joomla.application.component.controller');
 
@@ -27,34 +29,28 @@ jimport('joomla.application.component.controller');
  *
  * @author Virtualidad
  */
-class JawFrontController extends JController implements UnderscoreFrontController {
+class JoomlaFrontController extends \JController {
 
     /**
      *
-     * @var JView
+     * @var \JView
      */
     private $view;
-
-    /**
-     *
-     * @var UnderscoreFrontControllerHelper 
-     */
-    private $frontControllerHelper;
+    private $manager;
 
     /**
      * Constructs this controller as a joomla controller.
      */
-    public function __construct() {
+    public function __construct(ModulesManager $manager) {
         //As this is not at a tipical component is necesary to say where are we.
         parent::__construct(array("base_path" => __DIR__));
         parent::registerDefaultTask("doTask");
 
-        $document = &JFactory::getDocument();
+        $this->manager = $manager;
+
+        $document = &\JFactory::getDocument();
         //Get the view saying where is it.
         $this->view = &$this->getView('_', $document->getType(), '', array("base_path" => __DIR__));
-
-        //Get the helper to execute the task.
-        $this->frontControllerHelper = UnderscoreFrontControllerHelper::instance();
     }
 
     /**
@@ -62,9 +58,7 @@ class JawFrontController extends JController implements UnderscoreFrontControlle
      */
     public function doTask() {
 
-        $call = $this->buildCallFromRequest();
-
-        $html = $this->frontControllerHelper->invokeModule($call);
+        $html = $this->manager->run();
 
         if (isset($html)) {
             $this->view->assignRef("html", $html);
@@ -79,7 +73,7 @@ class JawFrontController extends JController implements UnderscoreFrontControlle
      * @return mixed 
      */
     public function execute($task) {
-        $isAjax = JRequest::getVar("ajax", false);
+        $isAjax = \JRequest::getVar("ajax", false);
 
         $mainframe = JoomlaHelper::getMainframe();
         $return = parent::execute($task);
@@ -94,34 +88,6 @@ class JawFrontController extends JController implements UnderscoreFrontControlle
     public function run() {
         $this->execute("");
         $this->redirect();
-    }
-
-    /**
-     * Creates a call from request data.
-     * 
-     * @return ModuleCall 
-     */
-    private function buildCallFromRequest() {
-
-        $call = $this->frontControllerHelper->getDefaultModuleCall();
-        $controller = JRequest::getVar("controller", null);
-
-        if (!empty($controller)) {
-
-            $moduleRoute = explode(".", $controller);
-            if ($this->frontControllerHelper->applicationExists($moduleRoute[0])) {
-                $call->setApp($moduleRoute[0]);
-            }
-
-            if (!empty($moduleRoute[1])) {
-                $call->setModule($moduleRoute[1]);
-            }
-        }
-
-        $task = JRequest::getVar("task", "index");
-        $call->setTask($task);
-
-        return $call;
     }
 
 }
