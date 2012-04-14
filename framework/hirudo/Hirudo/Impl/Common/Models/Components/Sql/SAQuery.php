@@ -22,7 +22,7 @@ class SAQuery extends Query {
     }
 
     protected function executeWrite($query) {
-        throw new Exception("Not implemented yet");
+        return $this->dbo->query($query);
     }
 
     protected function compileInsert($table, array $keys, array $values) {

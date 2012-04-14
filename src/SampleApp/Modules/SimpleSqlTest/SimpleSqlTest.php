@@ -12,6 +12,7 @@ use Hirudo\Core\Module;
 class SimpleSqlTest extends Module {
 
     public function index() {
+        $add = $this->route->action("add");
         /**
          * This way we create an Url to another module in the same application. 
          */
@@ -21,7 +22,22 @@ class SimpleSqlTest extends Module {
          * is also enough.
          */
         echo "<div><a href='$returnUrl'>Get Back</a></div>";
+        echo "
+            <form method='post' action='$add'>
+                <label>Name: </label> <input type='text' name='name[0]' placeholder='some name'/>
+                <input type='submit' value='add'/>
+            </form>
+            ";
         var_dump($this->component("DbTest")->getAll());
+    }
+
+    /**
+     * 
+     * @param array $name 
+     */
+    public function add(array $name) {
+        $this->component("DbTest")->add($name[0]);
+        $this->index();
     }
 
 }

@@ -19,6 +19,12 @@ class DbTestComponent extends SimpleSqlComponent {
                         ->resultList();
     }
 
+    public function add($name) {
+        $this->getQuery()->insertInto("people")
+                ->set("name", $name)
+                ->commit();
+    }
+
 }
 
 ?>
