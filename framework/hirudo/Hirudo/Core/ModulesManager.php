@@ -24,11 +24,13 @@ class ModulesManager extends EventDispatcher {
      * @var Context\ModulesContext 
      */
     private $context;
+
     /**
      *
      * @var string The name of the root app dir.
      */
     private $rootAppDir;
+
     /**
      *
      * @var UniversalClassLoader 
@@ -45,6 +47,7 @@ class ModulesManager extends EventDispatcher {
         $this->dependencyManager = new AnnotationLoader();
         $this->dependencyManager->addServices($implementationClasses);
         $this->context = Context\ModulesContext::instance();
+        $this->context->setDependenciesManager($this->dependencyManager);
         $this->load();
     }
 
@@ -68,11 +71,11 @@ class ModulesManager extends EventDispatcher {
     public function run() {
         //Get the call from request.
         $call = $this->context->getRequest()->buildModuleCall();
-        
+
         if (!$this->moduleExists($call)) {
             $call = $this->getDefaultCall();
         }
-        
+
         $output = "";
 
         try {
@@ -113,7 +116,7 @@ class ModulesManager extends EventDispatcher {
         $task->invoke();
         return $module->getRendered();
     }
-    
+
     public static function setAutoLoader($loader) {
         self::$autoLoader = $loader;
     }

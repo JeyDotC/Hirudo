@@ -58,9 +58,43 @@ class FrontPage extends Module {
      * </code>
      */
     public function response(ComplexObject $myComplexObject) {
+        
+        /**
+         * Store our complex object somewhere, in this case, the session, but
+         * depending on the component's implementation it could be on a database
+         * or sent to a restful webservice.
+         */
+        $this->component("ComplexObject")->save($myComplexObject);
+        /**
+         * This is how you can get access to the session. 
+         */
+        $this->request->getSession()->put("complexObjectName", $myComplexObject->getName());
+        
         $this->assign("myObject", $myComplexObject);
+        $this->assign("sessionVarsUrl", $this->route->action("seeSomeSessionVars"));
 
         $this->display("response");
+    }
+    
+    public function seeSomeSessionVars() {
+        /**
+         * Getting a value from session. 
+         */
+        $name = $this->request->getSession()->get("complexObjectName");
+        
+        /**
+         * Getting a value from a component. 
+         */
+        $complexObject = $this->component("ComplexObject")->get($name);
+        
+        $this->assign("name", $name);
+        $this->assign("object", $complexObject);
+        
+        /**
+         * View name doesn't necesarily match the method name, only
+         * the file name. 
+         */
+        $this->display("sessionVars");
     }
 
     /**

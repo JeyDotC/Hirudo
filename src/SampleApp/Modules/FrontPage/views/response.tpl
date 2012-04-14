@@ -20,5 +20,6 @@
     <p>
         Message: '{$myObject->getSimpleObject()->getMessage()}'
     </p>
+    <a href="{$sessionVarsUrl}">See  what got stored into session.</a>
 </div>
 {/block}

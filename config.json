@@ -2,5 +2,10 @@
     "businessRoot": "src",
     "debug": true,
     "onModuleNotFound": "SampleApp::FrontPage::index",
-    "onError": "SampleApp::ErrorPage::index"
+    "onError": "SampleApp::ErrorPage::index",
+    "sa-db-connection":{
+        "dsn":"mysql:host=localhost;dbname=myDataBase",
+        "user":"root",
+        "password":"123456"
+    }
 }

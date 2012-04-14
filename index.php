@@ -17,6 +17,8 @@ $manager = new ModulesManager(array(
             'Hirudo\Impl\StandAlone\SAppConfig',
             //The templating system.
             'Hirudo\Impl\Common\Templating\SmartyTemplating',
+            //The Sql Model
+            'Hirudo\Impl\Common\Models\Components\Sql\SAQueryFactory',
         ));
 
 echo $manager->run();

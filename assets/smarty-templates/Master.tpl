@@ -4,6 +4,9 @@
     </head>
     <body>
         <div>
+            <div>
+                <a href="{url call="SampleApp::FrontPage"}">Go to index</a>
+            </div>
             {block name="header"}Hirudo Sample App{/block}
         </div>
 

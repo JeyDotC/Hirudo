@@ -9,6 +9,7 @@ use Hirudo\Core\Context\ModuleCall,
     Hirudo\Core\Context\AppConfig,
     Hirudo\Core\Context\Routing;
 use Hirudo\Core\Annotations\Import;
+use Hirudo\Core\DependencyInjection\AnnotationLoader;
 
 /**
  * Description of ModulesContext
@@ -27,6 +28,7 @@ class ModulesContext {
     private $request;
     private $config;
     private $routing;
+    private $dependenciesManager;
 
     /**
      *
@@ -143,6 +145,18 @@ class ModulesContext {
      */
     public function setRouting(Routing $routing) {
         $this->routing = $routing;
+    }
+
+    /**
+     *
+     * @return AnnotationLoader
+     */
+    public function getDependenciesManager() {
+        return $this->dependenciesManager;
+    }
+
+    public function setDependenciesManager(AnnotationLoader $dependenciesManager) {
+        $this->dependenciesManager = $dependenciesManager;
     }
 
 }

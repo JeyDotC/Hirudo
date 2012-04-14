@@ -55,7 +55,6 @@ abstract class Module {
      * @var Context\Principal
      */
     protected $currentUser;
-    protected $loaders = array();
 
     /**
      * A helper class for managing urls.
@@ -77,6 +76,13 @@ abstract class Module {
      * @var ModulesContext 
      */
     private $context;
+    /**
+     *
+     * @var type 
+     * 
+     * #decision: Make this static?
+     */
+    private $loadedComponents = array();
 
     /**
      * Adds a variable to the view.
@@ -88,7 +94,7 @@ abstract class Module {
     protected function assign($name, $value) {
         $this->view->assign($name, $value);
     }
-    
+
     /**
      *
      * @param array $array 
@@ -101,15 +107,40 @@ abstract class Module {
 
     /**
      *
+     * @param string $name The name of the component in "ComponentName" or "AppName::ComponentName"
+     * format.
+     * 
+     * @return mixed
+     */
+    protected function component($name) {
+        $app = $this->appName;
+        $componentName = $name;
+
+        $parts = explode("::", $name);
+        if (count($parts) > 1) {
+            $app = $parts[0];
+            $componentName = $parts[1];
+        }
+        
+        $componentClass = "$app\\Models\\Components\\{$componentName}Component";
+        
+        if (!array_key_exists($componentClass, $this->loadedComponents)) {
+            $component = new $componentClass();
+            $this->context->getDependenciesManager()->resolveDependencies($component);
+            $this->loadedComponents[$componentClass] = $component;
+        }else{
+            $component = $this->loadedComponents[$componentClass];
+        }
+            
+        return $component;
+    }
+    
+    /**
+     *
      * @param type $taskName
      * @return \Hirudo\Core\Task 
      */
     public function getTask($taskName) {
-        foreach ($this->loaders as &$loader) {
-            $loader->setModuleName($this->name);
-            $loader->setApp($this->appName);
-        }
-
         $this->currentTask = $this->defaultTask;
 
         if (method_exists($this, $taskName)) {
@@ -190,36 +221,6 @@ abstract class Module {
      */
     public function addMessage(Message $message) {
         $this->module["messages"][] = $message;
-    }
-
-    public function getLoaders() {
-        return $this->loaders;
-    }
-
-    /**
-     *
-     * @param array $loaders
-     *
-     * //import-many Loader
-     */
-    public function setLoaders($loaders) {
-        foreach ($loaders as &$loader) {
-            if ($loader instanceof AbstractLoader) {
-                $this->loaders[get_class($loader)] = $loader;
-            }
-        }
-    }
-
-    /**
-     *
-     * @param string $name
-     * @return AbstractLoader
-     */
-    public function __get($name) {
-        if (!array_key_exists($name . "Loader", $this->loaders)) {
-            throw new Exception("There is no loader named '$name'");
-        }
-        return $this->loaders[$name . "Loader"];
     }
 
     /**
