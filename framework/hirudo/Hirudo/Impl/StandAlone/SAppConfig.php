@@ -30,10 +30,10 @@ class SAppConfig extends AppConfig {
     }
 
     protected function load() {
-        $path = Loader::toSinglePath("config", ".json");
+        $path = Loader::toSinglePath("ext::config::config", ".json");
         $json = "{}";
         if (file_exists($path)) {
-            $json = file_get_contents(Loader::toSinglePath("config", ".json"));
+            $json = file_get_contents($path);
         }
         $this->document = JSON::Decode($json, true);
     }

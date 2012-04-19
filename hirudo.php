@@ -19,6 +19,8 @@ $controller = new JoomlaFrontController(new ModulesManager(array(
                     'Hirudo\Impl\StandAlone\SAppConfig',
                     //The templating system.
                     'Hirudo\Impl\Common\Templating\SmartyTemplating',
+                    //The Sql Model
+                    "Hirudo\Impl\Joomla\Models\Components\Sql\JoomlaQueryFactory",
                 )));
 
 $controller->run();

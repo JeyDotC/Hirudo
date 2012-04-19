@@ -141,13 +141,13 @@ abstract class Module {
      * @return \Hirudo\Core\Task 
      */
     public function getTask($taskName) {
+        $this->onModuleReady();
+        
         $this->currentTask = $this->defaultTask;
 
         if (method_exists($this, $taskName)) {
             $this->currentTask = $taskName;
         }
-
-        $this->onModuleReady();
 
         $reflection = new \ReflectionClass($this);
         $task = new Task($reflection->getMethod($this->currentTask), $this);
@@ -286,11 +286,6 @@ abstract class Module {
     public function getName() {
         return $this->name;
     }
-
-    /**
-     * The default task of the module.
-     */
-    public abstract function index();
 
     public function getAppName() {
         return $this->appName;

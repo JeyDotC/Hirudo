@@ -21,7 +21,7 @@ class EmptyResponseException extends Exception {
  * 
  * @author JeyDotC
  */
-abstract class RESTfulComponent implements ComponentInterface {
+class RESTfulComponent implements ComponentInterface {
 
     public static $DefaultRoot = "http://";
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hirudo\Impl\Common\Models\Components\Sql;
+namespace Hirudo\Impl\StandAlone\Models\Components\Sql;
 
 use Hirudo\Models\Components\Sql\Result;
 

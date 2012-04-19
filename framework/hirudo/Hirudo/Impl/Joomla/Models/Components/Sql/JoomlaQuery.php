@@ -1,6 +1,6 @@
 <?php
 
-namespace Hirudo\Impl\Common\Models\Components\Sql;
+namespace Hirudo\Impl\Joomla\Models\Components\Sql;
 
 use Hirudo\Models\Components\Sql\Query;
 
@@ -9,20 +9,25 @@ use Hirudo\Models\Components\Sql\Query;
  *
  * @author JeyDotC
  */
-class SAQuery extends Query {
+class JoomlaQuery extends Query {
 
     /**
      *
-     * @var \PDO
+     * @var JDatabase
      */
     private $dbo;
 
-    function __construct($dsn, $username, $password, $options = array()) {
-        $this->dbo = new \PDO($dsn, $username, $password, $options = array());
+    function __construct() {
+        $this->dbo = JFactory::getDBO();
     }
 
     protected function executeWrite($query) {
-        return $this->dbo->query($query);
+        $this->dbo->setQuery($query);
+        $result = $this->dbo->query();
+        if ($result === FALSE) {
+            throw new Exception("Database Error: [{$this->dbo->getErrorNum()}: {$this->dbo->getErrorMsg()}]");
+        }
+        return $result;
     }
 
     protected function compileInsert($table, array $keys, array $values) {
@@ -57,8 +62,8 @@ class SAQuery extends Query {
     }
 
     protected function executeSelect($query, $limit, $offset) {
-        $statement = $this->dbo->query($query);
-        return new SAResult($statement, $limit, $offset);
+        $this->dbo->setQuery($query, $offset, $limit);
+        return new JoomlaResult($this->dbo);
     }
 
 }
