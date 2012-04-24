@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2012 Craig Campbell
  *
@@ -21,11 +22,11 @@
  * @package ChromePhp
  * @author Craig Campbell <iamcraigcampbell@gmail.com>
  */
-class ChromePhp
-{
+class ChromePhp {
     /**
      * @var string
      */
+
     const VERSION = '3.0';
 
     /**
@@ -124,8 +125,7 @@ class ChromePhp
     /**
      * constructor
      */
-    private function __construct()
-    {
+    private function __construct() {
         $this->_php_version = phpversion();
         $this->_timestamp = $this->_php_version >= 5.1 ? $_SERVER['REQUEST_TIME'] : time();
         $this->_json['request_uri'] = $_SERVER['REQUEST_URI'];
@@ -136,8 +136,7 @@ class ChromePhp
      *
      * @return ChromePhp
      */
-    public static function getInstance()
-    {
+    public static function getInstance() {
         if (self::$_instance === null) {
             self::$_instance = new ChromePhp();
         }
@@ -152,8 +151,7 @@ class ChromePhp
      * @param string severity ChromePhp::LOG || ChromePhp::WARN || ChromePhp::ERROR
      * @return void
      */
-    public static function log()
-    {
+    public static function log() {
         $args = func_get_args();
         $severity = count($args) == 3 ? array_pop($args) : '';
 
@@ -172,8 +170,7 @@ class ChromePhp
      * @param mixed value
      * @return void
      */
-    public static function warn()
-    {
+    public static function warn() {
         return self::_log(func_get_args() + array('type' => self::WARN));
     }
 
@@ -184,8 +181,7 @@ class ChromePhp
      * @param mixed value
      * @return void
      */
-    public static function error()
-    {
+    public static function error() {
         return self::_log(func_get_args() + array('type' => self::ERROR));
     }
 
@@ -194,8 +190,7 @@ class ChromePhp
      *
      * @param string value
      */
-    public static function group()
-    {
+    public static function group() {
         return self::_log(func_get_args() + array('type' => self::GROUP));
     }
 
@@ -204,8 +199,7 @@ class ChromePhp
      *
      * @param string value
      */
-    public static function info()
-    {
+    public static function info() {
         return self::_log(func_get_args() + array('type' => self::INFO));
     }
 
@@ -214,8 +208,7 @@ class ChromePhp
      *
      * @param string value
      */
-    public static function groupCollapsed()
-    {
+    public static function groupCollapsed() {
         return self::_log(func_get_args() + array('type' => self::GROUP_COLLAPSED));
     }
 
@@ -224,8 +217,7 @@ class ChromePhp
      *
      * @param string value
      */
-    public static function groupEnd()
-    {
+    public static function groupEnd() {
         return self::_log(func_get_args() + array('type' => self::GROUP_END));
     }
 
@@ -235,8 +227,7 @@ class ChromePhp
      * @param string $type
      * @return void
      */
-    protected static function _log(array $args)
-    {
+    protected static function _log(array $args) {
         $type = $args['type'];
         unset($args['type']);
 
@@ -277,8 +268,7 @@ class ChromePhp
      * @param Object
      * @return array
      */
-    protected function _convert($object)
-    {
+    protected function _convert($object) {
         // if this isn't an object then just return it
         if (!is_object($object)) {
             return $object;
@@ -341,8 +331,7 @@ class ChromePhp
      * @param ReflectionProperty
      * @return string
      */
-    protected function _getPropertyKey(ReflectionProperty $property)
-    {
+    protected function _getPropertyKey(ReflectionProperty $property) {
         $static = $property->isStatic() ? ' static' : '';
         if ($property->isPublic()) {
             return 'public' . $static . ' ' . $property->getName();
@@ -363,8 +352,7 @@ class ChromePhp
      * @var mixed
      * @return void
      */
-    protected function _addRow($label, $log, $backtrace, $type)
-    {
+    protected function _addRow($label, $log, $backtrace, $type) {
         // if this is logged on the same line for example in a loop, set it to null to save space
         if (in_array($backtrace, $this->_backtraces)) {
             $backtrace = null;
@@ -380,8 +368,7 @@ class ChromePhp
         $this->_writeHeader($this->_json);
     }
 
-    protected function _writeHeader($data)
-    {
+    protected function _writeHeader($data) {
         header(self::HEADER_NAME . ': ' . $this->_encode($data));
     }
 
@@ -391,8 +378,7 @@ class ChromePhp
      * @param array $data
      * @return string
      */
-    protected function _encode($data)
-    {
+    protected function _encode($data) {
         return base64_encode(utf8_encode(json_encode($data)));
     }
 
@@ -403,8 +389,7 @@ class ChromePhp
      * @param mixed value
      * @return void
      */
-    public function addSetting($key, $value)
-    {
+    public function addSetting($key, $value) {
         $this->_settings[$key] = $value;
     }
 
@@ -414,8 +399,7 @@ class ChromePhp
      * @param array $settings
      * @return void
      */
-    public function addSettings(array $settings)
-    {
+    public function addSettings(array $settings) {
         foreach ($settings as $key => $value) {
             $this->addSetting($key, $value);
         }
@@ -427,11 +411,11 @@ class ChromePhp
      * @param string key
      * @return mixed
      */
-    public function getSetting($key)
-    {
+    public function getSetting($key) {
         if (!isset($this->_settings[$key])) {
             return null;
         }
         return $this->_settings[$key];
     }
+
 }

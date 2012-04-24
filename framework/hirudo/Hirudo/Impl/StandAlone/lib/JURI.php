@@ -1,6 +1,7 @@
 <?php
 
 namespace Hirudo\Impl\StandAlone\lib;
+
 /**
  * @version		$Id: uri.php 10617 2008-08-06 12:13:05Z tcp $
  * @package		Joomla.Framework

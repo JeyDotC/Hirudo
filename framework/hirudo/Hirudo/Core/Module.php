@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * «Copyright 2012 Jeysson José Guevara Mendivil(JeyDotC)» 
+ * 
+ * This file is part of Hirudo.
+ * 
+ * Hirudo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ *  Hirudo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU General Public License
+ *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 namespace Hirudo\Core;
 
 use Hirudo\Core\Util\Message;
@@ -76,6 +95,7 @@ abstract class Module {
      * @var ModulesContext 
      */
     private $context;
+
     /**
      *
      * @var type 
@@ -121,20 +141,20 @@ abstract class Module {
             $app = $parts[0];
             $componentName = $parts[1];
         }
-        
+
         $componentClass = "$app\\Models\\Components\\{$componentName}Component";
-        
+
         if (!array_key_exists($componentClass, $this->loadedComponents)) {
             $component = new $componentClass();
             $this->context->getDependenciesManager()->resolveDependencies($component);
             $this->loadedComponents[$componentClass] = $component;
-        }else{
+        } else {
             $component = $this->loadedComponents[$componentClass];
         }
-            
+
         return $component;
     }
-    
+
     /**
      *
      * @param type $taskName
@@ -142,7 +162,7 @@ abstract class Module {
      */
     public function getTask($taskName) {
         $this->onModuleReady();
-        
+
         $this->currentTask = $this->defaultTask;
 
         if (method_exists($this, $taskName)) {

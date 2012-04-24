@@ -44,7 +44,7 @@ files and the folder where you are going to work. Lets explain each one:
 Also you can put your special templates like, the *Master.tpl* or *Base.twig* templates 
 for example, but the later is just a convension.
 
-* *ext/*: Here goes the extensions to the framework: plugins and smarty plugins.
+* *ext/*: Here goes the extensions to the framework: plugins, smarty plugins, configuration, etc.
 
 * *framework/*: Obviously here goes the framework classes; normally you should not
 look into this folder, unless you are very curious or even have an idea to inprove
@@ -52,18 +52,6 @@ the framework itself ;)
 
 * *src/*: Here goes your applications. In this place you will put your fantastic 
 application code; for more information please look at the *README.md* file inside.
-
-* *config.json* This file holds your applicacion's configuration. It can hold a
-JSON object with whatever you want, it will be accesible via the config object from
-the ModulesContext class. 
-    * If you open it you will find the next basic contents:
-
-        {
-            "businessRoot": "src",
-            "debug": true,
-            "onModuleNotFound": "SampleApp::FrontPage::index",
-            "onError": "SampleApp::ErrorPage::index"
-        }
 
     * This is the most basic configuration object and has the next propeties:
         * "businessRoot": the root to your applications.

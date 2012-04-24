@@ -1,35 +1,55 @@
 <?php
 
+/**
+ * «Copyright 2012 Jeysson José Guevara Mendivil(JeyDotC)» 
+ * 
+ * This file is part of Hirudo.
+ * 
+ * Hirudo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Hirudo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 namespace Hirudo\Models\Components\Sql;
 
 class QueryWriteMode {
+
     const NONE = 0;
     const INSERT = 1;
     const UPDATE = 2;
     const DELETE = 3;
     const TRUNCATE = 4;
     const EMPTY_TABLE = 5;
+
 }
 
 class QueryOperator {
+
     const AND_ = 'AND';
     const OR_ = 'OR';
     const IS = "IS";
-
     const EQUALS = "=";
     const LIKE = "LIKE";
     const DIFFERENT = "!=";
     const NOT = "NOT";
-
     const LESS_THAN = "<";
     const LT = "<";
     const LESS_THAN_OR_EQUAL_TO = "<=";
     const LTE = "<=";
-
     const GREATER_THAN = ">";
     const GT = ">";
     const GREATER_OR_EQUAL = ">=";
     const GTE = ">=";
+
 }
 
 /**
@@ -88,10 +108,10 @@ abstract class Query {
 
             $this->compiledQuery = $this->compileInsert($table, $keys, $values);
         } else if ($this->writeMode == QueryWriteMode::UPDATE) {
-            
+
             $this->compiledQuery = $this->compileUpdate($table, $this->set, $this->orderby, $this->where);
         } else if ($this->writeMode == QueryWriteMode::DELETE) {
-            
+
             $this->compiledQuery = $this->compileDelete($table, $this->where);
         }
 
@@ -123,7 +143,7 @@ abstract class Query {
     }
 
     public function from($from) {
-        foreach ((array)$from as $val) {
+        foreach ((array) $from as $val) {
             $val = trim($val);
 
             $this->from[] = $val;
@@ -214,7 +234,7 @@ abstract class Query {
 
     public function select($fields = "*") {
 
-        foreach ((array)$fields as $val) {
+        foreach ((array) $fields as $val) {
             $val = trim($val);
 
             if ($val != '') {
