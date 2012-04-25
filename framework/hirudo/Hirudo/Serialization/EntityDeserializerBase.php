@@ -39,6 +39,11 @@ abstract class EntityDeserializerBase {
      */
     public function deserialize($class, $string) {
         $array = $this->convertStringToArray($string);
+        //Add suport for primitive types
+        if ($this->arrayToEntityConverter->typeIsPrimitive($class)) {
+            return $array;
+        }
+        
         return $this->arrayToEntityConverter->convert($array, $class);
     }
 

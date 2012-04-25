@@ -53,16 +53,6 @@ the framework itself ;)
 * *src/*: Here goes your applications. In this place you will put your fantastic 
 application code; for more information please look at the *README.md* file inside.
 
-    * This is the most basic configuration object and has the next propeties:
-        * "businessRoot": the root to your applications.
-        * "debug": Tells if the application is in debug or produccion mode.
-        * "onModuleNotFound": This is an action to be called in case that a 
-          requested module is not found. The given string has this format *ApplicationName::ModuleName::methodName*
-        * "onError": This is called in case of any exception, this string has the same format that the one above.
-
-    * For this file you will have to be careful as it is parsed via the *json_decode* function
-    and it is very stricted with the JSON syntax (I accept sugestions on this field).
-
 * *index.php*: This is the main entry point for the stand alone version, it just instantiates
 the modulemanager and makes it execute.
 
@@ -77,3 +67,15 @@ Hirudo framework features and a neat *README.md* file with some explanations.
 
 Oooor... you may want to know how plugins work, in such case you can look at *ext/plugins/*
 folder, there is a sample plugin.
+
+<!--
+* This is the most basic configuration object and has the next propeties:
+        * "businessRoot": the root to your applications.
+        * "debug": Tells if the application is in debug or produccion mode.
+        * "onModuleNotFound": This is an action to be called in case that a 
+          requested module is not found. The given string has this format *ApplicationName::ModuleName::methodName*
+        * "onError": This is called in case of any exception, this string has the same format that the one above.
+
+    * For this file you will have to be careful as it is parsed via the *json_decode* function
+    and it is very stricted with the JSON syntax (I accept sugestions on this field).
+-->

@@ -1,4 +1,4 @@
-SRC/
+src/
 ====
 
 What Goes Here
@@ -49,7 +49,6 @@ is necesary to do these things:
 2. Create a class with exactly the same name of the Module's folder. Such class must:
     * Be in the `AppName\Modules` namespace, where 'AppName' is the name of your App.
     * Extend the `Hirudo\Core\Module` class.
-    * Implent the `index()` abstract method from `Hirudo\Core\Module`
 3. Create a *views/* folder in which to put the views associated to the module. This
 step is optional if the module renders it's results without recurring to
 the templating system or uses views located in another modules.
@@ -87,6 +86,6 @@ gereally is localhost/HirudoFolder/ and a big "Hello world" message should appea
 
 To have more complete view of the modules creation, you can visit the sample application
 (*SampleApp/* folder) and look at the *README.md* file or just look at the files in it if you
-see them self explanatory enough.
+find them self explanatory enough. 
 
 The models layer [coming soon...].

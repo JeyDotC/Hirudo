@@ -36,6 +36,11 @@ class EntityToArrayConverter {
      * @return array 
      */
     public function convert($entity) {
+        //If it's not an entity, there's no reason to convert it.
+        if (is_string($entity) || is_scalar($entity)) {
+            return $entity;
+        }
+
         $result = array();
 
         if (is_array($entity)) {
