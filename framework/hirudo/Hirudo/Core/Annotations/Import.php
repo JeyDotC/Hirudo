@@ -24,7 +24,13 @@ namespace Hirudo\Core\Annotations;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * Description of Import
+ * This annotation marks a method as a dependency requester, a point in which
+ * to inject a dependency.
+ * 
+ * Note that this annotation only applies to methods, that is because it might be
+ * cheaper than looking at an attribute and determinig it's type by looking at
+ * the PhpDoc. This is most likely to change in the near future, may be by adding
+ * a direct class attribute to the annotation.
  *
  * @author JeyDotC
  * 
@@ -34,11 +40,23 @@ use Doctrine\Common\Annotations\Annotation\Target;
 final class Import {
 
     /**
-     *
+     * The id of the dependency to be injected. If null, the dependency should be
+     * resolved by looking at the method's type hinting.
+     * 
      * @var string 
      */
-    public $id = "";
+    public $id = null;
 
+    /**
+     * A dependency class name. This is useful if the dependency class is instantiable
+     * and direct instantiation is acceptable. To import interfaces, abstract
+     * classes or classes with some kind of special instatiation issue 
+     * (like factory methods), use Import::$id instead and export the dependency
+     * class with the @Export annotation.
+     * 
+     * @var string  The fully qualified name of the class to be imported. 
+     */
+    public $className = null;
 }
 
 ?>

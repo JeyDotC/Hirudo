@@ -141,12 +141,18 @@ class ModulesManager extends EventDispatcher {
     }
 
     private function resolveTaskRequirements(Task &$task) {
-        foreach ($task->getGetParams() as /* @var $param \ReflectionParameter */$param) {
-            $task->setParamValue($param->name, $this->context->getRequest()->get($param->name, $task->getParamValue($param->name)));
+        if($task->isPostOnly() && $this->context->getRequest()->method() != "POST"){
+            throw new Exception("The task [{$this->context->getCurrentCall()}] accepts POST requests only");
+        }
+        
+        if (!$task->isPostOnly()) {
+            foreach ($task->getGetParams() as /* @var $param \ReflectionParameter */$param) {
+                $task->setParamValue($param->name, $this->context->getRequest()->get($param->name, $task->getParamValue($param->name)));
+            }
         }
 
         foreach ($task->getPostParams() as /* @var $param ReflectionParameter */$param) {
-            if ($param->isArray()) {
+            if ($param->isArray() || $task->isPostOnly()) {
                 $task->setParamValue($param->name, $this->context->getRequest()->post($param->name, $task->getParamValue($param->name)));
             } else {
                 $object = $param->getClass()->newInstance();

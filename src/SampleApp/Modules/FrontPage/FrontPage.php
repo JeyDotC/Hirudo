@@ -27,12 +27,12 @@ class FrontPage extends Module {
          * same module.
          */
         $action = $this->route->action("response");
-        
+
         //These variables will be available in the view
         $this->assign("name", $name);
         $this->assign("action", $action);
         $this->assign("exceptionPage", $this->route->action("boomPage"));
-        
+
         /**
          * Display the view named "index", you can also display another view
          * from this module by just giving it's name or even views from another 
@@ -58,7 +58,7 @@ class FrontPage extends Module {
      * </code>
      */
     public function response(ComplexObject $myComplexObject) {
-        
+
         /**
          * Store our complex object somewhere, in this case, the session, but
          * depending on the component's implementation it could be on a database
@@ -69,27 +69,27 @@ class FrontPage extends Module {
          * This is how you can get access to the session. 
          */
         $this->request->getSession()->put("complexObjectName", $myComplexObject->getName());
-        
+
         $this->assign("myObject", $myComplexObject);
         $this->assign("sessionVarsUrl", $this->route->action("seeSomeSessionVars"));
 
         $this->display("response");
     }
-    
+
     public function seeSomeSessionVars() {
         /**
          * Getting a value from session. 
          */
         $name = $this->request->getSession()->get("complexObjectName");
-        
+
         /**
          * Getting a value from a component. 
          */
         $complexObject = $this->component("ComplexObject")->get($name);
-        
+
         $this->assign("name", $name);
         $this->assign("object", $complexObject);
-        
+
         /**
          * View name doesn't necesarily match the method name, only
          * the file name. 

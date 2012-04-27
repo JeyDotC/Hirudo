@@ -22,6 +22,7 @@
 namespace Hirudo\Core;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Hirudo\Core\Annotations\HttpPost;
 
 /**
  * Description of Task
@@ -39,6 +40,7 @@ class Task {
     private $getParams = array();
     private $postParams = array();
     private $paramValues = array();
+    private $isPostOnly = false;
 
     /**
      *
@@ -51,17 +53,25 @@ class Task {
         $this->annotationReader = new AnnotationReader();
         $this->reflectionMethod = $reflectionMethod;
         $this->module = $owner;
+
+        $this->isPostOnly = $this->annotationReader->getMethodAnnotation($reflectionMethod, "Hirudo\Core\Annotations\HttpPost") != null;
+
         foreach ($this->reflectionMethod->getParameters() as /* @var $parameter \ReflectionParameter */$parameter) {
 
             $this->paramValues[$parameter->name] = $parameter->isOptional() ? $parameter->getDefaultValue() : null;
 
-            if (!$parameter->isArray() && is_null($parameter->getClass())) {
+            if (!$parameter->isArray() && is_null($parameter->getClass()) && !$this->isPostOnly) {
                 $this->getParams[] = $parameter;
             } else {
                 $this->postParams[] = $parameter;
             }
         }
     }
+
+    public function getName() {
+        return $this->reflectionMethod->name;
+    }
+
 
     public function getGetParams() {
         return $this->getParams;
@@ -97,6 +107,10 @@ class Task {
      */
     public function getModule() {
         return $this->module;
+    }
+
+    public function isPostOnly() {
+        return $this->isPostOnly;
     }
 
 }

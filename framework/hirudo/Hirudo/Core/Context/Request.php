@@ -87,6 +87,10 @@ abstract class Request {
     public abstract function server($name, $default = null);
 
     public abstract function getURI();
+    
+    public function method() {
+        return $this->server("REQUEST_METHOD", "GET");
+    }
 
     /**
      * Creates a ModuleCall from request parameters, generally from the URL,

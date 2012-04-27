@@ -102,6 +102,10 @@ class ModuleCall {
     public function hasUnhandledException() {
         return $this->lastUnhandledException instanceof HirudoException;
     }
+    
+    public function __toString() {
+        return "$this->app::$this->module::$this->task";
+    }
 
 }
 
