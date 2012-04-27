@@ -37,7 +37,7 @@ Loader::using("framework::hirudo::Hirudo::Core::Annotations::Export");
  *
  * @author JeyDotC
  */
-class AnnotationLoader extends ContainerAware {
+class AnnotationLoader extends ContainerAware implements DependenciesManager {
 
     private $annotationReader;
 
@@ -141,15 +141,15 @@ class AnnotationLoader extends ContainerAware {
         $this->resolveDependencies($requestedObject);
 
         $makeUnaccesible = false;
-        
+
         if ($property->isPrivate() || $property->isProtected()) {
             $property->setAccessible(true);
             $makeUnaccesible = true;
         }
-        
+
         $property->setValue($object, $requestedObject);
-        
-        if($makeUnaccesible){
+
+        if ($makeUnaccesible) {
             $property->setAccessible(false);
         }
     }
