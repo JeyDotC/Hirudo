@@ -94,7 +94,7 @@ abstract class Module {
      * 
      * @var ModulesContext 
      */
-    private $context;
+    protected $context;
 
     /**
      *
@@ -219,6 +219,10 @@ abstract class Module {
      * @param type $view 
      */
     protected function display($view = null) {
+        $this->rendered = $this->renderGet($view);
+    }
+    
+    protected function renderGet($view) {
         $viewParts = $this->getViewParts($view);
 
         $this->module["appName"] = $this->appName;
@@ -231,7 +235,7 @@ abstract class Module {
 
         $this->assign("Module", $this->module);
 
-        $this->rendered = $this->view->display($this->getModuleDir($viewParts["app"], $viewParts["module"]), $viewParts["view"]);
+        return $this->view->display($this->getModuleDir($viewParts["app"], $viewParts["module"]), $viewParts["view"]);
     }
 
     /**
