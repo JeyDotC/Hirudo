@@ -1,5 +1,7 @@
 <?php
 
+namespace Hirudo\Core\Events;
+
 /**
  * «Copyright 2012 Jeysson José Guevara Mendivil(JeyDotC)» 
  * 
@@ -22,6 +24,7 @@
 namespace Hirudo\Core\Events;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Annotations\ForCall;
 
 /**
  * Description of BeforeTaskEventListener
@@ -36,8 +39,40 @@ abstract class BeforeTaskEventListener implements EventSubscriberInterface {
 
     //A wrapper function for future cool stuff.
     public function onBeforeTask(BeforeTaskEvent $e) {
+        $annotations = \Hirudo\Core\Context\ModulesContext::instance()->getDependenciesManager()->getClassMetadata(new \ReflectionClass($this));
+        $isCallable = true;
+
+        if (is_array($annotations)) {
+            foreach ($annotations as $annotation) {
+                if ($annotation instanceof Annotations\ForCall) {
+                    $isCallable = $this->isCallable($annotation);
+                    break;
+                }
+            }
+        }
+
+        if ($isCallable) {
+            $this->beforeTask($e);
+        }
+    }
+
+    private function isCallable(Annotations\ForCall $forCall) {
+        $call = \Hirudo\Core\Context\ModulesContext::instance()->getCurrentCall();
         
-        $this->beforeTask($e);
+        if(!empty($forCall->app) && $forCall->app != $call->getApp()){
+            return false;
+        }
+        
+        if(!empty($forCall->module) && $forCall->module != $call->getModule()){
+            return false;
+        }
+        
+        if(!empty($forCall->task) && $forCall->task != $call->getTask()){
+            return false;
+        }
+        
+        return true;
+        
     }
 
     protected abstract function beforeTask(BeforeTaskEvent $e);
