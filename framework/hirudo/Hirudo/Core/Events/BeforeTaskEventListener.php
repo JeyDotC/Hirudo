@@ -36,6 +36,7 @@ abstract class BeforeTaskEventListener implements EventSubscriberInterface {
 
     //A wrapper function for future cool stuff.
     public function onBeforeTask(BeforeTaskEvent $e) {
+        
         $this->beforeTask($e);
     }
 

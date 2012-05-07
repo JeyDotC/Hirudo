@@ -23,6 +23,7 @@ namespace Hirudo\Impl\StandAlone;
 
 use Hirudo\Core\Context\AppConfig as AppConfig;
 use Hirudo\Lang\Loader;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Description of SAppConfig 
@@ -38,7 +39,7 @@ class SAppConfig extends AppConfig {
      *
      * @var array
      */
-    private $document;
+    private $document = array();
 
     public function get($key, $default = null) {
         $result = $default;
@@ -49,12 +50,11 @@ class SAppConfig extends AppConfig {
     }
 
     protected function load() {
-        $path = Loader::toSinglePath("ext::config::config", ".json");
-        $json = "{}";
+        $path = Loader::toSinglePath("ext::config::Config", ".yml");
+
         if (file_exists($path)) {
-            $json = file_get_contents($path);
+            $this->document = Yaml::parse($path);
         }
-        $this->document = JSON::Decode($json, true);
     }
 
 }

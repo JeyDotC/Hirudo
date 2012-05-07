@@ -1,0 +1,13 @@
+AddType text/cache-manifest .manifest
+
+<Files .htaccess>
+deny from all
+</Files>
+
+<Files config.json>
+deny from all
+</Files>
+
+<Files init.php>
+deny from all
+</Files>

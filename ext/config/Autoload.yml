@@ -1,0 +1,6 @@
+namespaces:
+  #The core namespaces
+  Hirudo: "framework::hirudo"
+  Symfony\Component: "framework::libs::symfony-components"
+  Doctrine\Common: "framework::libs::doctrine-common"
+  #Add any extra namespaces here

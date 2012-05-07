@@ -18,8 +18,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 // TODO: Remove or wrap this class
 require_once 'ChromePhp.php';
 
@@ -40,21 +38,25 @@ Loader::Config(HIRUDO_ROOT, DS);
 //Load some useful classes.
 Loader::using(array(
     "framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader",
+    "framework::libs::symfony-components::Symfony::Component::Yaml::*",
     "framework::libs::doctrine-common::Doctrine::Common::Annotations::AnnotationRegistry",
     "framework::hirudo::Hirudo::Lang::Enum",
 ));
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\Yaml\Yaml;
 use Doctrine\Common\Annotations\AnnotationRegistry as AnnotationRegistry;
 
+$autoloadPath = Loader::toSinglePath("ext::config::Autoload", ".yml");
+$namespaces = Yaml::parse($autoloadPath);
+$namespaces = $namespaces["namespaces"];
+foreach ($namespaces as $namespace => &$value) {
+    $namespaces[$namespace] = Loader::toSinglePath($value, "");
+}
+
 $loader = new UniversalClassLoader();
-$loader->registerNamespaces(array(
-    "Hirudo" => Loader::toSinglePath("framework::hirudo", ""),
-    "Symfony\\Component" => Loader::toSinglePath("framework::libs::symfony-components", ""),
-    "Doctrine\\Common" => Loader::toSinglePath("framework::libs::doctrine-common", ""),
-));
-AnnotationRegistry::registerLoader(array($loader, "loadClass"));
-AnnotationRegistry::registerAutoloadNamespace("Hirudo\Core\Annotations", Loader::toSinglePath("framework::hirudo::Hirudo::Core::Annotations", ""));
+$loader->registerNamespaces($namespaces);
+
 $loader->register();
 Hirudo\Core\ModulesManager::setAutoLoader($loader);
 ?>
