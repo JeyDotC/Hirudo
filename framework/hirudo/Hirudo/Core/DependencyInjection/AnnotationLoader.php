@@ -155,15 +155,15 @@ class AnnotationLoader extends ContainerAware implements DependenciesManager {
     }
 
     public function getClassMetadata(\ReflectionClass $object) {
-        throw new Exception("Not implmented yet");
+        return $this->annotationReader->getClassAnnotations($object);
     }
 
     public function getMethodMetadata(\ReflectionMethod $method) {
-        throw new Exception("Not implmented yet");
+        return $this->annotationReader->getMethodAnnotations($method);
     }
 
     public function getPropertyMetadata(\ReflectionProperty $property) {
-        throw new Exception("Not implmented yet");
+        return $this->annotationReader->getPropertyAnnotations($property);
     }
 
 }
