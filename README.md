@@ -56,6 +56,9 @@ application code; for more information please look at the *README.md* file insid
 * *index.php*: This is the main entry point for the stand alone version, it just instantiates
 the modulemanager and makes it execute.
 
+* *hirudo.php*: This is the main entry point for the Joomla! version, it just instantiates the modulemanager and makes it execute wraped into a Joomla! controller. 
+To make it work as a component just rename this file with the name of your component.
+
 * *init.php*: This file just initializes some stuff and creates a couple of constants, it's presence
 is due to the need to know the absolute path to the root folder.
 
@@ -65,8 +68,6 @@ If you are willing to know how to make an application in Hirudo, the [src/](/Jey
 is your place, there you will find a sample application that tests some of the
 Hirudo framework features and a neat *README.md* file with some explanations.
 
-Oooor... you may want to know how plugins work, in such case you can look at *ext/plugins/*
-folder, there is a sample plugin.
 
 <!--
 * This is the most basic configuration object and has the next propeties:
