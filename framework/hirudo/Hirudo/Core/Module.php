@@ -29,6 +29,39 @@ use Hirudo\Core\Annotations\Import;
 use Hirudo\Core\Context\Routing;
 use Hirudo\Core\Exceptions\HirudoException;
 
+class HeaderBag {
+
+    public function setHeader($key, $value) {
+        $this->addHeader("$key: $value");
+    }
+
+    public function setHeaders(array $headers) {
+        foreach ($headers as $key => $value) {
+            if (is_numeric($key)) {
+                $this->addHeader($value);
+            } else {
+                $this->setHeader($key, $value);
+            }
+        }
+    }
+
+    public function setContentsForDownload($mime, $filename) {
+        $this->setHeaders(array(
+            "Content-type" => $mime,
+            "Content-Disposition" => "attachment;filename=$filename",
+            "Content-Transfer-Encoding" => "binary",
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ));
+        set_time_limit(0);
+    }
+
+    private function addHeader($header) {
+        header($header);
+    }
+
+}
+
 /**
  * A module represents a single use case in the business logic.
  * 
@@ -95,6 +128,12 @@ abstract class Module {
      * @var ModulesContext 
      */
     protected $context;
+
+    /**
+     *
+     * @var HeaderBag
+     */
+    protected $headers;
 
     /**
      *
@@ -221,9 +260,9 @@ abstract class Module {
     protected function display($view = null) {
         $this->rendered = $this->renderGet($view);
     }
-    
+
     protected function renderGet($view) {
-        $viewParts = $this->getViewParts($view);
+        $viewParts = $this->_getViewParts($view);
 
         $this->module["appName"] = $this->appName;
         $this->module["name"] = $this->name;
@@ -247,30 +286,22 @@ abstract class Module {
         $this->module["messages"][] = $message;
     }
 
-    /**
-     *
-     * @param TemplatingInterface $templateManager 
-     * 
-     * @Import(id="templating")
-     */
-    public function setTemplateManager(TemplatingInterface $templateManager) {
-        $this->view = $templateManager;
-    }
-
     public function setDefaultTask($defaultTask) {
         $this->defaultTask = $defaultTask;
     }
 
     function __construct() {
+        $this->headers = new HeaderBag();
         $this->context = ModulesContext::instance();
-        $this->name = $this->getUnqualifiedClassName(get_class($this));
+        $this->name = $this->_getUnqualifiedClassName(get_class($this));
         $this->currentUser = $this->context->getCurrentUser();
         $this->request = $this->context->getRequest();
         $this->route = $this->context->getRouting();
         $this->route->setModuleName($this->name);
+        $this->view = $this->context->getTemplating();
     }
 
-    private function getViewParts($view) {
+    private function _getViewParts($view) {
         $viewParts = array("app" => $this->appName, "module" => $this->name, "view" => $this->currentTask,);
 
         if (!empty($view)) {
@@ -328,7 +359,7 @@ abstract class Module {
         return $this->context->getCurrentCall()->getLastUnhandledException();
     }
 
-    private function getUnqualifiedClassName($qualifiedClassName) {
+    private function _getUnqualifiedClassName($qualifiedClassName) {
         $name = $qualifiedClassName;
 
         $lastBackSlashPos = strrpos($qualifiedClassName, "\\");
