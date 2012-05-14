@@ -1,0 +1,14 @@
+#
+namespaces: 
+  - Sample
+  
+plugins:
+  - Sample\Plugins\ModuleEnhablePlugin
+  
+services:
+  - Sample\Utilities\SomeUsefulClass
+  
+templating_extensions:
+  - Sample/SmartyExtensions
+
+

@@ -21,6 +21,7 @@
 
 namespace Hirudo\Core\Context;
 
+use Hirudo\Core\TemplatingInterface;
 use Hirudo\Core\Context\ModuleCall,
     Hirudo\Core\Context\Principal,
     Hirudo\Core\Context\Session,
@@ -47,6 +48,7 @@ class ModulesContext {
     private $request;
     private $config;
     private $routing;
+    private $templating;
     private $dependenciesManager;
 
     /**
@@ -164,6 +166,23 @@ class ModulesContext {
      */
     public function setRouting(Routing $routing) {
         $this->routing = $routing;
+    }
+
+    /**
+     *
+     * @return TemplatingInterface 
+     */
+    public function getTemplating() {
+        return $this->templating;
+    }
+
+    /**
+     *
+     * @param TemplatingInterface $templating 
+     * @Import(id="templating")
+     */
+    public function setTemplating(TemplatingInterface $templating) {
+        $this->templating = $templating;
     }
 
     /**

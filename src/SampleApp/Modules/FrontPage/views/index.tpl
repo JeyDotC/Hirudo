@@ -13,6 +13,7 @@ conveerted into the 'DIRECTORY_SEPARATOR' character).
     <p>
         This is a sample Hirudo app, neat isn't it?
     </p>
+    
     <form method="post" action="{$action}">
         <div>
             <label for="name">

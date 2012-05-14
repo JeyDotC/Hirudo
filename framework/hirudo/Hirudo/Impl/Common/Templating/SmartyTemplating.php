@@ -43,7 +43,7 @@ class SmartyTemplating implements TemplatingInterface {
 
     function __construct() {
         $this->smarty = new \Smarty();
-        $this->smarty->addPluginsDir(dirname(__FILE__) . "/SmartyTemplatingPlugins");
+        $this->addExtensionsPath(dirname(__FILE__) . "/SmartyTemplatingPlugins");
 
         $isDebuging = ModulesContext::instance()->getConfig()->get("debug");
         $this->smarty->caching = !$isDebuging;
@@ -89,6 +89,10 @@ class SmartyTemplating implements TemplatingInterface {
         }
 
         return self::$instance;
+    }
+
+    public function addExtensionsPath($path) {
+        $this->smarty->addPluginsDir($path);
     }
 
 }

@@ -173,6 +173,16 @@ final class Loader {
             throw new LogicException("The extension is expected to be a string");
         }
     }
+    
+    public static function isDir($dir) {
+        $dir = self::toSinglePath($dir, DS);
+        is_dir($dir);
+    }
+    
+    public static function isFile($file, $extension = Loader::DEFAULT_EXT) {
+        $file = self::toSinglePath($file, $extension);
+        is_file($file);
+    }
 
 }
 
@@ -232,7 +242,6 @@ class DirectoryHelper {
 
     private function recursiveListFiles(RecursiveDirectoryIterator &$dir,
             $depth = 1) {
-
         $paths = array();
 
         while ($dir->valid()) {

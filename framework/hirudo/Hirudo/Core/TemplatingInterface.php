@@ -45,6 +45,8 @@ interface TemplatingInterface {
      * @return string The output of the view as a string. 
      */
     public function display($moduleDir, $view);
+    
+    public function addExtensionsPath($path);
 }
 
 ?>

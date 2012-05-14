@@ -30,6 +30,7 @@ use Hirudo\Core\Events\BeforeTaskEvent;
 use Hirudo\Core\Exceptions\HirudoException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Description of ModulesManager
@@ -72,15 +73,8 @@ class ModulesManager extends EventDispatcher {
 
     private function load() {
         $this->dependencyManager->resolveDependencies($this->context);
+        $this->loadExtensions();
         $this->rootAppDir = $this->context->getConfig()->get("businessRoot", "src");
-
-        $plugins = Loader::toPaths("ext::plugins::*");
-        foreach ($plugins as $plugin) {
-            require_once $plugin;
-            $className = str_replace(".php", "", $plugin);
-            $className = substr($className, strrpos($className, DS));
-            $this->addSubscriber(new $className());
-        }
     }
 
     /**
@@ -141,10 +135,10 @@ class ModulesManager extends EventDispatcher {
     }
 
     private function resolveTaskRequirements(Task &$task) {
-        if($task->isPostOnly() && $this->context->getRequest()->method() != "POST"){
+        if ($task->isPostOnly() && $this->context->getRequest()->method() != "POST") {
             throw new Exception("The task [{$this->context->getCurrentCall()}] accepts POST requests only");
         }
-        
+
         if (!$task->isPostOnly()) {
             foreach ($task->getGetParams() as /* @var $param \ReflectionParameter */$param) {
                 $task->setParamValue($param->name, $this->context->getRequest()->get($param->name, $task->getParamValue($param->name)));
@@ -202,6 +196,76 @@ class ModulesManager extends EventDispatcher {
      */
     private function getErrorCall() {
         return ModuleCall::fromString($this->context->getConfig()->get("onError"));
+    }
+
+    private function loadExtensions() {
+        $extensions = $this->getExtensionsConfiguration();
+
+        foreach ($extensions as $dir => $extension) {
+            if (isset($extension["namespaces"])) {
+                $this->registerNamespaces($dir, $extension["namespaces"]);
+            }
+
+            if (isset($extension["plugins"])) {
+                $this->registerPlugins($extension["plugins"]);
+            }
+
+            if (isset($extension["services"])) {
+                $this->registerServices($extension["services"]);
+            }
+
+            if (isset($extension["templating_extensions"])) {
+                $this->registerTemplatingExtensions($dir, $extension["templating_extensions"]);
+            }
+        }
+    }
+
+    private function registerNamespaces($dir, array $namespaces) {
+        foreach ($namespaces as $namespace) {
+            self::$autoLoader->registerNamespace($namespace, $dir);
+        }
+    }
+
+    private function registerPlugins(array $plugins) {
+        foreach ($plugins as $plugin) {
+            $this->addSubscriber(new $plugin());
+        }
+    }
+
+    private function registerServices(array $services) {
+        $this->dependencyManager->addServices($services);
+    }
+
+    private function registerTemplatingExtensions($dir,
+            array $templating_extensions) {
+
+        foreach ($templating_extensions as $extensionDir) {
+            $this->context->getTemplating()->addExtensionsPath($dir . DS . $extensionDir);
+        }
+    }
+
+    private function getExtensionsConfiguration() {
+        $cacheFile = Loader::toSinglePath("ext::cache::extensions.config.cache", ".yml");
+        $extensions = array();
+
+        if (!is_file($cacheFile)) {
+            $extensionsDir = new \Hirudo\Lang\DirectoryHelper(new \RecursiveDirectoryIterator(Loader::toSinglePath("ext::libs", "")));
+            $files = $extensionsDir->listFiles(2);
+
+            foreach ($files as $file) {
+                $extensions[dirname($file)] = Yaml::parse($file);
+            }
+            if (!Loader::isDir("ext::cache::")) {
+                mkdir(Loader::toSinglePath("ext::cache", ""));
+            }
+
+            $yaml = Yaml::dump($extensions);
+            file_put_contents($cacheFile, $yaml);
+        } else {
+            $extensions = Yaml::parse($cacheFile);
+        }
+
+        return $extensions;
     }
 
 }
