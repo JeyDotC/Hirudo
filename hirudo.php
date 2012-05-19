@@ -18,7 +18,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 defined('_JEXEC') or die('Restricted access');
 require_once 'init.php';
 
@@ -40,6 +39,8 @@ $controller = new JoomlaFrontController(new ModulesManager(array(
                     'Hirudo\Impl\Common\Templating\SmartyTemplating',
                     //The Sql Model
                     "Hirudo\Impl\Joomla\Models\Components\Sql\JoomlaQueryFactory",
+                    //The Asset system
+                    'Hirudo\Impl\StandAlone\JoomlaAssets',
                 )));
 
 $controller->run();

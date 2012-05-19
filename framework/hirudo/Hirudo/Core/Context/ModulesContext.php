@@ -27,7 +27,8 @@ use Hirudo\Core\Context\ModuleCall,
     Hirudo\Core\Context\Session,
     Hirudo\Core\Context\Request,
     Hirudo\Core\Context\AppConfig,
-    Hirudo\Core\Context\Routing;
+    Hirudo\Core\Context\Routing,
+    Hirudo\Core\Context\Assets;
 use Hirudo\Core\Annotations\Import;
 use Hirudo\Core\DependencyInjection\DependenciesManager;
 
@@ -50,6 +51,7 @@ class ModulesContext {
     private $routing;
     private $templating;
     private $dependenciesManager;
+    private $assets;
 
     /**
      *
@@ -191,6 +193,23 @@ class ModulesContext {
      */
     public function getDependenciesManager() {
         return $this->dependenciesManager;
+    }
+
+    /**
+     *
+     * @return Assets
+     */
+    public function getAssets() {
+        return $this->assets;
+    }
+
+    /**
+     *
+     * @param Assets $assets 
+     * @Import(id="assets")
+     */
+    public function setAssets(Assets $assets) {
+        $this->assets = $assets;
     }
 
     public function setDependenciesManager(DependenciesManager $dependenciesManager) {

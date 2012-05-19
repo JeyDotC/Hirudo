@@ -1,5 +1,6 @@
 <html>
     <head>
+        {css file="css/style.css"}
         <title>{block name="title"}Home page{/block}</title>
     </head>
     <body>

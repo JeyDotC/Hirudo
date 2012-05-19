@@ -1,0 +1,14 @@
+form {
+    border-right-style: dotted;
+    border-left-style: dotted;
+    border-bottom-style: dotted;
+    border-top-style: dotted;
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    border-right-color: #999999;
+    border-left-color: #999999;
+    border-bottom-color: #999999;
+    border-top-color: #999999;
+}

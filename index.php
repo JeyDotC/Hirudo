@@ -38,6 +38,8 @@ $manager = new ModulesManager(array(
             'Hirudo\Impl\Common\Templating\SmartyTemplating',
             //The Sql Model
             'Hirudo\Impl\StandAlone\Models\Components\Sql\SAQueryFactory',
+            //The Asset system
+            'Hirudo\Impl\StandAlone\SAssets',
         ));
 
 echo $manager->run();
