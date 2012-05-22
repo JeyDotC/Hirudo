@@ -23,19 +23,40 @@ namespace Hirudo\Serialization;
 
 require_once "EntityToArrayConverter.php";
 
+/**
+ * A base class for entity serialization.
+ */
 abstract class EntitySerializerBase {
 
     private $entityToArrayConverter;
 
+    /**
+     * Creates a new entity serializer. 
+     */
     public function __construct() {
         $this->entityToArrayConverter = new EntityToArrayConverter();
     }
 
+    /**
+     * Serializes an entity into a string.
+     * 
+     * @param mixed $entity The entity to be serialized.
+     * @return string The string representing the entity. 
+     */
     public function serialize($entity) {
         $array = $this->entityToArrayConverter->convert($entity);
         return $this->doSerialize($array);
     }
 
+    /**
+     * This is the abstract method to be implemented by any serializer, it receives
+     * an ssociative array representing the entity making it easier to create the 
+     * string representation.
+     * 
+     * @param array $array The associative array that represents the entity.
+     * 
+     * @return string The string that represents the entity.
+     */
     protected abstract function doSerialize($array);
 }
 

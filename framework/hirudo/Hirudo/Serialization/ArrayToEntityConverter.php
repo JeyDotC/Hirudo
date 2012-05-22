@@ -24,12 +24,23 @@ namespace Hirudo\Serialization;
 use \ReflectionClass;
 
 /**
- * 
+ * Transforms an array into an object of a given class.
  */
 class ArrayToEntityConverter {
 
     private static $knownPrimitiveTypes = array("mixed", "array", "int", "integer", "float", "bool", "boolean", "string");
 
+    /**
+     * Converts an array into the given object. 
+     * 
+     * The collection must be an associative array which keys will correspond to
+     * a property in the object.
+     * 
+     * @param array $array The associative array to be converted into an object.
+     * @param mixed $objectOrClassName A classname in which the given array will be converted.
+     * 
+     * @return mixed An instance of the given class. 
+     */
     public function convert($array, &$objectOrClassName) {
         $objectInstance = null;
 

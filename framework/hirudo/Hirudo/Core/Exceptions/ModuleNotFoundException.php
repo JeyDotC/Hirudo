@@ -23,10 +23,13 @@ namespace Hirudo\Core\Exceptions;
 
 use Hirudo\Core\Context\ModuleCall;
 
+/**
+ * Thrown when a an application tries to invoke a non existing module.
+ */
 class ModuleNotFoundException extends HirudoException {
 
     public function __construct($module, $app) {
-        parent::__construct(new ModuleCall($app, $module), "The module '$module' from application '$app' Doesn't exist and there is no default module.");
+        parent::__construct(new ModuleCall($app, $module), "The module '$module' from application '$app' Doesn't exist.");
     }
 
 }

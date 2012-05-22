@@ -23,19 +23,27 @@ namespace Hirudo\Serialization;
 
 require_once "ArrayToEntityConverter.php";
 
+/**
+ * Base class for entity de-serializers. 
+ */
 abstract class EntityDeserializerBase {
 
     private $arrayToEntityConverter;
 
+    /**
+     * Creates a new entity de-serializer. 
+     */
     public function __construct() {
         $this->arrayToEntityConverter = new ArrayToEntityConverter();
     }
 
     /**
-     *
-     * @param string $class
-     * @param string $string
-     * @return mixed 
+     * Converts the given string into an entity of the given class.
+     * 
+     * @param string $class The class in which the string will be converted.
+     * @param string $string The string that will be converted into the given class.
+     * 
+     * @return mixed An instance of the given class.
      */
     public function deserialize($class, $string) {
         $array = $this->convertStringToArray($string);
@@ -47,6 +55,15 @@ abstract class EntityDeserializerBase {
         return $this->arrayToEntityConverter->convert($array, $class);
     }
 
+    /**
+     * This is the abstract method to be implemented by any de-serializer, it receives
+     * an string to be converted into an associative array which will make easier
+     * the conversion into an entity.
+     * 
+     * @param string $string The associative array that represents the entity.
+     * 
+     * @return array An associative array that represents the entity.
+     */
     protected abstract function convertStringToArray($string);
 }
 

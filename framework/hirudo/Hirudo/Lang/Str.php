@@ -8,7 +8,6 @@ namespace Hirudo\Lang;
  * @author JeyDotC
  */
 abstract class Str extends String {
-    //put your code here
 }
 
 ?>

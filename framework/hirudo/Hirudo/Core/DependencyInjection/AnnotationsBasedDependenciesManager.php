@@ -33,12 +33,17 @@ Loader::using("framework::hirudo::Hirudo::Core::Annotations::Import");
 Loader::using("framework::hirudo::Hirudo::Core::Annotations::Export");
 
 /**
- * Description of AnnotationLoader
- *
+ * A dependencies manager that uses the doctrine's doc-block annotations system
+ * to determine dependencies and load services.
+ * 
  * @author JeyDotC
  */
-class AnnotationLoader extends ContainerAware implements DependenciesManager {
+class AnnotationsBasedDependenciesManager extends ContainerAware implements DependenciesManager {
 
+    /**
+     *
+     * @var AnnotationReader
+     */
     private $annotationReader;
 
     function __construct() {
@@ -154,16 +159,68 @@ class AnnotationLoader extends ContainerAware implements DependenciesManager {
         }
     }
 
+    /**
+     * Gets the annotations associated to thie given class.
+     * 
+     * @param \ReflectionClass $object
+     * @return array<mixed> 
+     */
     public function getClassMetadata(\ReflectionClass $object) {
         return $this->annotationReader->getClassAnnotations($object);
     }
 
+    /**
+     * Gets the annotations associated to thie given method.
+     * 
+     * @param \ReflectionMethod $method
+     * @return array<mixed> 
+     */
     public function getMethodMetadata(\ReflectionMethod $method) {
         return $this->annotationReader->getMethodAnnotations($method);
     }
 
+    /**
+     * Gets the annotations associated to thie given property.
+     * 
+     * @param \ReflectionProperty $property
+     * @return array<mixed> 
+     */
     public function getPropertyMetadata(\ReflectionProperty $property) {
         return $this->annotationReader->getPropertyAnnotations($property);
+    }
+
+    /**
+     * Gets an annotation associated to thie given class by it's fully qualified class name.
+     * 
+     * @param \ReflectionClass $object
+     * @param string $metaDataId The annotation's fully qualified class name
+     * @return mixed The annotation, or null if it doesn't exists for this class.
+     */
+    public function getClassMetadataById(\ReflectionClass $object, $metaDataId) {
+        return $this->annotationReader->getClassAnnotation($object, $metaDataId);
+    }
+
+    /**
+     * Gets an annotation associated to thie given method by it's fully qualified class name.
+     * 
+     * @param \ReflectionMethod $method
+     * @param string $metaDataId The annotation's fully qualified class name
+     * @return mixed The annotation, or null if it doesn't exists for this method.
+     */
+    public function getMethodMetadataById(\ReflectionMethod $method, $metaDataId) {
+        return $this->annotationReader->getMethodAnnotation($method, $metaDataId);
+    }
+
+    /**
+     * Gets an annotation associated to thie given property by it's fully qualified class name.
+     * 
+     * @param \ReflectionProperty $property
+     * @param string $metaDataId The annotation's fully qualified class name
+     * @return mixed The annotation, or null if it doesn't exists for this property.
+     */
+    public function getPropertyMetadataById(\ReflectionProperty $property,
+            $metaDataId) {
+        return $this->annotationReader->getPropertyAnnotation($property, $metaDataId);
     }
 
 }

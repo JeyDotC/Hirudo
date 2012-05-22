@@ -22,10 +22,25 @@
 use Hirudo\Core\Context\ModulesContext;
 
 /**
- *
+ * Returns a URL based on the string given in the call attribute.
+ * Usage: <code>{url call="AppName::ModuleName::taskName"}</code> Any extra
+ * parameters will be used as params for the url. For example, if we have:
+ * <code>{url call="AppName::ModuleName::taskName" id=123 name="MyName"}</code>
+ * the resulting url will be the same if we called:
+ *  <code>
+ * $aRoutingObject->appAction("AppName", "ModuleName", "taskName",  
+ *      array(
+ *          "id"=>123, 
+ *          "name"=>"MyName"
+ *      )
+ * );
+ * </code>
+ * 
  * @param array $params
  * @param Smarty_Internal_Template $template
- * @return <type>
+ * 
+ * @return string The generated URL.
+ * @see \Hirudo\Core\Context\Routing For more information about Hirudo URLs
  */
 function smarty_function_url($params, $template) {
     $route = ModulesContext::instance()->getRouting();

@@ -24,13 +24,8 @@ namespace Hirudo\Core\Annotations;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * This annotation marks a method as a dependency requester, a point in which
+ * This annotation marks a method or property as a dependency requester, a point in which
  * to inject a dependency.
- * 
- * Note that this annotation only applies to methods, that is because it might be
- * cheaper than looking at an attribute and determinig it's type by looking at
- * the PhpDoc. This is most likely to change in the near future, may be by adding
- * a direct class attribute to the annotation.
  *
  * @author JeyDotC
  * 
@@ -40,8 +35,18 @@ use Doctrine\Common\Annotations\Annotation\Target;
 final class Import {
 
     /**
-     * The id of the dependency to be injected. If null, the dependency should be
-     * resolved by looking at the method's type hinting.
+     * The id of the dependency to be injected.
+     * 
+     * If this attribute is null, the dependency injector shall determine the class
+     * of the requested object and create a new instance to inject it. The way the class is
+     * determined is like below:
+     * 
+     * If this annotation is applied to a method, the method's type hinting will be used
+     * to determine the class of the dependency.
+     * 
+     * If this nanotation is applied to a property, the className property of this annotation
+     * must be set to the fully qualified class name, this is a way to avoid the efford
+     * of determining the class name based on the doc blocks.
      * 
      * @var string 
      */

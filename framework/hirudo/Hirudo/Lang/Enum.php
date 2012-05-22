@@ -20,17 +20,54 @@
  */
 
 /**
+ * <p>A base class for simple Enum representation. It gives some utility methods
+ * commonly associated to the enums in other languages.</p>
+ * 
+ * <p>To make an enum class just extend this class and add the enum constants, like this:
+ * 
+ * <code>
+ * class MyEnum extends PseudoEnum {
+ *      const AN_ENUM_VALUE = 0;
+ *      const OTHER_ENUM_VALUE = 1;
+ *      const AND_OTHER_ENUM_VALUE = 2;
+ * }
+ * </code></p>
  * 
  */
 abstract class PseudoEnum {
 
+    /**
+     * Says if the given value belongs to the set of values  of this enum.
+     * 
+     * @param string|number $value The value which we want to know if exists for this enum.
+     * @return boolean True if the value exists for this enum, false otherwise.
+     */
     public static function valueBelongs($value) {
         $reflector = self::getClass();
-        $belongs = $reflector->hasConstant($value);
+        $constants = $reflector->getConstants();
+        
+        return in_array($value, $constants);
+    }
+
+    /**
+     * Says if there is a constant with the given name for this enum.
+     * 
+     * @param string|number $value The name which we want to know if exists for this enum.
+     * @return boolean True if the name exists for this enum, false otherwise.
+     */
+    public static function nameBelongs($name) {
+        $reflector = self::getClass();
+        $belongs = $reflector->hasConstant($name);
 
         return $belongs;
     }
 
+    /**
+     * Returns the constant name corresponding to the given value.
+     * 
+     * @param string|number $value The value which we want to know name in the enum list.
+     * @return string The name corresponding to the given value. 
+     */
     public static function valueToString($value) {
         $reflector = self::getClass();
         $string = array_search($value, $reflector->getConstants());
@@ -38,6 +75,12 @@ abstract class PseudoEnum {
         return $string;
     }
 
+    /**
+     * Returns a value by the corresponding name.
+     * 
+     * @param string $string The name of the constant.
+     * @return string|number The value corresponding to the constant with the given name.
+     */
     public static function stringToValue($string) {
         $reflector = self::getClass();
         $value = $reflector->getConstant($string);

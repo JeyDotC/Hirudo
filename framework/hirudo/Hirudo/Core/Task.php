@@ -23,9 +23,12 @@ namespace Hirudo\Core;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Hirudo\Core\Annotations\HttpPost;
+use Hirudo\Core\Context\ModulesContext;
 
 /**
- * Description of Task
+ * Is a representation of a module's task, it holds the information about the action
+ * to be executed and can be used to know which are it's requirements and also 
+ * resolve them.
  *
  * @author JeyDotC
  */
@@ -37,6 +40,11 @@ class Task {
      */
     private $reflectionMethod;
     private $annotationReader;
+    /**
+     *
+     * @var DependencyInjection\DependenciesManager 
+     */
+    private $dependenciesManager;
     private $getParams = array();
     private $postParams = array();
     private $paramValues = array();
@@ -48,13 +56,19 @@ class Task {
      */
     private $module;
 
+    /**
+     * Constructs a task.
+     * 
+     * @param \ReflectionMethod $reflectionMethod The method to be called.
+     * @param \Hirudo\Core\Module $owner The module that is the owner of the task.
+     */
     function __construct(\ReflectionMethod $reflectionMethod,
             \Hirudo\Core\Module $owner) {
-        $this->annotationReader = new AnnotationReader();
+        $this->dependenciesManager = ModulesContext::instance()->getDependenciesManager();
         $this->reflectionMethod = $reflectionMethod;
         $this->module = $owner;
 
-        $this->isPostOnly = $this->annotationReader->getMethodAnnotation($reflectionMethod, "Hirudo\Core\Annotations\HttpPost") != null;
+        $this->isPostOnly = $this->dependenciesManager->getMethodMetadataById($this->reflectionMethod, "Hirudo\Core\Annotations\HttpPost") != null;
 
         foreach ($this->reflectionMethod->getParameters() as /* @var $parameter \ReflectionParameter */$parameter) {
 
@@ -68,47 +82,93 @@ class Task {
         }
     }
 
+    /**
+     * Gets the method name.
+     * 
+     * @return string 
+     */
     public function getName() {
         return $this->reflectionMethod->name;
     }
 
-
+    /**
+     * Gets the method's parameters.
+     * 
+     * @return array<\ReflectionParameter> 
+     */
     public function getGetParams() {
         return $this->getParams;
     }
 
+    /**
+     * Gets the method's parameters that should be resolved from POST.
+     * 
+     * @return array<\ReflectionParameter> 
+     */
     public function getPostParams() {
         return $this->postParams;
     }
 
+    /**
+     * Sets the value of a method's param.
+     * 
+     * @param string $paramName The parameter name.
+     * @param mixed $value The value for the parameter.
+     */
     public function setParamValue($paramName, $value) {
         $this->paramValues[$paramName] = $value;
     }
 
+    /**
+     * Gets the value of a method's param.
+     * 
+     * @param string $paramName
+     * @return type 
+     */
     public function getParamValue($paramName) {
         return $this->paramValues[$paramName];
     }
 
+    /**
+     * Executes the task.
+     */
     public function invoke() {
         $this->reflectionMethod->invokeArgs($this->module, $this->paramValues);
     }
 
+    /**
+     * Gets the method's meta data.
+     * 
+     * @return array<mixed> An annotations list. 
+     */
     public function getTaskAnnotations() {
-        return $this->annotationReader->getMethodAnnotations($this->reflectionMethod);
-    }
-
-    public function getTaskAnnotation($annotationName) {
-        return $this->annotationReader->getMethodAnnotation($this->reflectionMethod, $annotationName);
+        return $this->dependenciesManager->getMethodMetadata($this->reflectionMethod);
     }
 
     /**
-     *
+     * Gets a single annotation from the merhod.
+     * 
+     * @param string $annotationName The fully qualified annotation class or annotation id.
+     * @return mixed The annotation 
+     */
+    public function getTaskAnnotation($annotationName) {
+        return $this->dependenciesManager->getMethodMetadataById($this->reflectionMethod, $annotationName);
+    }
+
+    /**
+     * Gets the module that owns the method to be executed.
+     * 
      * @return Module
      */
     public function getModule() {
         return $this->module;
     }
 
+    /**
+     * Says if the method must be executed only if the request method is POST
+     * 
+     * @return boolean True if the method must be executed only if the request method is POST 
+     */
     public function isPostOnly() {
         return $this->isPostOnly;
     }

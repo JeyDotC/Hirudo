@@ -22,7 +22,11 @@
 namespace Hirudo\Core;
 
 /**
- *
+ * <p>An interface for any templating system such as Smarty, Twig, PATemplate, etc.</p>
+ * 
+ * <p>Implementors must be capable of loading and rendering the template resource
+ * based on the view name.</p>
+ * 
  * @author JeyDotC
  */
 interface TemplatingInterface {
@@ -46,6 +50,13 @@ interface TemplatingInterface {
      */
     public function display($moduleDir, $view);
     
+    /**
+     * Tells to the Templating system the location of an extensions folder, allowing
+     * it to load and use its extensions.
+     * 
+     * @param string $path
+     * @return void 
+     */
     public function addExtensionsPath($path);
 }
 

@@ -30,7 +30,7 @@ use Hirudo\Impl\StandAlone\lib\JURI;
  */
 class SARouting extends Routing {
 
-    public function appAction($app, $module, $task = "index", $params = array()) {
+    public function appAction($app, $module, $task = "index", array $params = array()) {
 
         $uri = JURI::getInstance();
         $query = $uri->getQuery(true);

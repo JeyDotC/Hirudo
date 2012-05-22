@@ -24,7 +24,7 @@ namespace Hirudo\Core\Annotations;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * Description of Export
+ * Signals a class, method or property as a service exporter.
  *
  * @author JeyDotC
  * 
@@ -34,13 +34,16 @@ use Doctrine\Common\Annotations\Annotation\Target;
 final class Export {
 
     /**
+     * The id of the service to be exported.
      * 
      * @var string 
      */
     public $id = "";
 
     /**
-     *
+     * An optional factory method which is in charge of returning
+     * an instance of the service.
+     * 
      * @var string 
      */
     public $factory = "";

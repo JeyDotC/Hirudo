@@ -31,7 +31,7 @@ require_once "JoomlaHelper.php";
  */
 class JoomlaRouting extends Routing {
 
-    public function appAction($app, $module, $task = "index", $params = array()) {
+    public function appAction($app, $module, $task = "index", array $params = array()) {
         $mainframe = JoomlaHelper::getMainframe();
 
         $itemId = \JRequest::getVar("Itemid", 2);

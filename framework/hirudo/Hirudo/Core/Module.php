@@ -29,12 +29,45 @@ use Hirudo\Core\Annotations\Import;
 use Hirudo\Core\Context\Routing;
 use Hirudo\Core\Exceptions\HirudoException;
 
+/**
+ * A class that allows the edition of the response headers.
+ */
 class HeaderBag {
 
-    public function setHeader($key, $value) {
-        $this->addHeader("$key: $value");
+    /**
+     * Sets a header value.
+     * 
+     * @param string $key The header key.
+     * @param string|array $value The header value. If the value is an array, all of its elements are added under the same key given as the first parameter.
+     * @param boolean $replace Tells if the new value shall replace the existing one.
+     */
+    public function setHeader($key, $value, $replace = true) {
+        if (is_array($value)) {
+            foreach ($value as $header) {
+                $this->setHeader($key, $header, false);
+            }
+        } else {
+            $this->addHeader("$key: $value", $replace);
+        }
     }
 
+    /**
+     * <p>Adds the given headers list.</p>
+     * 
+     * <p>The array can have any conbination of these elements styles.</p>
+     * 
+     * <div>
+     * <code>
+     * array(
+     *      "Header-Key" => "Header-Value", //Key/Value pairs
+     *      "Header-Key: Header-Value", //Single values with all header information in a single string
+     *      "Header-Key" => array("Value1", "Value2", "...ValueN"), //A list of header values under a single key.
+     * )
+     * </code>
+     * </div>
+     * 
+     * @param array $headers List of headers. 
+     */
     public function setHeaders(array $headers) {
         foreach ($headers as $key => $value) {
             if (is_numeric($key)) {
@@ -45,6 +78,13 @@ class HeaderBag {
         }
     }
 
+    /**
+     * <p>An utility method that causes the resulting output to be downloaded
+     * instead of being rendered in browser.</p>
+     * 
+     * @param string $mime The mime type of the file to be downloaded.
+     * @param string $filename A file name for the file to be downloaded.
+     */
     public function setContentsForDownload($mime, $filename) {
         $this->setHeaders(array(
             "Content-type" => $mime,
@@ -56,8 +96,8 @@ class HeaderBag {
         set_time_limit(0);
     }
 
-    private function addHeader($header) {
-        header($header);
+    private function addHeader($header, $replace = true) {
+        header($header, $replace);
     }
 
 }
@@ -69,13 +109,15 @@ class HeaderBag {
 abstract class Module {
 
     /**
-     *
-     * @var string The name of the application this module belongs to.
+     * The name of the application this module belongs to.
+     * 
+     * @var string
      */
     private $appName = "";
 
     /**
-     * This module name.
+     * This module's name.
+     * 
      * @var string
      */
     private $name;
@@ -88,16 +130,24 @@ abstract class Module {
     private $view;
 
     /**
-     *
-     * @var string The result of the rendering 
+     * The result of the rendering.
+     * 
+     * @var string 
      */
     private $rendered = null;
+
+    /**
+     * The name of the task being executed.
+     * 
+     * @var string
+     */
     private $currentTask;
     private $defaultTask = "index";
 
     /**
-     *
-     * @var array Data associated to this module.
+     * Data associated to this module.
+     * 
+     * @var array
      */
     private $module = array("messages" => array());
 
@@ -130,33 +180,35 @@ abstract class Module {
     protected $context;
 
     /**
-     *
+     * An utility object for response header edition.
+     * 
      * @var HeaderBag
      */
     protected $headers;
 
     /**
-     *
-     * @var type 
+     * @var array<mixed> 
      * 
-     * #decision: Make this static?
+     * TODO: #decision: Make this static?
      */
     private $loadedComponents = array();
 
     /**
-     * Adds a variable to the view.
+     * Adds a variable to the view so it can access it via the name.
      * 
-     * @param string $name
-     * @param mixed $value 
-     * @see TemplatesManager->assign()
+     * @param string $name The name of the variable.
+     * @param mixed $value The value of the variable.
+     * 
+     * @see TemplatingInterface->assign()
      */
     protected function assign($name, $value) {
         $this->view->assign($name, $value);
     }
 
     /**
-     *
-     * @param array $array 
+     * Batch assign.
+     * 
+     * @param array $array A list of key/value pairs where keys are the variable names.
      */
     protected function assignMany(array $array) {
         foreach ($array as $name => $value) {
@@ -165,11 +217,12 @@ abstract class Module {
     }
 
     /**
-     *
+     * Retreives a component instance.
+     * 
      * @param string $name The name of the component in "ComponentName" or "AppName::ComponentName"
      * format.
      * 
-     * @return mixed
+     * @return mixed The resulting component.
      */
     protected function component($name) {
         $app = $this->appName;
@@ -195,9 +248,11 @@ abstract class Module {
     }
 
     /**
-     *
-     * @param type $taskName
-     * @return \Hirudo\Core\Task 
+     * Builds a task from it's name. If the module doesn't have a corresponding
+     * method, the default task is returned, normally the "index" task.
+     * 
+     * @param string $taskName Thask's name.
+     * @return \Hirudo\Core\Task The representation of the task to be executed.
      */
     public function getTask($taskName) {
         $this->onModuleReady();
@@ -215,8 +270,9 @@ abstract class Module {
     }
 
     /**
-     *
-     * @return string 
+     * Returns the result of the view rendering as a string.
+     * 
+     * @return string The rendered view.
      */
     public function getRendered() {
         return $this->rendered;
@@ -232,7 +288,7 @@ abstract class Module {
     }
 
     /**
-     * <p>Displays the given view of the current module.</p>
+     * <p>Displays the given view to the browser.</p>
      * 
      * <p>In adition to the data provided by the module, the view will have these
      * variables available.</p>
@@ -255,12 +311,22 @@ abstract class Module {
      *      </dd>
      * </dl>
      * 
-     * @param type $view 
+     * @param string $view The view name. It can be just the view name if it belongs
+     * to the current module or a string with the "AppName::ModuleName::viewName" format
+     * if the view belongs to another module.
      */
     protected function display($view = null) {
         $this->rendered = $this->renderGet($view);
     }
 
+    /**
+     * <p>Renders the given view and returns it as a string without sending it to
+     * the browser.</p>
+     * 
+     * @param string $view The view name
+     * @return string The result of the rendering.
+     * @see Module->display()
+     */
     protected function renderGet($view) {
         $viewParts = $this->_getViewParts($view);
 
@@ -280,16 +346,24 @@ abstract class Module {
     /**
      * Adds a message to the view which normally will be rendered as a notification.
      * 
-     * @param Message $message 
+     * @param Message $message The message to be displayed.
      */
     public function addMessage(Message $message) {
         $this->module["messages"][] = $message;
     }
 
+    /**
+     * Sets the name of the default task. By default is "index".
+     * 
+     * @param string $defaultTask 
+     */
     public function setDefaultTask($defaultTask) {
         $this->defaultTask = $defaultTask;
     }
 
+    /**
+     * Creates a module. 
+     */
     function __construct() {
         $this->headers = new HeaderBag();
         $this->context = ModulesContext::instance();
@@ -324,7 +398,7 @@ abstract class Module {
     }
 
     /**
-     * Gets the path to this module.
+     * Gets the directory in which this module is located.
      * 
      * @return string The directory that contains this module. 
      */
@@ -338,25 +412,32 @@ abstract class Module {
         return $dir;
     }
 
+    /**
+     * Gets the module's name.
+     * 
+     * @return string 
+     */
     public function getName() {
         return $this->name;
     }
 
+    /**
+     * Gets the name of the app this module belongs to.
+     * 
+     * @return string 
+     */
     public function getAppName() {
         return $this->appName;
     }
 
+    /**
+     * Sets the name of the app this module belongs to.
+     * 
+     * @param string $appName 
+     */
     public function setAppName($appName) {
         $this->appName = $appName;
         $this->route->setAppName($this->appName);
-    }
-
-    /**
-     *
-     * @return HirudoException 
-     */
-    public function getLastUnhandledException() {
-        return $this->context->getCurrentCall()->getLastUnhandledException();
     }
 
     private function _getUnqualifiedClassName($qualifiedClassName) {

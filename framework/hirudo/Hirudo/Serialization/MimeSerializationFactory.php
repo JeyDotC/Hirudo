@@ -24,7 +24,12 @@ namespace Hirudo\Serialization;
 require_once "SerializationFactory.php";
 
 /**
- * A default SerializationFactory implementation 
+ * A default SerializationFactory implementation. This one creates
+ * the serializer and the de-serializer based on a mime type.
+ * 
+ * If the mime given to request the serializer or de-serializer has a slash ('/'),
+ * the text before it will be ignored, so if $mimeType is "application/json", only the
+ * "json" part of the string will be taken into account.
  */
 class MimeSerializationFactory implements SerializationFactory {
 
@@ -32,11 +37,17 @@ class MimeSerializationFactory implements SerializationFactory {
     private $deserializerIinstances = array();
 
     public function getMime($mimeType) {
-        //Obtiene el sufijo de la implementacion.
         $slashPos = strrpos($mimeType, "/");
         return strtolower(substr($mimeType, $slashPos + 1));
     }
 
+    /**
+     * Gets a Serializer based on the given mime type.
+     * 
+     * @param string $mimeType A string with the mime type. 
+     * 
+     * @return EntitySerializerBase 
+     */
     function getSerializer($mimeType = null) {
         $mime = $this->getMime($mimeType);
 
@@ -49,6 +60,12 @@ class MimeSerializationFactory implements SerializationFactory {
         return $this->serializerIinstances[$mime];
     }
 
+    /**
+     * Gets a de-Serializer based on the given mime type.
+     * 
+     * @param string $mimeType
+     * @return EntityDeserializerBase 
+     */
     function getDeserializer($mimeType = null) {
         $mime = $this->getMime($mimeType);
 

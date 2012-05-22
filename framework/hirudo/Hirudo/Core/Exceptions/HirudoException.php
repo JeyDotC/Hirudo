@@ -24,9 +24,15 @@ namespace Hirudo\Core\Exceptions;
 use Hirudo\Core\Context\ModuleCall;
 
 /**
- * Description of HirudoException
+ * <p>Base class for exceptions occurred on Hirudo. This class contains the
+ * current ModuleCall.</p>
+ * 
+ * <p>All exceptions thrown by an application that doesn't inherit this class, 
+ * are wraped into an instance of this class as the 'previous' exception.</p>
+ * 
  *
  * @author JeyDotC
+ * @see \Exception
  */
 class HirudoException extends \Exception {
 
@@ -36,6 +42,13 @@ class HirudoException extends \Exception {
      */
     private $call;
 
+    /**
+     * Creates a HirudoException.
+     * 
+     * @param ModuleCall $call The module call in which this exception were thrown.
+     * @param string $message A useful message.
+     * @param \Exception $previous An inner exception.
+     */
     public function __construct(ModuleCall $call, $message = "",
             $previous = null) {
 
@@ -51,14 +64,27 @@ class HirudoException extends \Exception {
         $this->call = $call;
     }
 
+    /**
+     * Gets the name of the application in which this exception were thrown.
+     * @return string The application name.
+     */
     public function getApp() {
         return $this->call->getApp();
     }
 
+    /**
+     * Gets the name of the module in which this exception were thrown.
+     * 
+     * @return string The module name.
+     */
     public function getModule() {
         return $this->call->getModule();
     }
 
+    /**
+     * Gets the task of the application in which this exception were thrown.
+     * @return string The task name.
+     */
     public function getTask() {
         return $this->call->getTask();
     }

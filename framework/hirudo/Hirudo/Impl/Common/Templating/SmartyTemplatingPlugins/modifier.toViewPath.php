@@ -23,7 +23,7 @@ use Hirudo\Lang\Loader;
 
 /**
  * <p>Converts the given string into a valid absolute path like smarty_modifier_toPath
- * plugin, but this time the path has only three parts, the application, the 
+ * plugin, but in this time the path has only three parts, the application, the 
  * module and the view name, so any view from any module can be included or inherited.
  *  
  * @param string $string The complete name of the view with format AppName::ModuleName::viewName

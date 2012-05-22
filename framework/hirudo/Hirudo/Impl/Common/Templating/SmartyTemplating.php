@@ -27,8 +27,7 @@ use Hirudo\Core\Context\ModulesContext;
 \Hirudo\Lang\Loader::using("framework::libs::smarty::Smarty.class");
 
 /**
- * Has the only smarty instance. Allows adding variables to the view and 
- * rendering any view from the module.
+ * A Smarty based templating system.
  *
  * @Hirudo\Core\Annotations\Export(id="templating", factory="instance")
  * 
@@ -41,6 +40,9 @@ class SmartyTemplating implements TemplatingInterface {
      */
     private $smarty;
 
+    /**
+     * Creates a new instance of smarty templating.
+     */
     function __construct() {
         $this->smarty = new \Smarty();
         $this->addExtensionsPath(dirname(__FILE__) . "/SmartyTemplatingPlugins");
@@ -91,6 +93,11 @@ class SmartyTemplating implements TemplatingInterface {
         return self::$instance;
     }
 
+    /**
+     * Adds a path to smarty extensions so these can be used in the templates.
+     * 
+     * @param string $path The absolute path to the smarty extensions.
+     */
     public function addExtensionsPath($path) {
         $this->smarty->addPluginsDir($path);
     }

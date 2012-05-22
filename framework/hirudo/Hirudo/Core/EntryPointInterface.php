@@ -3,7 +3,7 @@
 namespace Hirudo\Core;
 
 /**
- * Description of EntryPointInterface
+ * @unused
  *
  * @author JeyDotC
  */

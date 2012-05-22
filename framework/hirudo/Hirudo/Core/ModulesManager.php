@@ -21,7 +21,7 @@
 
 namespace Hirudo\Core;
 
-use Hirudo\Core\DependencyInjection\AnnotationLoader as AnnotationLoader;
+use Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager;
 use Hirudo\Core\Exceptions\ModuleNotFoundException;
 use Hirudo\Core\Context as Context;
 use Hirudo\Core\Context\ModuleCall;
@@ -33,7 +33,8 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Description of ModulesManager
+ * This class serves as a front controller in Hirudo, is the main entry
+ * point of the framework.
  *
  * @author JeyDotC
  */
@@ -59,12 +60,18 @@ class ModulesManager extends EventDispatcher {
 
     /**
      *
-     * @var AnnotationLoader
+     * @var AnnotationsBasedDependenciesManager
      */
     private $dependencyManager;
 
+    /**
+     * Creates a new modules manager. 
+     * 
+     * @param array<string> $implementationClasses A list of fully qualified 
+     * class names that implement the core functionalities of Hirudo.
+     */
     function __construct(array $implementationClasses) {
-        $this->dependencyManager = new AnnotationLoader();
+        $this->dependencyManager = new AnnotationsBasedDependenciesManager();
         $this->dependencyManager->addServices($implementationClasses);
         $this->context = Context\ModulesContext::instance();
         $this->context->setDependenciesManager($this->dependencyManager);
@@ -78,8 +85,10 @@ class ModulesManager extends EventDispatcher {
     }
 
     /**
+     * Executes the requested action based on the request parameters or the
+     * default configuration.
      * 
-     * @return string The programs output. 
+     * @return string The program's output. 
      */
     public function run() {
         //Get the call from request.
@@ -105,6 +114,12 @@ class ModulesManager extends EventDispatcher {
         return $output;
     }
 
+    /**
+     * Executes a ModuleCall.
+     * 
+     * @param ModuleCall $call The call to be executed.
+     * @return string The resulting output.
+     */
     public function executeCall(ModuleCall $call) {
         //Register the applications namespace
         self::$autoLoader->registerNamespace($call->getApp(), Loader::toSinglePath("$this->rootAppDir", ""));
@@ -130,11 +145,22 @@ class ModulesManager extends EventDispatcher {
         return $module->getRendered();
     }
 
+    /**
+     * Sets the autoloader class.
+     * 
+     * @param type $loader 
+     */
     public static function setAutoLoader($loader) {
         self::$autoLoader = $loader;
     }
 
-    private function resolveTaskRequirements(Task &$task) {
+    /**
+     * Resolves the task's requirements from request.
+     * 
+     * @param Task $task
+     * @throws Exception 
+     */
+    protected function resolveTaskRequirements(Task &$task) {
         if ($task->isPostOnly() && $this->context->getRequest()->method() != "POST") {
             throw new Exception("The task [{$this->context->getCurrentCall()}] accepts POST requests only");
         }
@@ -157,7 +183,7 @@ class ModulesManager extends EventDispatcher {
     }
 
     /**
-     *
+     * 
      * @param ModuleCall $call
      * @return \Hirudo\Core\Module
      * @throws ModuleNotFoundException 

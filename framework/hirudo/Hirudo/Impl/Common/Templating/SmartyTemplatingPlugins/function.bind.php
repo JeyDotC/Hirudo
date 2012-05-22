@@ -20,10 +20,22 @@
  */
 
 /**
- *
+ * <p>Binds a field to an entity property, Generally a parameter
+ * of a task. Usage: 
+ * <code>
+ *  <input {bind="taskParameter.property.innerProperty"} id="myField" type="someType" />
+ * </code></p>
+ * 
+ * <p>Note the absence of the <strong>name=</strong> attribute, the attribute is generated
+ * by this method. In fact, the same thing can be achieved by just using the array-like
+ * naming, like this: 
+ * <code>
+ *  <input name="taskParameter[property][innerProperty]" id="myField" type="someType" />
+ * </code></p>
+ * 
  * @param array $params
  * @param Smarty_Internal_Template $template
- * @return <type>
+ * @return string The resulting name attribute.
  */
 function smarty_function_bind($params, $template) {
     $to = $params["to"];

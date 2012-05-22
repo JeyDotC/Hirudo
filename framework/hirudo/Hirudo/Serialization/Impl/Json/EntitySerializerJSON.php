@@ -24,8 +24,9 @@ namespace Hirudo\Serialization\Impl\Json;
 use Hirudo\Serialization\EntityDeserializerBase;
 
 /**
- * Description of EntitySerializerJSON
- *
+ * JSON implementation of EntitySerializerBase. Converts the given object
+ * into a JSON string.
+ * 
  * @author JeyDotC
  */
 class EntitySerializerJSON extends EntitySerializerBase {

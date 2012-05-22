@@ -25,6 +25,8 @@ use Hirudo\Core\Context\Session;
 use Hirudo\Core\Annotations\Export;
 
 /**
+ * Represents a session, this implementation delegates the session management to
+ * the Joomla! JSession class.
  * 
  * @Export(id="session")
  */

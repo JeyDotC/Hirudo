@@ -22,18 +22,31 @@
 namespace Hirudo\Serialization;
 
 /**
+ * An entity normilizer. Converts an entity into an array so it can be easily 
+ * serialized into any text format.
  */
 class EntityToArrayConverter {
 
     private $propertiesArePublic = false;
     private $getPrefix = "get";
 
+    /**
+     * Creates a new EntityToArrayConverter
+     * 
+     * @param boolean $propertiesArePublic Tells if properties are public, so the
+     * object can be converted with a simple object_get_vars().
+     * 
+     * @see object_get_vars
+     */
     public function __construct($propertiesArePublic = false) {
         $this->propertiesArePublic = $propertiesArePublic;
     }
 
     /**
-     * @return array 
+     * Converts the given entity into an array.
+     * 
+     * @param mixed $entity The entity to be converted.
+     * @return array The array that represents the entity. 
      */
     public function convert($entity) {
         //If it's not an entity, there's no reason to convert it.

@@ -27,6 +27,7 @@ use Hirudo\Core\Context\ModulesContext;
 /**
  *
  * @author JeyDotC
+ * @unused
  */
 class RequestBinder {
 

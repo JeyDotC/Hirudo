@@ -21,6 +21,11 @@
 
 namespace Hirudo\Core\Context;
 
+/**
+ * A collection of data asociated to the user.
+ * 
+ * TODO: This class is an absurdity!
+ */
 class UserExtraData {
 
     private $data = array();
@@ -40,6 +45,11 @@ class UserExtraData {
 
 }
 
+/**
+ * This class represents the current user. 
+ * 
+ * TODO: setter methods look unnecessary
+ */
 abstract class Principal {
 
     private $name;
@@ -47,32 +57,71 @@ abstract class Principal {
     private $permissions = array();
     private $data;
 
+    /**
+     * Creates a ne Principal object. 
+     */
     function __construct() {
         $this->data = new UserExtraData();
     }
 
+    /**
+     * Determines if this user is logged in.
+     * 
+     * @return boolean True if this user is logged in, false otherwise.
+     */
     public abstract function isAnonimous();
 
+    /**
+     * Gets the current user name. The name with which the user logs in.
+     * 
+     * @return string the current user name. 
+     */
     public function getName() {
         return $this->name;
     }
 
+    /**
+     * Sets the current user name.
+     * 
+     * @param string $name The new user name.
+     */
     public function setName($name) {
         $this->name = $name;
     }
 
+    /**
+     * Usually the user password, this may be null depending of the security
+     * system implementation.
+     * 
+     * @return type 
+     */
     public function getCredential() {
         return $this->credentials;
     }
 
+    /**
+     * Sets the current user's credential.
+     * 
+     * @param string $credential The new credential.
+     */
     public function setCredential($credential) {
         $this->credentials = $credential;
     }
 
+    /**
+     * Gets the array of roles associated to this user.
+     * 
+     * @return array The list of roles associated to this user. 
+     */
     public function getPermissions() {
         return $this->permissions;
     }
 
+    /**
+     * Sets the array of roles associated to this user.
+     * 
+     * @param array $permissions A new list of roles associated to this user. 
+     */
     public function setPermissions($permissions) {
         $this->permissions = $permissions;
     }

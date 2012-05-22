@@ -3,7 +3,8 @@
 namespace Hirudo\Lang;
 
 /**
- * Description of String
+ * This is a static class that includes a more organized way to invoke
+ * the PHP string functions.
  *
  * @author JeyDotC
  */

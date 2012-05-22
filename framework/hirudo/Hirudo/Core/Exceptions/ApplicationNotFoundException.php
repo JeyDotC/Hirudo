@@ -22,12 +22,18 @@
 namespace Hirudo\Core\Exceptions;
 
 /**
- * Description of ApplicationNotFoundException
+ * Thrown when there is an attempt to call a non existent application
  *
  * @author JeyDotC
  */
 class ApplicationNotFoundException extends HirudoException {
 
+    /**
+     * Creates an ApplicationNotFoundException.
+     * 
+     * @param string $app The application name.
+     * @param string $path The directory in which the application should be.
+     */
     function __construct($app, $path) {
         parent::__construct(new ModuleCall($app, ""), "Application '$app' not found at '$path'");
     }

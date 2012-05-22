@@ -33,9 +33,10 @@ use Hirudo\Core\Annotations\Import;
 use Hirudo\Core\DependencyInjection\DependenciesManager;
 
 /**
- * Description of ModulesContext
+ * This class holds the instances of the objects that implements
+ * the Hirudo abstract classes.
  *
- * @author Virtualidad
+ * @author JeyDotC
  */
 class ModulesContext {
 
@@ -60,8 +61,9 @@ class ModulesContext {
     private $currentCall;
 
     /**
-     *
-     * @return ModuleCall
+     * Gets the ModuleCall that is being executed.
+     * 
+     * @return ModuleCall The current ModuleCall.
      */
     public function getCurrentCall() {
         return $this->currentCall;
@@ -77,7 +79,10 @@ class ModulesContext {
     }
 
     /**
-     *
+     * Gets the current ModulesContext instance. Use this method to
+     * obtain a ModulesContext object that is actually holding the context 
+     * instances.
+     * 
      * @return ModulesContext
      */
     public static function instance() {
@@ -99,7 +104,8 @@ class ModulesContext {
     }
 
     /**
-     *
+     * Gets the current user which is stored in session. 
+     * 
      * @return Principal
      */
     public function getCurrentUser() {
@@ -107,7 +113,8 @@ class ModulesContext {
     }
 
     /**
-     *
+     * Gets the current session.
+     * 
      * @return Session
      */
     public function &getSession() {
@@ -115,7 +122,6 @@ class ModulesContext {
     }
 
     /**
-     *
      * @param Session $session
      * @Import(id="session")
      */
@@ -124,7 +130,6 @@ class ModulesContext {
     }
 
     /**
-     *
      * @param Request $request 
      * @Import(id="request")
      */
@@ -133,7 +138,8 @@ class ModulesContext {
     }
 
     /**
-     *
+     * Gets the current request object.
+     * 
      * @return Request
      */
     public function &getRequest() {
@@ -141,7 +147,8 @@ class ModulesContext {
     }
 
     /**
-     *
+     * Gets the current configuration object. 
+     * 
      * @return AppConfig 
      */
     public function &getConfig() {
@@ -157,6 +164,15 @@ class ModulesContext {
         $this->config = $config;
     }
 
+    /**
+     * Gets the current implementation of the Routing class.
+     * <strong>Note:</strong> The returned object is not bound to any module,
+     * so, the action() and moduleAction() methods will return the URL with the
+     * Application and Module parts empty. Always use the appAction() method if
+     * you are getting the routing object fron this method.
+     * 
+     * @return Routing 
+     */
     public function getRouting() {
         return $this->routing;
     }
@@ -171,7 +187,8 @@ class ModulesContext {
     }
 
     /**
-     *
+     * Gets the templating system object.
+     * 
      * @return TemplatingInterface 
      */
     public function getTemplating() {
@@ -188,7 +205,8 @@ class ModulesContext {
     }
 
     /**
-     *
+     * Gets the current object responsible for the dependency injection.
+     * 
      * @return DependenciesManager
      */
     public function getDependenciesManager() {
@@ -196,7 +214,8 @@ class ModulesContext {
     }
 
     /**
-     *
+     * Gets the current assets management system.
+     * 
      * @return Assets
      */
     public function getAssets() {
