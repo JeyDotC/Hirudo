@@ -67,16 +67,18 @@ And here is the source code for your Module Class:
 
 File *SomeModule.php*:
 
-    <?php
-    namespace YourApp\Modules;
-    use Hirudo\Core\Module;
+```php
+<?php
+namespace YourApp\Modules;
+use Hirudo\Core\Module;
 
-    class SomeModule extends Module {
-        public function index() {
-            echo "<h1>Hello world!</h1>";
-        }
+class SomeModule extends Module {
+    public function index() {
+        echo "<h1>Hello world!</h1>";
     }
-    ?>
+}
+?>
+```
 
 With this basic code you can now type in your browser a url like this: 
 *http://Path/To/Hirudo/index.php?controller=YourApp.SomeModule* where 'Path/To/Hirudo/'
