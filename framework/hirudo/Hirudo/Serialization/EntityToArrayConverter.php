@@ -27,30 +27,15 @@ namespace Hirudo\Serialization;
  */
 class EntityToArrayConverter {
 
-    private $propertiesArePublic = false;
-    private $getPrefix = "get";
-
-    /**
-     * Creates a new EntityToArrayConverter
-     * 
-     * @param boolean $propertiesArePublic Tells if properties are public, so the
-     * object can be converted with a simple object_get_vars().
-     * 
-     * @see object_get_vars
-     */
-    public function __construct($propertiesArePublic = false) {
-        $this->propertiesArePublic = $propertiesArePublic;
-    }
-
     /**
      * Converts the given entity into an array.
      * 
      * @param mixed $entity The entity to be converted.
      * @return array The array that represents the entity. 
      */
-    public function convert($entity) {
+    public function convert($entity, $ignoreUnsetValues = false) {
         //If it's not an entity, there's no reason to convert it.
-        if (is_string($entity) || is_scalar($entity)) {
+        if (is_string($entity) || is_scalar($entity) || is_null($entity)) {
             return $entity;
         }
 
@@ -58,29 +43,24 @@ class EntityToArrayConverter {
 
         if (is_array($entity)) {
             foreach ($entity as $object) {
-                $result[] = $this->getProperties($object);
+                $result[] = $this->convert($object);
             }
             return $result;
         }
 
+        $reflection = new \ReflectionClass($entity);
+        foreach ($reflection->getProperties() as /* @var $property \ReflectionProperty */$property) {
+            if (!$property->isStatic()) {
+                $accesible = $property->isPublic();
+                if (!$accesible) {
+                    $property->setAccessible(true);
+                }
+                $value = $property->getValue($entity);
 
-        if (!$this->propertiesArePublic) {
-            $reflectedObject = new ReflectionClass($entity);
-            foreach ($reflectedObject->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-
-                if (stripos($method->name, $this->getPrefix) === 0) {
-                    $propertyValue = $method->invoke($entity);
-                    $index = lcfirst(str_replace($this->getPrefix, "", $method->name));
-
-                    if (!is_object($propertyValue) && !is_array($propertyValue)) {
-                        $result[$index] = $propertyValue;
-                    } else {
-                        $result[$index] = $this->getProperties($propertyValue);
-                    }
+                if (!$ignoreUnsetValues || ($ignoreUnsetValues && !is_null($value))) {
+                    $result[$property->name] = $this->convert($value);
                 }
             }
-        } else {
-            $result = get_object_vars($entity);
         }
 
         return $result;
