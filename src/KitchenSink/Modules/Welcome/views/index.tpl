@@ -1,5 +1,5 @@
 {*
-    
+    ...
 *}
 {extends file="assets::smarty-templates::Master"|toPath}
 
