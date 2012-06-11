@@ -1,5 +1,7 @@
 <?php
 
+namespace Hirudo\Core;
+
 /**
  * «Copyright 2012 Jeysson José Guevara Mendivil(JeyDotC)» 
  * 
@@ -18,9 +20,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace Hirudo\Core;
-
 use Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager;
 use Hirudo\Core\Exceptions\ModuleNotFoundException;
 use Hirudo\Core\Context as Context;
@@ -98,8 +97,6 @@ class ModulesManager extends EventDispatcher {
             $call = $this->getDefaultCall();
         }
 
-        $output = "";
-
         try {
             $output = $this->executeCall($call);
         } catch (\Exception $ex) {
@@ -122,8 +119,8 @@ class ModulesManager extends EventDispatcher {
      */
     public function executeCall(ModuleCall $call) {
         //Register the applications namespace
-        self::$autoLoader->registerNamespace($call->getApp(), Loader::toSinglePath("$this->rootAppDir", ""));
-        //Sets the current call in context possible useless behavior?
+        self::$autoLoader->registerNamespace($call->getApp(), Loader::toSinglePath($this->rootAppDir, ""));
+        //Sets the current call in context. Possible useless behavior?
         $this->context->setCurrentCall($call);
 
         //Constructs the current module.
@@ -162,7 +159,7 @@ class ModulesManager extends EventDispatcher {
      */
     protected function resolveTaskRequirements(Task &$task) {
         if ($task->isPostOnly() && $this->context->getRequest()->method() != "POST") {
-            throw new Exception("The task [{$this->context->getCurrentCall()}] accepts POST requests only");
+            throw new \Exception("The task [{$this->context->getCurrentCall()}] accepts POST requests only");
         }
 
         if (!$task->isPostOnly()) {
@@ -172,7 +169,7 @@ class ModulesManager extends EventDispatcher {
         }
 
         foreach ($task->getPostParams() as /* @var $param ReflectionParameter */$param) {
-            if ($param->isArray() || $task->isPostOnly()) {
+            if ($param->isArray() || ($param->getClass() == null && $task->isPostOnly())) {
                 $task->setParamValue($param->name, $this->context->getRequest()->post($param->name, $task->getParamValue($param->name)));
             } else {
                 $object = $param->getClass()->newInstance();

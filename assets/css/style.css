@@ -1,14 +1,141 @@
-form {
-    border-right-style: dotted;
-    border-left-style: dotted;
-    border-bottom-style: dotted;
-    border-top-style: dotted;
-    border-right-width: 1px;
-    border-left-width: 1px;
-    border-bottom-width: 1px;
-    border-top-width: 1px;
-    border-right-color: #999999;
-    border-left-color: #999999;
-    border-bottom-color: #999999;
-    border-top-color: #999999;
+/*
+    Navigation bar styles
+*/
+#Navigation {
+    float: left;
+    width: 131px;
+}
+
+#Navigation ul li {
+    margin-bottom: 5px;
+}
+
+/**
+    Notifications styles:
+*/
+.message {
+    padding: 15px;
+    color: #FFFFFF;
+    text-shadow:1px 1px 1px #333333;
+}
+
+.message.success{
+    background-image: linear-gradient(bottom, #459934 0%, #98E698 100%);
+    background-image: -o-linear-gradient(bottom, #459934 0%, #98E698 100%);
+    background-image: -moz-linear-gradient(bottom, #459934 0%, #98E698 100%);
+    background-image: -webkit-linear-gradient(bottom, #459934 0%, #98E698 100%);
+    background-image: -ms-linear-gradient(bottom, #459934 0%, #98E698 100%);
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, #459934),
+        color-stop(1, #98E698)
+        );
+}
+
+.message.error{
+    background-image: linear-gradient(bottom, #993434 0%, #E69A9A 100%);
+    background-image: -o-linear-gradient(bottom, #993434 0%, #E69A9A 100%);
+    background-image: -moz-linear-gradient(bottom, #993434 0%, #E69A9A 100%);
+    background-image: -webkit-linear-gradient(bottom, #993434 0%, #E69A9A 100%);
+    background-image: -ms-linear-gradient(bottom, #993434 0%, #E69A9A 100%);
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, #993434),
+        color-stop(1, #E69A9A)
+        );
+}
+
+.message.info{
+    background-image: linear-gradient(bottom, #349299 0%, #9ACEE6 100%);
+    background-image: -o-linear-gradient(bottom, #349299 0%, #9ACEE6 100%);
+    background-image: -moz-linear-gradient(bottom, #349299 0%, #9ACEE6 100%);
+    background-image: -webkit-linear-gradient(bottom, #349299 0%, #9ACEE6 100%);
+    background-image: -ms-linear-gradient(bottom, #349299 0%, #9ACEE6 100%);
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, #349299),
+        color-stop(1, #9ACEE6)
+        );
+}
+
+.message.warning{
+    background-image: linear-gradient(bottom, #999934 0%, #E6E69A 100%);
+    background-image: -o-linear-gradient(bottom, #999934 0%, #E6E69A 100%);
+    background-image: -moz-linear-gradient(bottom, #999934 0%, #E6E69A 100%);
+    background-image: -webkit-linear-gradient(bottom, #999934 0%, #E6E69A 100%);
+    background-image: -ms-linear-gradient(bottom, #999934 0%, #E6E69A 100%);
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, #999934),
+        color-stop(1, #E6E69A)
+        );
+}
+
+
+/**
+    General contents styles.
+*/
+#Content {
+    margin-top: 5px;
+    float: left;
+    width: 65%;
+    border-left: 1px solid #DDD;
+    padding-left: 15px;
+}
+
+/*Styles borrowed from Github, I'll give them back when Hirudo has a visual identity, I promise.*/
+
+body {
+    font: 13px Helvetica,arial,freesans,clean,sans-serif;
+    color: #333;
+    margin: 0;
+}
+
+a {
+    color: #4183C4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 100%;
+    font: inherit;
+}
+
+table tr th,
+table tr td {
+    border: 1px solid #CCC;
+    text-align: left;
+    margin: 0;
+    padding: 6px 13px;
+}
+
+table tr:nth-child(2n) {
+    background-color: #F8F8F8;
+}
+
+#Header{
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #FAFAFA;
+    background: -moz-linear-gradient(#FAFAFA, #EAEAEA);
+    background: -webkit-linear-gradient(#FAFAFA, #EAEAEA);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')";
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid #CACACA;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4),0 0 10px rgba(0, 0, 0, 0.1);
 }

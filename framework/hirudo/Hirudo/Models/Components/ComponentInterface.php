@@ -24,6 +24,7 @@ namespace Hirudo\Models\Components;
 /**
  *
  * @author JeyDotC
+ * @todo Give functionality to this
  */
 interface ComponentInterface {
     //put your code here

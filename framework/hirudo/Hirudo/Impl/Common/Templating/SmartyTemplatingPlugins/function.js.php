@@ -13,9 +13,9 @@ use Hirudo\Core\Context\ModulesContext;
  * 
  * @see \Hirudo\Core\Context\Assets For more information about assets management.
  */
-function smarty_function_css($params, $template) {
+function smarty_function_js($params, $template) {
     $path = $params["file"];
     
-    return ModulesContext::instance()->getAssets()->addCSS($path);
+    return ModulesContext::instance()->getAssets()->addJavaScript($path);
 }
 ?>

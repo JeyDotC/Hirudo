@@ -29,14 +29,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\ContainerAware;
 
 //A quick fix for a weird issue with the autoloader when dealing with annotations.
-Loader::using("framework::hirudo::Hirudo::Core::Annotations::Import");
-Loader::using("framework::hirudo::Hirudo::Core::Annotations::Export");
+Loader::using("framework::hirudo::Hirudo::Core::Annotations::*");
 
 /**
  * A dependencies manager that uses the doctrine's doc-block annotations system
  * to determine dependencies and load services.
  * 
  * @author JeyDotC
+ * @todo The annotations reader can't autoload annotations for some reason.
  */
 class AnnotationsBasedDependenciesManager extends ContainerAware implements DependenciesManager {
 

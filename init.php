@@ -45,7 +45,7 @@ Loader::using(array(
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\Yaml\Yaml;
-use Doctrine\Common\Annotations\AnnotationRegistry as AnnotationRegistry;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 
 $autoloadPath = Loader::toSinglePath("ext::config::Autoload", ".yml");
 $namespaces = Yaml::parse($autoloadPath);
@@ -59,4 +59,5 @@ $loader->registerNamespaces($namespaces);
 
 $loader->register();
 Hirudo\Core\ModulesManager::setAutoLoader($loader);
+AnnotationRegistry::registerLoader(array($loader, "loadClass"));
 ?>
