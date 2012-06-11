@@ -4,7 +4,7 @@ src/
 What Goes Here
 --------------
 
-Welcome to the *src* folder, here goes your applications.
+Welcome to the *src* folder, here go your applications.
 
 In Hirudo, an *application* is just a folder with two folders inside:
 
@@ -61,7 +61,7 @@ The resulting directory listing looks like this:
             SomeModule/
                 views/
                     index.tpl <-- This is a view file.
-                SomeModule.php
+                SomeModule.php <-- Our module
 
 And here is the source code for your Module Class:
 
@@ -84,10 +84,25 @@ With this basic code you can now type in your browser a url like this:
 *http://Path/To/Hirudo/index.php?controller=YourApp.SomeModule* where 'Path/To/Hirudo/'
 gereally is localhost/HirudoFolder/ and a big "Hello world" message should appear.
 
+### An importatnt note about Models in Hirudo
+
+Hirudo by itself doesn't provide a persistence layer, instead, there will be some
+extensions that addresses data persistence which will be quite easy to install and
+use.
+
+This is due to the need of allowing various persistence mechanisms, like Restful
+clients, ORM based persistence, etc.
+
+There will be an extensions repository for Hirudo very soon, in which you will find various
+persistence mechanisms.
+
+Anyway, Hirudo uses a Components based model, where a component is just a class
+that deals with persistence, this way, an extension mechanism may provide a base
+class for components.
+
 ### Where to go now
 
-To have more complete view of the modules creation, you can visit the sample application
-(*SampleApp/* folder) and look at the *README.md* file or just look at the files in it if you
-find them self explanatory enough. 
-
-The models layer [coming soon...].
+To have a more complete view of the modules creation, you can visit the sample application
+(The [KitchenSink/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink) folder) 
+and look at the *README.md* file or just look at the files in it if you find them self explanatory 
+enough.

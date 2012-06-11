@@ -29,6 +29,11 @@
                     {$foo->getDescription()}
                 </td>
                 <td>
+                    {*
+                    Note that when we call the {url} function, we also add an 'id' param;
+                    in fact, any parameter different from 'call' will be added to the url as
+                    a GET param.
+                    *}
                     <a href="{url call="KitchenSink::CrudModule::view" id=$foo->getId()}">View</a> | 
                     <a href="{url call="KitchenSink::CrudModule::update" id=$foo->getId()}">Edit</a> | 
                     <a href="{url call="KitchenSink::CrudModule::remove"}">Remove</a>

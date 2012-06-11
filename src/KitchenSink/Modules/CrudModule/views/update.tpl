@@ -8,7 +8,14 @@
     <input type="hidden" {bind to="foo.id"} id="foo_id" value="{$foo->getId()}" />
     <label for="foo_description">Description:</label>
     <div>
-        <textarea name="foo[description]" id="foo_description">{$foo->getDescription()}</textarea>
+        {*
+        Here is where we can see another Hirudo function, the 'bind'
+        function, is like typing name="foo[bar][name]", but with a litle
+        clearer syntax.
+        
+        You can use any of both options, Hirudo wont complain ;)
+        *}
+        <textarea {bind to="foo.description"} id="foo_description">{$foo->getDescription()}</textarea>
     </div>
     <fieldset>
         <input type="hidden" {bind to="foo.bar.id"} id="foo_bar_id" value="{$foo->getBar()->getId()}" />

@@ -299,11 +299,11 @@ abstract class Module {
      *          An array with data about this module. The array consists of these
      *          values:
      *          <ul>
-     *              <li>meta =&gt; The metadata asociated to this module. (MetadataCollection)</li>
      *              <li>appName =&gt; The the name of the application this module belongs to.</li>
      *              <li>name =&gt; The name of this module.</li>
+     *              <li>task =&gt; The task that have been requested.</li>
      *              <li>context =&gt; A reference to the ModulesContext instance.</li>
-     *              <li>views =&gt; The absolute path to the views folder for this module.</li>
+     *              <li>views =&gt; The absolute path to the views folder for this module. [This value seems to be unnecesary, is left for historical reasons]</li>
      *              <li>baseURL =&gt; The current base URL</li>
      *              <li>messages =&gt; The list of added {@link Message} objects</li>
      *          </ul>
