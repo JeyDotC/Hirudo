@@ -162,19 +162,17 @@ class ModulesManager extends EventDispatcher {
             throw new \Exception("The task [{$this->context->getCurrentCall()}] accepts POST requests only");
         }
 
-        if (!$task->isPostOnly()) {
-            foreach ($task->getGetParams() as /* @var $param \ReflectionParameter */$param) {
-                $task->setParamValue($param->name, $this->context->getRequest()->get($param->name, $task->getParamValue($param->name)));
-            }
+        foreach ($task->getGetParams() as /* @var $param \ReflectionParameter */$param) {
+            $task->setParamValue($param->name, $this->context->getRequest()->get($param->name, $task->getParamValue($param->name)));
         }
 
         foreach ($task->getPostParams() as /* @var $param ReflectionParameter */$param) {
-            if ($param->isArray() || ($param->getClass() == null && $task->isPostOnly())) {
-                $task->setParamValue($param->name, $this->context->getRequest()->post($param->name, $task->getParamValue($param->name)));
-            } else {
+            if ($param->getClass() != null) {
                 $object = $param->getClass()->newInstance();
                 $this->context->getRequest()->bind($object, $this->context->getRequest()->post($param->name));
                 $task->setParamValue($param->name, $object);
+            } else {
+                $task->setParamValue($param->name, $this->context->getRequest()->post($param->name, $task->getParamValue($param->name)));
             }
         }
     }
