@@ -3,7 +3,6 @@
 namespace KitchenSink\Models\Entities;
 
 /**
- * Description of Bar
  *
  * @author JeyDotC
  */

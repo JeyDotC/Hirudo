@@ -1,6 +1,6 @@
 <?php
 
-namespace KitchenSink\Modules;
+namespace KitchenSink\Modules\Errors;
 
 use Hirudo\Core\Module;
 

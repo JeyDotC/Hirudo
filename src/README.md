@@ -47,7 +47,8 @@ is necesary to do these things:
 
 1. Create a Folder in the *Modules/* directory of the App with the name of the module.
 2. Create a class with exactly the same name of the Module's folder. Such class must:
-    * Be in the `AppName\Modules` namespace, where 'AppName' is the name of your App.
+    * Be in the `AppName\Modules\ModuleName` namespace, where 'AppName' is the name of your App.
+      and ModuleName is the name of the module. 
     * Extend the `Hirudo\Core\Module` class.
 3. Create a *views/* folder in which to put the views associated to the module. This
 step is optional if the module renders it's results without recurring to
@@ -69,7 +70,7 @@ File *SomeModule.php*:
 
 ```php
 <?php
-namespace YourApp\Modules;
+namespace YourApp\Modules\SomeModule;
 use Hirudo\Core\Module;
 
 class SomeModule extends Module {

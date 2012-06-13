@@ -1,6 +1,6 @@
 {*
     As you can see for this smarty function, this view inherits from a master view.
-    That view is located at assets/smarty-templates/Master.tpl.
+    That view is located at [assets/smarty-templates/Master.tpl](https://github.com/JeyDotC/Hirudo/blob/master/assets/smarty-templates/Master.tpl).
     
     Note that the string given to the function has the format "path::to::myTemplate"
     and is modified by the 'toPath' modifier.

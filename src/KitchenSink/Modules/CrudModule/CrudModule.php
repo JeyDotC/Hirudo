@@ -1,6 +1,6 @@
 <?php
 
-namespace KitchenSink\Modules;
+namespace KitchenSink\Modules\CrudModule;
 
 use Hirudo\Core\Module;
 use KitchenSink\Models\Entities\Foo;
@@ -129,7 +129,7 @@ class CrudModule extends Module {
     public function save(Foo $foo) {
         $this->component("Foo")->save($foo);
         
-        $this->addMessage(new Message("Foo have been saved.", "Saved!", Message::SUCCESS));
+        $this->addMessage(new Message("The foo have been saved.", "Saved!", Message::SUCCESS));
         
         $this->index();
     }

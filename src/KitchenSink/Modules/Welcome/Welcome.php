@@ -1,6 +1,6 @@
 <?php
 
-namespace KitchenSink\Modules;
+namespace KitchenSink\Modules\Welcome;
 
 use Hirudo\Core\Module;
 use Hirudo\Core\Util\Message;
@@ -19,7 +19,8 @@ class Welcome extends Module {
     public function index() {
         /**
          * Renders the index.tpl file which can be found at the views/ folder of this
-         * module.
+         * module. As you can notice, the filename of the view coincides with the
+         * method name, this is not mandatory, but is a good convention.
          * 
          * The given view name can be any in the views/ folder of this module. To 
          * call a view from another module, the string should have the format: 

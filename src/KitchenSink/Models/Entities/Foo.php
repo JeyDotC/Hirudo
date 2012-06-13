@@ -14,7 +14,13 @@ class Foo {
     private $description;
 
     /**
-     *
+     * Note the use of the fully qualified class name in the var documentation tag, 
+     * this is due to a limitation in the \ReflectionClass class.
+     * 
+     * Doing this part of the class' documentation
+     * is important for useful things like the module's parameter solving, seen
+     * in the module CrudModule on its method save().
+     * 
      * @var KitchenSink\Models\Entities\Bar
      */
     private $bar;

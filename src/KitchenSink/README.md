@@ -5,6 +5,9 @@ Welcome to the KitchenSink sample application. This is an app that shows some
 basic features of Hirudo, such as error handling, basic page rendering or
 method parameters solving.
 
+The source files in this application are overly documented to explain the features
+used.
+
 What Goes Here
 --------------
 

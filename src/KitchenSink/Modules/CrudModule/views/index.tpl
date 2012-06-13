@@ -41,7 +41,7 @@
             </tr>
         {foreachelse}
             <tr>
-                <td colspan="2">
+                <td colspan="3">
                     There is no Foo to see.
                 </td>
             </tr>

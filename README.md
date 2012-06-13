@@ -18,6 +18,15 @@ There will be two implementations at first:
 *Hirudo* comes from latin and means *leech*, that's because the framework ideally
 delegates the implementation of it's functionalities to the containing CMS.
 
+Documentation
+-------------
+
+The Hirudo's documentation is, for now, a work in progress, currently you can see our
+Tutorial documentation (starting above) or the [API documentation](https://github.com/JeyDotC/Hirudo-docs).
+Both are made to be read directly in the repository they are in.
+
+If you've been using Hirudo for a while, you can contribute to the [Wiki](https://github.com/JeyDotC/Hirudo/wiki)
+
 Tutorial
 --------
 

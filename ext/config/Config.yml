@@ -1,10 +1,19 @@
-# The folder where your applications are in. [Optional]
+# The folder where your applications are in. [Optional] it is default to "src"
 businessRoot: "src"
+
 # Is Hirudo in development mode? [Optional]
 debug: true
-# This is a module to be called in case of any exception, the value is in format: "AppName::ModuleName::methodName"
+
+# This is the default module, this is used if no module is requested the value is  
+# in format: "AppName::ModuleName::methodName".[Optional]
+defaultModule: "KitchenSink::Welcome::index"
+
+# This is a module to be called in case of any exception, the value is in format: 
+# "AppName::ModuleName::methodName"
 onModuleNotFound: "KitchenSink::Errors::notFound"
-# This is a module to be called if a requested module doesn't exist, the value is in format: "AppName::ModuleName::methodName"
+
+# This is a module to be called if a requested module doesn't exist, the value is 
+# in format: "AppName::ModuleName::methodName"
 onError: "KitchenSink::Errors::index"
 
 # A db connection [Optional]
