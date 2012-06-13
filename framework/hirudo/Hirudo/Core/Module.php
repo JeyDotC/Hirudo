@@ -189,9 +189,16 @@ abstract class Module {
     /**
      * @var array<mixed> 
      * 
-     * TODO: #decision: Make this static?
+     * @todo #decision: Make this static?
      */
     private $loadedComponents = array();
+
+    /**
+     *
+     * @var \ReflectionClass 
+     */
+    private $reflector;
+
 
     /**
      * Adds a variable to the view so it can access it via the name.
@@ -365,14 +372,17 @@ abstract class Module {
      * Creates a module. 
      */
     function __construct() {
+        $this->reflector = new \ReflectionClass($this);
         $this->headers = new HeaderBag();
         $this->context = ModulesContext::instance();
-        $this->name = $this->_getUnqualifiedClassName(get_class($this));
+        $this->name = $this->reflector->getShortName();
         $this->currentUser = $this->context->getCurrentUser();
         $this->request = $this->context->getRequest();
         $this->route = $this->context->getRouting();
         $this->route->setModuleName($this->name);
         $this->view = $this->context->getTemplating();
+        $this->appName = str_replace("\\Modules\\$this->name", "", $this->reflector->getNamespaceName());
+        $this->route->setAppName($this->appName);
     }
 
     private function _getViewParts($view) {
@@ -428,27 +438,6 @@ abstract class Module {
      */
     public function getAppName() {
         return $this->appName;
-    }
-
-    /**
-     * Sets the name of the app this module belongs to.
-     * 
-     * @param string $appName 
-     */
-    public function setAppName($appName) {
-        $this->appName = $appName;
-        $this->route->setAppName($this->appName);
-    }
-
-    private function _getUnqualifiedClassName($qualifiedClassName) {
-        $name = $qualifiedClassName;
-
-        $lastBackSlashPos = strrpos($qualifiedClassName, "\\");
-        if ($lastBackSlashPos !== false) {
-            $name = substr($qualifiedClassName, $lastBackSlashPos + 1);
-        }
-
-        return $name;
     }
 
 }

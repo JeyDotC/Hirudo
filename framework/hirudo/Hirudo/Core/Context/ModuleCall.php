@@ -55,6 +55,10 @@ class ModuleCall {
         $this->task = $task;
         $this->lastUnhandledException = $lastUnhandledException;
     }
+    
+    public function isEmpty() {
+        return empty($this->app) && empty($this->module);
+    }
 
     /**
      * A factory method to create a module call from a string with the "AppName::ModuleName::taskName"

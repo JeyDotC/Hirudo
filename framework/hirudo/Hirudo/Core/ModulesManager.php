@@ -93,8 +93,12 @@ class ModulesManager extends EventDispatcher {
         //Get the call from request.
         $call = $this->context->getRequest()->buildModuleCall();
 
-        if (!$this->moduleExists($call)) {
+        if ($call->isEmpty()) {
             $call = $this->getDefaultCall();
+        }
+        
+        if (!$this->moduleExists($call)) {
+            $call = $this->getModuleNotFoundCall();
         }
 
         try {
@@ -126,7 +130,6 @@ class ModulesManager extends EventDispatcher {
         //Constructs the current module.
         $module = $this->resolveModule($call);
         $this->dependencyManager->resolveDependencies($module);
-        $module->setAppName($call->getApp());
 
         $task = $module->getTask($call->getTask());
         $this->resolveTaskRequirements($task);
@@ -184,9 +187,7 @@ class ModulesManager extends EventDispatcher {
      * @throws ModuleNotFoundException 
      */
     private function resolveModule(ModuleCall $call) {
-        $file = $this->getFileFromCall($call);
         $className = $this->getClassNameFromCall($call);
-        require_once $file;
         return new $className();
     }
 
@@ -200,7 +201,7 @@ class ModulesManager extends EventDispatcher {
     }
 
     private function getClassNameFromCall(ModuleCall $call) {
-        return "{$call->getApp()}\\Modules\\{$call->getModule()}";
+        return "{$call->getApp()}\\Modules\\{$call->getModule()}\\{$call->getModule()}";
     }
 
     /**
@@ -208,6 +209,11 @@ class ModulesManager extends EventDispatcher {
      * @return ModuleCall
      */
     private function getDefaultCall() {
+        $defaultValue = $this->context->getConfig()->get("onModuleNotFound");
+        return ModuleCall::fromString($this->context->getConfig()->get("defaultModule", $defaultValue));
+    }
+
+    private function getModuleNotFoundCall() {
         return ModuleCall::fromString($this->context->getConfig()->get("onModuleNotFound"));
     }
 
