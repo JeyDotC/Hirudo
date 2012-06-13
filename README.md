@@ -55,12 +55,12 @@ look into this folder, unless you are very curious or even have an idea to inpro
 the framework itself ;)
 
 * [src/](http://github.com/JeyDotC/Hirudo/tree/master/src): Here goes your applications. In this place you will put your fantastic 
-application code; for more information please look at the *README.md* file inside.
+application code.
 
 * [index.php](http://github.com/JeyDotC/Hirudo/blob/master/index.php): This is the main entry point for the stand alone version, it just instantiates
-the modulemanager and makes it execute.
+the ModulesManager class and makes it execute.
 
-* [hirudo.php](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.php): This is the main entry point for the Joomla! version, it just instantiates the modulemanager and makes it execute wraped into a Joomla! controller. 
+* [hirudo.php](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.php): This is the main entry point for the Joomla! version, it just instantiates the ModulesManager class and makes it execute wraped into a Joomla! controller. 
 To make it work as a component just rename this file with the name of your component.
 
 * [init.php](http://github.com/JeyDotC/Hirudo/blob/master/init.php): This file just initializes some stuff and creates a couple of constants, it's presence

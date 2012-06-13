@@ -25,13 +25,13 @@ typical Create, Read, Update, Delete use case.
 
 ### Where to go now
 
-To know the very basics of Hirudo, go to [Welcome/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Welcome),
+To know the very basics of Hirudo, go to [Welcome/](https://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Modules/Welcome),
 as it uses the most simple characteristics of the framework.
 
-To see a way of error handling, look at the [Errors/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Errors)
+To see a way of error handling, look at the [Errors/](https://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Modules/Errors)
 module, it represents just a way of managing exceptions.
 
-And finally, to know the basics of **doing** things, look at the [CrudModule/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/CrudModule).
+And finally, to know the basics of **doing** things, look at the [CrudModule/](https://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Modules/CrudModule).
 
 ###The end of readmes: rise of the source files.
 
