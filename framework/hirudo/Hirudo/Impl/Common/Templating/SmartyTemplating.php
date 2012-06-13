@@ -23,8 +23,9 @@ namespace Hirudo\Impl\Common\Templating;
 
 use Hirudo\Core\TemplatingInterface;
 use Hirudo\Core\Context\ModulesContext;
+use Hirudo\Lang\Loader;
 
-\Hirudo\Lang\Loader::using("framework::libs::smarty::Smarty.class");
+Loader::using("framework::libs::smarty::Smarty.class");
 
 /**
  * A Smarty based templating system.
@@ -48,7 +49,15 @@ class SmartyTemplating implements TemplatingInterface {
         $this->addExtensionsPath(dirname(__FILE__) . "/SmartyTemplatingPlugins");
 
         $isDebuging = ModulesContext::instance()->getConfig()->get("debug");
-        $this->smarty->caching = !$isDebuging;
+
+        if ($isDebuging) {
+            $this->smarty->caching = \Smarty::CACHING_OFF;
+        }else{
+            $this->smarty->caching = \Smarty::CACHING_LIFETIME_CURRENT;
+        }
+        
+        $this->smarty->setCacheDir(Loader::toSinglePath("ext::cache::smarty::cache", ""))
+                ->setCompileDir(Loader::toSinglePath("ext::cache::smarty::compile", ""));
     }
 
     /**
