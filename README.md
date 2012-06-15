@@ -1,5 +1,10 @@
+*\- To my lord Jesus Christ, who didn't scatimate himself for all of us so we could call him brother and friend.*
+
 HIRUDO FRAMEWORK
 ================
+
+Overview
+--------
 
 Hirudo is a small, general purpose framework for PHP 5.3+ which goal is to abstract 
 developers from challenges of creating extensions for CMS.
