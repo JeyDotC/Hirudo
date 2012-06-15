@@ -21,7 +21,6 @@
 
 namespace Hirudo\Core\Events;
 
-use Symfony\Component\EventDispatcher\Event;
 use Hirudo\Core\Context\ModuleCall;
 use Hirudo\Core\Task;
 
@@ -31,7 +30,7 @@ use Hirudo\Core\Task;
  *
  * @author JeyDotC
  */
-class BeforeTaskEvent extends Event {
+class BeforeTaskEvent extends HirudoEventBase {
 
     const NAME = "beforeTaskEvent";
 
@@ -108,6 +107,10 @@ class BeforeTaskEvent extends Event {
      */
     public function getCallReplaced() {
         return $this->callReplaced;
+    }
+
+    public static function name() {
+        return self::NAME;
     }
 
 }

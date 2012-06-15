@@ -23,9 +23,6 @@ namespace Hirudo\Core\Events;
 
 namespace Hirudo\Core\Events;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Annotations\ForCall;
-
 /**
  * <p>Listens to the BeforeTaskEvent which iccurs before the task is executed and after
  * the task's requirements are satisfied.</p>
@@ -34,16 +31,14 @@ use Annotations\ForCall;
  * 
  * @author JeyDotC
  */
-abstract class BeforeTaskEventListener implements EventSubscriberInterface {
+abstract class BeforeTaskEventListener extends HirudoEventListenerBase {
 
-    /**
-     * Subscribes this event listener to the BeforeTaskEvent.
-     * 
-     * @return array An array indicating to the event dispatcher which events will
-     * it listen to and which method will manage the event.
-     */
-    public static function getSubscribedEvents() {
-        return array(BeforeTaskEvent::NAME => "onBeforeTask");
+    protected static function eventName() {
+        return BeforeTaskEvent::NAME;
+    }
+
+    protected static function methodName() {
+        return "beforeTask";
     }
 
     /**
@@ -58,46 +53,6 @@ abstract class BeforeTaskEventListener implements EventSubscriberInterface {
      * @see BeforeTaskEvent
      */
     protected abstract function beforeTask(BeforeTaskEvent $e);
-
-    /**
-     * A wraper function for the beforeTask method. This method checks the annotations
-     * associated to the event listener.
-     * 
-     * @param BeforeTaskEvent $e 
-     * 
-     * @see Annotations\ForCall
-     */
-    public function onBeforeTask(BeforeTaskEvent $e) {
-        $annotation = \Hirudo\Core\Context\ModulesContext::instance()->getDependenciesManager()->getClassMetadataById(new \ReflectionClass($this), "Hirudo\Core\Events\Annotations\ForCall");
-        $isCallable = true;
-
-        if (!is_null($annotation)) {
-            $isCallable = $this->isCallable($annotation);
-        }
-
-        if ($isCallable) {
-            $this->beforeTask($e);
-        }
-    }
-
-    private function isCallable(Annotations\ForCall $forCall) {
-        $call = \Hirudo\Core\Context\ModulesContext::instance()->getCurrentCall();
-
-        if (!empty($forCall->app) && $forCall->app != $call->getApp()) {
-            return false;
-        }
-
-        if (!empty($forCall->module) && $forCall->module != $call->getModule()) {
-            return false;
-        }
-
-        if (!empty($forCall->task) && $forCall->task != $call->getTask()) {
-            return false;
-        }
-
-        return true;
-    }
-
 }
 
 ?>

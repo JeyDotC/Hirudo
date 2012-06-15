@@ -24,8 +24,9 @@ use Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager;
 use Hirudo\Core\Exceptions\ModuleNotFoundException;
 use Hirudo\Core\Context as Context;
 use Hirudo\Core\Context\ModuleCall;
-use Hirudo\Lang\Loader as Loader;
+use Hirudo\Lang\Loader;
 use Hirudo\Core\Events\BeforeTaskEvent;
+use Hirudo\Core\Events\HirudoStartEvent;
 use Hirudo\Core\Exceptions\HirudoException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
@@ -96,10 +97,12 @@ class ModulesManager extends EventDispatcher {
         if ($call->isEmpty()) {
             $call = $this->getDefaultCall();
         }
-        
+
         if (!$this->moduleExists($call)) {
             $call = $this->getModuleNotFoundCall();
         }
+        
+        $this->dispatch(HirudoStartEvent::NAME, new HirudoStartEvent());
 
         try {
             $output = $this->executeCall($call);
@@ -248,8 +251,19 @@ class ModulesManager extends EventDispatcher {
     }
 
     private function registerNamespaces($dir, array $namespaces) {
-        foreach ($namespaces as $namespace) {
-            self::$autoLoader->registerNamespace($namespace, $dir);
+        foreach ($namespaces as $key => $value) {
+            $folder = $dir;
+            $namespace = $value;
+
+            if (is_string($key)) {
+                $folder = $value;
+                $namespace = $key;
+
+                if (!is_dir($value)) {
+                    $folder = Loader::toSinglePath($folder, "");
+                }
+            }
+            self::$autoLoader->registerNamespace($namespace, $folder);
         }
     }
 
@@ -275,14 +289,16 @@ class ModulesManager extends EventDispatcher {
         $cacheFile = Loader::toSinglePath("ext::cache::extensions.config.cache", ".yml");
         $extensions = array();
 
-        if (!is_file($cacheFile)) {
+        if ($this->context->getConfig()->get("debug") || !is_file($cacheFile)) {
             $extensionsDir = new \Hirudo\Lang\DirectoryHelper(new \RecursiveDirectoryIterator(Loader::toSinglePath("ext::libs", "")));
-            $files = $extensionsDir->listFiles(2);
+            $files = $extensionsDir->listDirectories(1);
 
             foreach ($files as $file) {
-                $extensions[dirname($file)] = Yaml::parse($file);
+                if (is_file($file . DS . "manifest.yml")) {
+                    $extensions[$file] = Yaml::parse($file . DS . "manifest.yml");
+                }
             }
-            if (!Loader::isDir("ext::cache::")) {
+            if (!Loader::isDir("ext::cache")) {
                 mkdir(Loader::toSinglePath("ext::cache", ""));
             }
 

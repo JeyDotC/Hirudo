@@ -48,10 +48,15 @@ use Symfony\Component\Yaml\Yaml;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 $autoloadPath = Loader::toSinglePath("ext::config::Autoload", ".yml");
-$namespaces = Yaml::parse($autoloadPath);
-$namespaces = $namespaces["namespaces"];
-foreach ($namespaces as $namespace => &$value) {
-    $namespaces[$namespace] = Loader::toSinglePath($value, "");
+$namespacesDir = Yaml::parse($autoloadPath);
+$namespaces = array();
+
+foreach ($namespacesDir["namespaces"] as $namespace => &$value) {
+    $dir = $value;
+    if(!is_dir($dir)){
+        $dir = Loader::toSinglePath($value, "");
+    }
+    $namespaces[$namespace] = $dir;
 }
 
 $loader = new UniversalClassLoader();

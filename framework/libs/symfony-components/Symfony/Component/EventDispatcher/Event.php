@@ -30,8 +30,8 @@ namespace Symfony\Component\EventDispatcher;
  *
  * @api
  */
-class Event
-{
+class Event {
+
     /**
      * @var Boolean Whether no further event listeners should be triggered
      */
@@ -45,8 +45,7 @@ class Event
      *
      * @api
      */
-    public function isPropagationStopped()
-    {
+    public function isPropagationStopped() {
         return $this->propagationStopped;
     }
 
@@ -59,8 +58,8 @@ class Event
      *
      * @api
      */
-    public function stopPropagation()
-    {
+    public function stopPropagation() {
         $this->propagationStopped = true;
     }
+
 }

@@ -173,12 +173,12 @@ final class Loader {
             throw new LogicException("The extension is expected to be a string");
         }
     }
-    
+
     public static function isDir($dir) {
-        $dir = self::toSinglePath($dir, DS);
-        is_dir($dir);
+        $dir = self::toSinglePath($dir, "");
+        return is_dir($dir);
     }
-    
+
     public static function isFile($file, $extension = Loader::DEFAULT_EXT) {
         $file = self::toSinglePath($file, $extension);
         is_file($file);
@@ -237,6 +237,30 @@ class DirectoryHelper {
             throw new LogicException("depth must be positive.");
         }
         $paths = $this->recursiveListFiles($this->dir, $depth);
+        return $paths;
+    }
+
+    public function listDirectories($depth = 1) {
+        if ($depth < 0) {
+            throw new LogicException("depth must be positive.");
+        }
+        $paths = $this->recursiveListDirectories($this->dir, $depth);
+        return $paths;
+    }
+
+    private function recursiveListDirectories(RecursiveDirectoryIterator &$dir,
+            $depth = 1) {
+        $paths = array();
+
+        while ($dir->valid()) {
+            if (!$dir->isDot() && $dir->isDir() && $depth > 1) {
+                $paths = array_merge($paths, $this->recursiveListFiles($dir->getChildren(), $depth - 1));
+            } else if (!$dir->isDot() && $dir->isDir()) {
+                $paths[] = $dir->getPathname();
+            }
+            $dir->next();
+        }
+
         return $paths;
     }
 

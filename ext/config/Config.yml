@@ -1,5 +1,5 @@
-# The folder where your applications are in. [Optional] it is default to "src"
-businessRoot: "src"
+# The folder where your applications are in. [Optional] it defaults to "src"
+#businessRoot: "src"
 
 # Is Hirudo in development mode? [Optional]
 debug: true
@@ -16,7 +16,13 @@ onModuleNotFound: "KitchenSink::Errors::notFound"
 # in format: "AppName::ModuleName::methodName"
 onError: "KitchenSink::Errors::index"
 
-# A db connection [Optional]
-sa-db-connection: { dsn: "mysql:host=localhost;dbname=myDataBase", user: "root", password: 123456}
-
 # Indeed, you can put whatever configuration variables needed here:
+
+# Yes, this is a DBAL configuration for doctrine, supposing that you are using the
+# Hirudo's DoctrineDataAccess extension ;)
+dbal:
+  dbname: mydatabase
+  user: root
+  password: 123456
+  host: localhost
+  driver: pdo_mysql
