@@ -39,7 +39,7 @@ class Task {
      * @var \ReflectionMethod
      */
     private $reflectionMethod;
-    private $annotationReader;
+    
     /**
      *
      * @var DependencyInjection\DependenciesManager 

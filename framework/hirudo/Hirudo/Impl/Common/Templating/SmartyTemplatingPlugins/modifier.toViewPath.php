@@ -41,7 +41,7 @@ function smarty_modifier_toViewPath($string) {
 
     $parts = explode("::", $string);
 
-    $resultingPath = Loader::toSinglePath("$base{$parts[0]}::Modules::{$parts[1]}::{$parts[2]}", ".tpl");
+    $resultingPath = Loader::toSinglePath("$base::{$parts[0]}::Modules::{$parts[1]}::views::{$parts[2]}", ".tpl");
 
     return $resultingPath;
 }
