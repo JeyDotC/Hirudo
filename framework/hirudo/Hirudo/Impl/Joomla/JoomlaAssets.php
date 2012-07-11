@@ -13,25 +13,20 @@ use Hirudo\Core\Annotations\Export;
  */
 class JoomlaAssets extends Assets {
 
-    private $assetsPath;
+    private $componentName;
 
     function __construct() {
         $componentName = JoomlaHelper::getMainframe()->scope;
-        $this->assetsPath = $componentName;
-    }
-
-    public function load($assetPath) {
-
-        return "components/$component/assets/$assetPath";
+        $this->componentName = $componentName;
     }
 
     public function addCSS($cssPath) {
-        JHTML::_("script", $cssPath, $this->componentName);
+        JHTML::_("script", $this->resolveLocalPath($cssPath), $this->componentName);
         return "";
     }
 
     public function addJavaScript($jsPath) {
-        JHTML::_("stylesheet", $jsPath, $this->componentName);
+        JHTML::_("stylesheet", $this->resolveLocalPath($jsPath), $this->componentName);
         return "";
     }
 

@@ -1,4 +1,4 @@
-{extends file="assets::smarty-templates::Master"|toPath}
+{extends file="KitchenSink::smarty-templates/Master"|toAssetPath}
 
 {block name="title"}Notifications{/block}
 

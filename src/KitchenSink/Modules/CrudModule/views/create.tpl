@@ -1,4 +1,4 @@
-{extends file="assets::smarty-templates::Master"|toPath}
+{extends file="KitchenSink::smarty-templates/Master"|toAssetPath}
 
 
 {block name="header"}Crud Module | Create{/block}

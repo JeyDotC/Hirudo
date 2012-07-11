@@ -14,11 +14,11 @@ use Hirudo\Core\Annotations\Export;
 class SAssets extends Assets {
 
     public function addCSS($cssPath) {
-        return $this->generateCSSTag("./assets/$cssPath");
+        return $this->generateCSSTag("./{$this->resolveLocalPath($cssPath)}");
     }
 
     public function addJavaScript($jsPath) {
-        return $this->generateScriptTag("./assets/$jsPath");
+        return $this->generateScriptTag("./{$this->resolveLocalPath($jsPath)}");
     }
 
 }

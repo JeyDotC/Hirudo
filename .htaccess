@@ -7,3 +7,7 @@ deny from all
 <Files init.php>
 deny from all
 </Files>
+
+<filesMatch "\.(css|js)$">
+allow from all
+</filesMatch>

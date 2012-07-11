@@ -20,7 +20,7 @@
     
     Note: The toPath modifier is a custom modifier from Hirudo.
 *}
-{extends file="assets::smarty-templates::Master"|toPath}
+{extends file="KitchenSink::smarty-templates/Master"|toAssetPath}
 
 {*Here we override the title of the parent template, which is at the head > title tag.*}
 {block name="title"}Welcome to Hirudo{/block}

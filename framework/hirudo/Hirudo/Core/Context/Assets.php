@@ -83,6 +83,20 @@ abstract class Assets {
         return "<link type='text/css' rel='stylesheet' href='$cssPath' />";
     }
 
+    protected function resolveLocalPath($path) {
+        $result = $path;
+        
+        if(strpos($path, "::") !== false){
+            $parts = explode("::", $path);
+            $src = ModulesContext::instance()->getConfig()->get("businessRoot", "src");
+            $base = trim(str_replace("::", "/", $src), "/");
+            $result = "$base/$parts[0]/assets/$parts[1]";
+        }else{
+            $result = "assets/$result";
+        }
+        
+        return $result;
+    }
 }
 
 ?>
