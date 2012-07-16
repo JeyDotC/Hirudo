@@ -48,4 +48,8 @@ function hirudo_block_view($delta = '') {
     return $block;
 }
 
+function hirudo_form($node, &$form_state) {
+    return array();
+}
+
 ?>

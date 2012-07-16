@@ -56,11 +56,12 @@ class DrupalPrincipal extends Principal {
     function __construct() {
         parent::__construct();
         global $user;
+
         $this->user = $user;
-        $this->setName($this->user->name);
-        $this->setCredential($this->user->pass);
 
         if (!$this->isAnonimous()) {
+            $this->setName($this->user->name);
+            $this->setCredential($this->user->pass);
             $this->setPermissions($this->user->roles);
         }
     }

@@ -9,10 +9,8 @@ function hirudo_install() {
     $type->orig_type = "hirudo";
 
     $type->description = "Hirudo PHP Web framework";
-    $type->help = "";
+    $type->help = "Please, avoid using this node type to create content as it exists only to hold the Hirudo App.";
     $type->title_label = "";
-    // title_label is required in core; has_title will always be true, unless a
-    // module alters the title field.
     $type->has_title = false;
 
     $type->base = 'node_content';
@@ -25,9 +23,8 @@ function hirudo_install() {
 
     $fakeNode = new stdClass();
     $fakeNode->uid = 1;
-//    $fakeNode->title = "Hirudo";
     $fakeNode->status = 1;
-    $fakeNode->type = "page";
+    $fakeNode->type = "hirudo";
     $fakeNode->language = "und";
     $fakeNode->name = "JeyDotC";
     $fakeNode->is_new = true;
