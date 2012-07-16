@@ -15,7 +15,7 @@ To learn more about Smarty's template inheritance see http://www.smarty.net/inhe
         
         Note: this function doesn't come with Smarty, is an extension provided by Hirudo.
         *}
-        {css file="KitchenSink::css/style.css"}
+        {css file="KitchenSink::css/kitchensink.style.css"}
         {*
         This function renders a <script> tag that points to the given javascript file. 
         The script should be at the assets directory under the js/ folder.

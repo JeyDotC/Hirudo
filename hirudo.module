@@ -2,13 +2,50 @@
 
 require_once 'init.php';
 
+use Hirudo\Core\ModulesManager;
+
 function hirudo_block_info() {
     return array(
         "hirudo" => array(
             "info" => "Hirudo framework",
             'cache' => DRUPAL_NO_CACHE,
+            "visibility" => BLOCK_VISIBILITY_LISTED,
+            "pages" => "App",
         )
     );
+}
+
+function hirudo_block_view($delta = '') {
+    $block = array();
+
+    if ($delta == "hirudo") {
+        //Yep, a Dirty Quick fix to hide titles for this block
+        drupal_add_js("(function ($) { $('.title').hide() })(jQuery);", array('type' => 'inline', 'scope' => 'footer'));
+
+        $manager = new ModulesManager(array(
+                    //The request data.
+                    'Hirudo\Impl\Drupal\DrupalRequest',
+                    //The URL builder.
+                    'Hirudo\Impl\Drupal\DrupalRouting',
+                    //The session Manager.
+                    'Hirudo\Impl\Drupal\DrupalSession',
+                    //The current user.
+                    'Hirudo\Impl\Drupal\DrupalPrincipal',
+                    //The configuration manager.
+                    'Hirudo\Impl\StandAlone\SAppConfig',
+                    //The templating system.
+                    'Hirudo\Impl\Common\Templating\SmartyTemplating',
+                    //The Asset system
+                    'Hirudo\Impl\Drupal\DrupalAssets',
+                ));
+
+        $block = array(
+            "subject" => "Hirudo",
+            "content" => $manager->run()
+        );
+    }
+
+    return $block;
 }
 
 ?>

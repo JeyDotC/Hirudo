@@ -1,0 +1,60 @@
+<?php
+
+function hirudo_install() {
+
+    $type = node_type_set_defaults();
+
+    $type->type = "hirudo";
+    $type->name = "Hirudo";
+    $type->orig_type = "hirudo";
+
+    $type->description = "Hirudo PHP Web framework";
+    $type->help = "";
+    $type->title_label = "";
+    // title_label is required in core; has_title will always be true, unless a
+    // module alters the title field.
+    $type->has_title = false;
+
+    $type->base = 'node_content';
+    $type->custom = true;
+    $type->locked = true;
+    $type->module = true;
+
+    node_type_save($type);
+
+
+    $fakeNode = new stdClass();
+    $fakeNode->uid = 1;
+//    $fakeNode->title = "Hirudo";
+    $fakeNode->status = 1;
+    $fakeNode->type = "page";
+    $fakeNode->language = "und";
+    $fakeNode->name = "JeyDotC";
+    $fakeNode->is_new = true;
+
+    node_save($fakeNode);
+
+    if (drupal_lookup_path("source", "App") === false) {
+        $newPath = array(
+            "source" => "node/{$fakeNode->nid}",
+            "alias" => "App"
+        );
+        path_save($newPath);
+    }
+}
+
+function hirudo_uninstall() {
+    $result = db_query("SELECT nid FROM node WHERE type = :type", array(
+        "type" => "hirudo"
+    ));
+
+    $nids = array();
+    foreach ($result as $obj) {
+        $nids[] = $obj->nid;
+    }
+
+    node_delete_multiple($nids);
+    node_type_delete("hirudo");
+}
+
+?>

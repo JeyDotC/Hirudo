@@ -10,43 +10,44 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Hirudo is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  Hirudo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Hirudo\Impl\StandAlone;
+namespace Hirudo\Impl\Drupal;
 
-use Hirudo\Core\Context\Request as Request,
-    Hirudo\Core\Context\ModuleCall;
+use Hirudo\Core\Context\Request as Request;
+use Hirudo\Core\Context\ModuleCall;
 use Hirudo\Core\Annotations\Export;
 
 /**
- * Description of SARequest
+ * Description of DrupalRequest
  *
  * @author JeyDotC
  * 
  * @Export(id="request", factory="instance")
+ * 
  */
-class SARequest extends Request {
+class DrupalRequest extends Request {
 
     /**
      *
-     * @var SARequest
+     * @var DrupalRequest
      */
     private static $instance;
 
     /**
      *
-     * @return SARequest
+     * @return DrupalRequest
      */
     public static function instance() {
         if (!self::$instance) {
-            self::$instance = new SARequest();
+            self::$instance = new DrupalRequest();
         }
 
         return self::$instance;
@@ -77,8 +78,7 @@ class SARequest extends Request {
     }
 
     public function getURI() {
-        require_once "lib/JURI.php";
-        return JURI::getInstance()->toString();
+        return request_uri();
     }
 
     public function submitted() {
@@ -86,15 +86,11 @@ class SARequest extends Request {
     }
 
     public function buildModuleCall() {
-        $task = $this->get("task", "index");
+        $parts = explode("/", $this->get("h"));
 
-        $controllerParts = explode(".", $this->get("controller", ""));
-        $app = $controllerParts[0];
-        $module = "";
-
-        if (count($controllerParts) > 1) {
-            $module = $controllerParts[1];
-        }
+        $app = isset($parts[0]) ? $parts[0] : "";
+        $module = isset($parts[1]) ? $parts[1] : "";
+        $task = isset($parts[2]) ? $parts[2] : "index";
 
         return new ModuleCall($app, $module, $task);
     }
