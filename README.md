@@ -49,10 +49,6 @@ What Goes Here
 In this folder you can find the root directory of the framework, some important
 files and the folder where you are going to work. Lets explain each one:
 
-* [assets/](http://github.com/JeyDotC/Hirudo/tree/master/assets): In this folder you will put your web stuff, like *css, js and image* files. 
-Also you can put your special templates like, the *Master.tpl* or *Base.twig* templates 
-for example, but the latter is just a convension.
-
 * [ext/](http://github.com/JeyDotC/Hirudo/tree/master/ext): Here goes the extensions to the framework: plugins, smarty plugins, configuration, etc.
 
 * [framework/](http://github.com/JeyDotC/Hirudo/tree/master/framework): Obviously here goes the framework classes; normally you should not
@@ -66,7 +62,13 @@ application code.
 the ModulesManager class and makes it execute.
 
 * [hirudo.php](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.php): This is the main entry point for the Joomla! version, it just instantiates the ModulesManager class and makes it execute wraped into a Joomla! controller. 
-To make it work as a component just rename this file with the name of your component.
+In order to make it work as a component just rename this file with the name of your component.
+
+* [hirudo.info](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.info): This file provides information to dupal so it can interact with the framework as a Drupal Module.
+
+* [hirudo.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.install): This file is called by drupal to install and uninstall hirudo on drupal.
+
+* [hirudo.module](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.module): This file is the entry point for the Drupal implementation of Hirudo.
 
 * [init.php](http://github.com/JeyDotC/Hirudo/blob/master/init.php): This file just initializes some stuff and creates a couple of constants, it's presence
 is due to the need to know the absolute path to the root folder.

@@ -35,9 +35,12 @@ require_once HIRUDO_ROOT . DS . "framework" . DS . "hirudo" . DS . "Hirudo" . DS
 use Hirudo\Lang\Loader;
 
 Loader::Config(HIRUDO_ROOT, DS);
+
+if(!class_exists("Symfony\Component\ClassLoader\UniversalClassLoader")){
+    Loader::using("framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader");
+}
 //Load some useful classes.
 Loader::using(array(
-    "framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader",
     "framework::libs::symfony-components::Symfony::Component::Yaml::*",
     "framework::libs::doctrine-common::Doctrine::Common::Annotations::AnnotationRegistry",
     "framework::hirudo::Hirudo::Lang::Enum",

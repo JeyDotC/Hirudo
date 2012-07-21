@@ -4,7 +4,6 @@ package = Hirudo
 version = VERSION
 core = 7.x
 
-version = "7.x"
 project = "drupal"
 
 files[] = hirudo.install
