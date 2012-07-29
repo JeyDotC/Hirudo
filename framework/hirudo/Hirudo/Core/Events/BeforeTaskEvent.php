@@ -108,6 +108,14 @@ class BeforeTaskEvent extends HirudoEventBase {
     public function getCallReplaced() {
         return $this->callReplaced;
     }
+    
+    /**
+     * 
+     * @return Task
+     */
+    public function getTask() {
+        return $this->task;
+    }
 
     public static function name() {
         return self::NAME;
