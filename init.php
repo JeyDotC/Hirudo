@@ -34,9 +34,10 @@ require_once HIRUDO_ROOT . DS . "framework" . DS . "hirudo" . DS . "Hirudo" . DS
 
 use Hirudo\Lang\Loader;
 
-Loader::Config(HIRUDO_ROOT, DS);
+Loader::Init();
+Loader::addPath(HIRUDO_ROOT);
 
-if(!class_exists("Symfony\Component\ClassLoader\UniversalClassLoader")){
+if (!class_exists("Symfony\Component\ClassLoader\UniversalClassLoader")) {
     Loader::using("framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader");
 }
 //Load some useful classes.
@@ -56,7 +57,7 @@ $namespaces = array();
 
 foreach ($namespacesDir["namespaces"] as $namespace => &$value) {
     $dir = $value;
-    if(!is_dir($dir)){
+    if (!is_dir($dir)) {
         $dir = Loader::toSinglePath($value, "");
     }
     $namespaces[$namespace] = $dir;

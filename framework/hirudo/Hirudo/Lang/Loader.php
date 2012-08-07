@@ -48,18 +48,23 @@ final class Loader {
 
     const DEFAULT_EXT = ".php";
 
-    private static $ROOT = "";
-    private static $DS = "";
+    private static $ROOT = array();
+    private static $DS;
+    private static $loadedPaths = array();
 
     /**
-     * Sets the root folder and the Directory separator for the loader.
-     * 
-     * @param string $ROOT The root folder, preferably an absolute path.
-     * @param string $DS The directory separator.
+     * Sets the Directory separator for the loader.
      */
-    public static function Config($ROOT, $DS) {
-        self::$DS = $DS;
-        self::$ROOT = $ROOT;
+    public static function Init() {
+        self::$DS = DIRECTORY_SEPARATOR;
+    }
+
+    public static function addPath($absolutePath) {
+        if (file_exists($absolutePath) && is_dir($absolutePath)) {
+            self::$ROOT[] = $absolutePath;
+        } else {
+            throw new \LogicException("The \$absolutePath value must be a valid absolute path to a Directory, given: '$absolutePath'");
+        }
     }
 
     /**
@@ -83,6 +88,7 @@ final class Loader {
      */
     public static function using($file, $extension = Loader::DEFAULT_EXT) {
         $paths = array();
+
         if (is_array($file)) {
             $paths = self::arrayToPaths($file, $extension);
         } else {
@@ -138,16 +144,35 @@ final class Loader {
         //Check if the path and extension are correct.
         self::validateArgs($string, $extension);
 
-        $package = str_replace("::", self::$DS, $string);
-        $path = self::$ROOT . self::$DS . $package;
         $paths = array();
-        //Resolve paths for * wildcard.
-        if (strrpos($path, "*") !== false) {
-            $url = str_replace("*", "", $path);
-            $directoryHelper = new DirectoryHelper(new RecursiveDirectoryIterator($url));
-            $paths = $directoryHelper->listFiles();
-        } else {
-            $paths = array($path . $extension);
+        //Avoid doing this process for already loaded strings. Useful for scenarios
+        //where certain strings are very prone to be called more than once.
+        if (!array_key_exists($string, self::$loadedPaths)) {
+            $package = str_replace("::", self::$DS, $string);
+            $isSingleFile = true;
+            //Resolve paths for * wildcard.
+            if (strrpos($package, "*") !== false) {
+                $package = str_replace("*", "", $package);
+                $isSingleFile = false;
+            } else {
+                $package .= $extension;
+            }
+
+            foreach (self::$ROOT as $value) {
+                $path = $value . self::$DS . $package;
+
+                if (file_exists($path)) {
+                    if ($isSingleFile) {
+                        $paths = array($path);
+                    } else {
+                        $directoryHelper = new DirectoryHelper(new RecursiveDirectoryIterator($package));
+                        $paths = $directoryHelper->listFiles();
+                    }
+                    break;
+                }
+            }
+
+            self::$loadedPaths[$string] = $paths;
         }
 
         return $paths;
@@ -155,8 +180,14 @@ final class Loader {
 
     public static function toSinglePath($string,
             $extension = Loader::DEFAULT_EXT) {
-        $paths = self::toPaths($string, $extension);
         $path = "";
+        
+        if (array_key_exists($string, self::$loadedPaths)) {
+            $paths = self::$loadedPaths[$string];
+        } else {
+            $paths = self::toPaths($string, $extension);
+        }
+
         if (count($paths) > 0) {
             $path = $paths[0];
         }

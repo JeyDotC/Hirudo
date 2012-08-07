@@ -59,6 +59,14 @@ class ModulesManager extends EventDispatcher {
     private static $autoLoader;
 
     /**
+     * Small optimization for enviroments where is highly probable to call
+     * various tasks in the same module.
+     * 
+     * @var array<Module>
+     */
+    private static $loadedModules = array();
+
+    /**
      *
      * @var AnnotationsBasedDependenciesManager
      */
@@ -101,7 +109,7 @@ class ModulesManager extends EventDispatcher {
         if (!$this->moduleExists($call)) {
             $call = $this->getModuleNotFoundCall();
         }
-        
+
         $this->dispatch(HirudoStartEvent::NAME, new HirudoStartEvent());
 
         try {
@@ -127,12 +135,12 @@ class ModulesManager extends EventDispatcher {
     public function executeCall(ModuleCall $call) {
         //Register the applications namespace
         self::$autoLoader->registerNamespace($call->getApp(), Loader::toSinglePath($this->rootAppDir, ""));
+        
         //Sets the current call in context. Possible useless behavior?
         $this->context->setCurrentCall($call);
 
         //Constructs the current module.
         $module = $this->resolveModule($call);
-        $this->dependencyManager->resolveDependencies($module);
 
         $task = $module->getTask($call->getTask());
         $this->resolveTaskRequirements($task);
@@ -191,7 +199,12 @@ class ModulesManager extends EventDispatcher {
      */
     private function resolveModule(ModuleCall $call) {
         $className = $this->getClassNameFromCall($call);
-        return new $className();
+        if (!isset(self::$loadedModules[$className])) {
+            $module = new $className();
+            $this->dependencyManager->resolveDependencies($module);
+            self::$loadedModules[$className] = $module;
+        }
+        return self::$loadedModules[$className];
     }
 
     private function moduleExists(ModuleCall $call) {
