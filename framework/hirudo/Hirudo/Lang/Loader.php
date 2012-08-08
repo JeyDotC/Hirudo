@@ -49,14 +49,16 @@ final class Loader {
     const DEFAULT_EXT = ".php";
 
     private static $ROOT = array();
+    private static $defaultRoot;
     private static $DS;
     private static $loadedPaths = array();
 
     /**
      * Sets the Directory separator for the loader.
      */
-    public static function Init() {
+    public static function Init($defaultRoot = "") {
         self::$DS = DIRECTORY_SEPARATOR;
+        self::$defaultRoot = $defaultRoot;
     }
 
     public static function addPath($absolutePath) {
@@ -162,17 +164,27 @@ final class Loader {
                 $path = $value . self::$DS . $package;
 
                 if (file_exists($path)) {
-                    if ($isSingleFile) {
-                        $paths = array($path);
-                    } else {
-                        $directoryHelper = new DirectoryHelper(new RecursiveDirectoryIterator($path));
-                        $paths = $directoryHelper->listFiles();
-                    }
+                    $paths = self::getPaths($path, $isSingleFile);
                     break;
                 }
             }
 
+            if (count($paths) == 0) {
+                $paths = self::getPaths(self::$defaultRoot . self::$DS . $package, $isSingleFile);
+            }
+
             self::$loadedPaths[$string] = $paths;
+        }
+
+        return $paths;
+    }
+
+    private static function getPaths($path, $isSingleFile) {
+        if ($isSingleFile) {
+            $paths = array($path);
+        } else {
+            $directoryHelper = new DirectoryHelper(new RecursiveDirectoryIterator($path));
+            $paths = $directoryHelper->listFiles();
         }
 
         return $paths;
@@ -212,7 +224,7 @@ final class Loader {
 
     public static function isFile($file, $extension = Loader::DEFAULT_EXT) {
         $file = self::toSinglePath($file, $extension);
-        is_file($file);
+        return is_file($file);
     }
 
 }

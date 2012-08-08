@@ -34,8 +34,7 @@ require_once HIRUDO_ROOT . DS . "framework" . DS . "hirudo" . DS . "Hirudo" . DS
 
 use Hirudo\Lang\Loader;
 
-Loader::Init();
-Loader::addPath(HIRUDO_ROOT);
+Loader::Init(HIRUDO_ROOT);
 
 if (!class_exists("Symfony\Component\ClassLoader\UniversalClassLoader")) {
     Loader::using("framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader");
