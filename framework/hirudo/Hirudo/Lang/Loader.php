@@ -165,7 +165,7 @@ final class Loader {
                     if ($isSingleFile) {
                         $paths = array($path);
                     } else {
-                        $directoryHelper = new DirectoryHelper(new RecursiveDirectoryIterator($package));
+                        $directoryHelper = new DirectoryHelper(new RecursiveDirectoryIterator($path));
                         $paths = $directoryHelper->listFiles();
                     }
                     break;

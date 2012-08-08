@@ -1,5 +1,7 @@
 <?php
 
+require_once 'init.php';
+
 /**
  * «Copyright 2012 Jeysson José Guevara Mendivil(JeyDotC)» 
  * 
@@ -28,7 +30,7 @@
  * 
  * @return array|void
  */
-function hirudo_block($op = 'list', $delta = 0, $edit = array()) {
+function hirudo6_block($op = 'list', $delta = 0, $edit = array()) {
     if ($op == "list") {
         return hirudo_block_info();
     } else if ($op == "view") {
@@ -63,11 +65,10 @@ function hirudo_block_view($delta = '') {
     $block = array();
 
     if ($delta == "hirudo") {
-        require_once 'init.php';
         //Yep, a Dirty Quick fix to hide node's title for this block
         drupal_add_js("(function ($) { $('.title').hide() })(jQuery);", array('type' => 'inline', 'scope' => 'footer'));
 
-        $manager = new ModulesManager(array(
+        $manager = new \Hirudo\Core\ModulesManager(array(
                     //The request data.
                     'Hirudo\Impl\Drupal\DrupalRequest',
                     //The URL builder.
@@ -93,7 +94,7 @@ function hirudo_block_view($delta = '') {
     return $block;
 }
 
-function hirudo_node_info() {
+function hirudo6_node_info() {
     /* "name": the human-readable name of the node type. Required.
       "module": a string telling Drupal how a module's functions map to hooks (i.e. if module is defined as example_foo, then example_foo_insert will be called when inserting a node of that type). This string is usually the name of the module in question, but not always. Required.
       "description": a brief description of the node type. Required.
@@ -104,7 +105,6 @@ function hirudo_node_info() {
         "hirudo" => array(
             "name" => "Hirudo PHP Web Framework",
             "module" => "hirudo", // For drupal 6
-            "base" => "hirudo",
             "description" => "A node to hold the Hirudo app presentations.",
             "has_title" => false,
         )
@@ -117,19 +117,9 @@ function hirudo_node_info() {
  * @param type $op
  * @param type $info
  */
-function hirudo_node_type($op, $info) {
-    if ($op == "insert") {
-        hirudo_node_type_insert($info);
-    }
-}
-
-function hirudo_node_type_insert($info) {
-    if ($info->type == "hirudo") {
-        if (class_exists("Drupal\node\Node")) {
-            $fakeNode = new Drupal\node\Node();
-        } else {
-            $fakeNode = new stdClass();
-        }
+function hirudo6_node_type($op, $info) {
+    if ($op == "insert" && $info->type == "hirudo") {
+        $fakeNode = new stdClass();
 
         $fakeNode->uid = 1;
         $fakeNode->status = 1;
@@ -143,14 +133,7 @@ function hirudo_node_type_insert($info) {
         if (drupal_lookup_path("source", "App") === false) {
             $source = "node/{$fakeNode->nid}";
             $alias = "App";
-            if (function_exists("path_save")) {
-                path_save(array(
-                    "source" => $source,
-                    "alias" => $alias
-                ));
-            }else{
-                path_set_alias($source, $alias);
-            }
+            path_set_alias($source, $alias);
         }
     }
 }

@@ -1,0 +1,6 @@
+name = "Hirudo"
+description = "Hirudo PHP Web Framework (Drupal version)."
+core = 6.x
+package = Hirudo
+
+dependencies[] = path
