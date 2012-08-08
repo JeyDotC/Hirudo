@@ -48,9 +48,10 @@ function hirudo_block_info() {
     return array(
         "hirudo" => array(
             "info" => "Hirudo framework",
-            'cache' => DRUPAL_NO_CACHE,
-            "visibility" => BLOCK_VISIBILITY_LISTED,
+            'cache' => BLOCK_NO_CACHE,
+            "visibility" => 1,
             "pages" => "App",
+            "region" => "content"
         )
     );
 }
@@ -66,7 +67,7 @@ function hirudo_block_view($delta = '') {
 
     if ($delta == "hirudo") {
         //Yep, a Dirty Quick fix to hide node's title for this block
-        drupal_add_js("(function ($) { $('.title').hide() })(jQuery);", array('type' => 'inline', 'scope' => 'footer'));
+        //drupal_add_js("(function ($) { $('.title').hide() })(jQuery);", array('type' => 'inline', 'scope' => 'footer'));
 
         $manager = new \Hirudo\Core\ModulesManager(array(
                     //The request data.
@@ -95,18 +96,13 @@ function hirudo_block_view($delta = '') {
 }
 
 function hirudo6_node_info() {
-    /* "name": the human-readable name of the node type. Required.
-      "module": a string telling Drupal how a module's functions map to hooks (i.e. if module is defined as example_foo, then example_foo_insert will be called when inserting a node of that type). This string is usually the name of the module in question, but not always. Required.
-      "description": a brief description of the node type. Required.
-      "has_title": boolean indicating whether or not this node type has a title field. Optional (defaults to TRUE).
-      "has_body": boolean indicating whether or not this node type has a body field. Optional (defaults to TRUE).
-     */
     return array(
         "hirudo" => array(
             "name" => "Hirudo PHP Web Framework",
             "module" => "hirudo", // For drupal 6
             "description" => "A node to hold the Hirudo app presentations.",
             "has_title" => false,
+            "has_body" => false
         )
     );
 }
@@ -119,18 +115,20 @@ function hirudo6_node_info() {
  */
 function hirudo6_node_type($op, $info) {
     if ($op == "insert" && $info->type == "hirudo") {
-        $fakeNode = new stdClass();
+        db_query("SELECT nid FROM {node} WHERE type = 'hirudo'");
+        if (db_affected_rows() == 0) {
+            $fakeNode = new stdClass();
 
-        $fakeNode->uid = 1;
-        $fakeNode->status = 1;
-        $fakeNode->type = "hirudo";
-        $fakeNode->language = "und";
-        $fakeNode->name = "JeyDotC";
-        $fakeNode->is_new = true;
+            $fakeNode->uid = 1;
+            $fakeNode->status = 1;
+            $fakeNode->type = "hirudo";
+            $fakeNode->name = "JeyDotC";
+            $fakeNode->is_new = true;
 
-        node_save($fakeNode);
-
-        if (drupal_lookup_path("source", "App") === false) {
+            node_save($fakeNode);
+            
+            variable_set("fakenode_nid", $fakeNode->nid);
+            
             $source = "node/{$fakeNode->nid}";
             $alias = "App";
             path_set_alias($source, $alias);
