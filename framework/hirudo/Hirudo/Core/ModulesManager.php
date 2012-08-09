@@ -25,8 +25,8 @@ use Hirudo\Core\Exceptions\ModuleNotFoundException;
 use Hirudo\Core\Context as Context;
 use Hirudo\Core\Context\ModuleCall;
 use Hirudo\Lang\Loader;
-use Hirudo\Core\Events\BeforeTaskEvent;
-use Hirudo\Core\Events\HirudoStartEvent;
+//use Hirudo\Core\Events\BeforeTaskEvent;
+//use Hirudo\Core\Events\HirudoStartEvent;
 use Hirudo\Core\Exceptions\HirudoException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
@@ -110,7 +110,7 @@ class ModulesManager extends EventDispatcher {
             $call = $this->getModuleNotFoundCall();
         }
 
-        $this->dispatch(HirudoStartEvent::NAME, new HirudoStartEvent());
+//        $this->dispatch(HirudoStartEvent::NAME, new HirudoStartEvent());
 
         try {
             $output = $this->executeCall($call);
@@ -145,12 +145,12 @@ class ModulesManager extends EventDispatcher {
         $task = $module->getTask($call->getTask());
         $this->resolveTaskRequirements($task);
 
-        $event = new BeforeTaskEvent($task, $call);
-        $this->dispatch(BeforeTaskEvent::NAME, $event);
+//        $event = new BeforeTaskEvent($task, $call);
+//        $this->dispatch(BeforeTaskEvent::NAME, $event);
 
-        if ($event->getCallReplaced()) {
-            return $this->executeCall($event->getCall());
-        }
+//        if ($event->getCallReplaced()) {
+//            return $this->executeCall($event->getCall());
+//        }
 
         $task->invoke();
         return $module->getRendered();
@@ -250,7 +250,7 @@ class ModulesManager extends EventDispatcher {
             }
 
             if (isset($extension["plugins"])) {
-                $this->registerPlugins($extension["plugins"]);
+//                $this->registerPlugins($extension["plugins"]);
             }
 
             if (isset($extension["services"])) {

@@ -18,8 +18,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
-function hirudo6_uninstall() {
-    path_set_alias(null, "App");
+function hirudo8_uninstall() {
+    path_delete(array("alias" => "App"));
     node_type_delete("hirudo");
     db_query("DELETE FROM {node} WHERE type = 'hirudo'");
     variable_del("fakenode_nid");

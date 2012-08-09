@@ -6,4 +6,7 @@ core = 7.x
 
 project = "drupal"
 
-files[] = hirudo.module
+files[] = hirudo7.install
+files[] = hirudo7.module
+
+dependencies[] = path

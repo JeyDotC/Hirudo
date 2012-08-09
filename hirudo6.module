@@ -1,7 +1,5 @@
 <?php
 
-require_once 'init.php';
-
 /**
  * «Copyright 2012 Jeysson José Guevara Mendivil(JeyDotC)» 
  * 
@@ -66,8 +64,11 @@ function hirudo_block_view($delta = '') {
     $block = array();
 
     if ($delta == "hirudo") {
+        require_once 'init.php';
+
+        $nid = variable_get("fakenode_nid", 0);
         //Yep, a Dirty Quick fix to hide node's title for this block
-        //drupal_add_js("(function ($) { $('.title').hide() })(jQuery);", array('type' => 'inline', 'scope' => 'footer'));
+        drupal_add_js("(function ($) { $('#node-$nid').hide() })(jQuery);", 'inline', 'footer');
 
         $manager = new \Hirudo\Core\ModulesManager(array(
                     //The request data.
