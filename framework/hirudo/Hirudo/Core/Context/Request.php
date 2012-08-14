@@ -150,7 +150,7 @@ abstract class Request {
      * @return string the current URI.
      */
     public abstract function getURI();
-    
+
     /**
      * Gets the current HTTP method (GET, POST, PUT, DELETE).
      * 
@@ -166,7 +166,15 @@ abstract class Request {
      * 
      * @return ModuleCall An instance of ModuleCall based on this class interpretation of the URL
      */
-    public abstract function buildModuleCall();
+    public function buildModuleCall() {
+        $parts = explode("/", $this->get("h"));
+
+        $app = isset($parts[0]) ? $parts[0] : "";
+        $module = isset($parts[1]) ? $parts[1] : "";
+        $task = isset($parts[2]) ? $parts[2] : "index";
+
+        return new ModuleCall($app, $module, $task);
+    }
 
     /**
      * Determines if there is any data in the $_POST array.

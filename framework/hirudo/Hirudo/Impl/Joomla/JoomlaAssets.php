@@ -21,12 +21,12 @@ class JoomlaAssets extends Assets {
     }
 
     public function addCSS($cssPath) {
-        JHTML::_("script", $this->resolveLocalPath($cssPath), $this->componentName);
+        \JHTML::_("stylesheet", $this->resolveLocalPath($cssPath), "components/$this->componentName/");
         return "";
     }
 
     public function addJavaScript($jsPath) {
-        JHTML::_("stylesheet", $this->resolveLocalPath($jsPath), $this->componentName);
+        \JHTML::_("script", $this->resolveLocalPath($jsPath), "components/$this->componentName/");
         return "";
     }
 

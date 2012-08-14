@@ -85,20 +85,6 @@ class JoomlaRequest extends Request {
         return isset($_POST) && count($_POST) > 0;
     }
 
-    public function buildModuleCall() {
-        $task = $this->get("task", "index");
-
-        $controllerParts = explode(".", $this->get("controller", ""));
-        $app = $controllerParts[0];
-        $module = "";
-
-        if (count($controllerParts) > 1) {
-            $module = $controllerParts[1];
-        }
-
-        return new ModuleCall($app, $module, $task);
-    }
-
 }
 
 ?>

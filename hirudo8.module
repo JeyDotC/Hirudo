@@ -47,7 +47,11 @@ function hirudo8_block_view($delta = '') {
 
     if ($delta == "hirudo") {
         require_once 'init.php';
-
+        
+        if (!defined("HIRUDO_DRUPAL_MODULE")) {
+            define("HIRUDO_DRUPAL_MODULE", "hirudo8");
+        }
+        
         $nid = variable_get("fakenode_nid", 0);
         //Yep, a Dirty Quick fix to hide node's title for this block
         drupal_add_js("(function ($) { $('#node-$nid').hide() })(jQuery);", 'inline', 'footer');
@@ -102,7 +106,7 @@ function hirudo8_node_type_insert($info) {
                 "is_new" => true,
                 'langcode' => LANGUAGE_NOT_SPECIFIED,
                     ));
-            
+
             $fakeNode->save();
 
             variable_set("fakenode_nid", $fakeNode->nid);

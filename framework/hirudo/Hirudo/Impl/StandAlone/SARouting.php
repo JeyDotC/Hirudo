@@ -33,12 +33,10 @@ class SARouting extends Routing {
     public function appAction($app, $module, $task = "index", array $params = array()) {
 
         $uri = JURI::getInstance();
-        $query = $uri->getQuery(true);
 
-        $query["controller"] = "$app.$module";
-        $query["task"] = $task;
+        $params["h"] = "$app/$module/$task";
 
-        $query = array_merge($query, $params);
+        $query = array_merge($uri->getQuery(true), $params);
 
         return $uri->toString(array('scheme', 'user', 'pass', 'host', 'port', 'path')) . "?" . $uri->buildQuery($query);
     }

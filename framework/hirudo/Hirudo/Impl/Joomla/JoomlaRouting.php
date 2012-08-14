@@ -34,14 +34,11 @@ class JoomlaRouting extends Routing {
     public function appAction($app, $module, $task = "index", array $params = array()) {
         $mainframe = JoomlaHelper::getMainframe();
 
-        $itemId = \JRequest::getVar("Itemid", 2);
         $uri = \JURI::getInstance();
         $query = $uri->getQuery(true);
 
         $query["option"] = $mainframe->scope;
-        $query["Itemid"] = $itemId;
-        $query["controller"] = "$app.$module";
-        $query["task"] = $task;
+        $query["h"] = "$app/$module/$task";
 
         $query = array_merge($query, $params);
 

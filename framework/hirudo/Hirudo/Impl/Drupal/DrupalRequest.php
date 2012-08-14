@@ -84,17 +84,6 @@ class DrupalRequest extends Request {
     public function submitted() {
         return isset($_POST) && count($_POST) > 0;
     }
-
-    public function buildModuleCall() {
-        $parts = explode("/", $this->get("h"));
-
-        $app = isset($parts[0]) ? $parts[0] : "";
-        $module = isset($parts[1]) ? $parts[1] : "";
-        $task = isset($parts[2]) ? $parts[2] : "index";
-
-        return new ModuleCall($app, $module, $task);
-    }
-
 }
 
 ?>

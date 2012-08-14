@@ -40,7 +40,7 @@ $controller = new JoomlaFrontController(new ModulesManager(array(
                     //The Sql Model
                     "Hirudo\Impl\Joomla\Models\Components\Sql\JoomlaQueryFactory",
                     //The Asset system
-                    'Hirudo\Impl\StandAlone\JoomlaAssets',
+                    'Hirudo\Impl\Joomla\JoomlaAssets',
                 )));
 
 $controller->run();
