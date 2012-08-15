@@ -447,7 +447,7 @@ class JURI {
             }
 
             $thekey = (!$akey ) ? $key : $akey . '[' . $key . ']';
-            $out[] = $thekey . "=" . urlencode($val);
+            $out[] = $thekey . "=" . str_replace("%2F", "/", urlencode($val));
         }
 
         return implode("&", $out);
