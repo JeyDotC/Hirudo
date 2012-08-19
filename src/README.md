@@ -6,7 +6,9 @@ What Goes Here
 
 Welcome to the *src* folder, here go your applications.
 
-In Hirudo, an *application* is just a folder with two folders inside:
+In Hirudo, an *application* is just a folder with three folders inside:
+
+* An *assets* folder to place your assets, such as javascripts, css and Master templates. 
 
 * A *Models* folder where the entities, data access, components and all the things 
 expected to be in the model layer of an MVC architecture are stored. 
@@ -18,6 +20,7 @@ controllers in an MVC architecture.
 So, to create an application you just need to create a directory with this structure:
 
     YourApp/
+        assets/ <-- Your js, css, etc.
         Models/ <-- Your Models layer.
         Modules/ <-- Your controllers
             AModule/
@@ -25,17 +28,20 @@ So, to create an application you just need to create a directory with this struc
             ...
             LotsOfModules/
 
-You can have various applications, each one with their own *Models* layer and with their
+You can have various applications, each one with their own *assets*, *Models* layer and with their
 own *Modules*.
 
     YourApp/
+        assets/
         Models/
         Modules/
     AnotherApp/
+        assets/
         Models/
         Modules/
         ...
     LotsOfApps/
+        assets/
         Models/
         Modules/
 
@@ -82,8 +88,12 @@ class SomeModule extends Module {
 ```
 
 With this basic code you can now type in your browser a url like this: 
-*http://Path/To/Hirudo/index.php?controller=YourApp.SomeModule* where 'Path/To/Hirudo/'
+*http://Path/To/Hirudo/index.php?h=YourApp/SomeModule* where 'Path/To/Hirudo/'
 gereally is localhost/HirudoFolder/ and a big "Hello world" message should appear.
+
+**Note:** The look of the URL my vary from one implementation to another, but usually you'll
+find the 'h' parameter which represents a Hirudo call, where the first part is the Application,
+the second is the module and the third(optional) is the method to be executed.
 
 ### An importatnt note about Models in Hirudo
 

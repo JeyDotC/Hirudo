@@ -7,16 +7,17 @@ Overview
 --------
 
 Hirudo is a small, general purpose framework for PHP 5.3+ which goal is to abstract 
-developers from challenges of creating extensions for CMS.
+developers from challenges of creating extensions for CMSs.
 
-It's components maily consist in abstract classes and interfaces so the different
+It's components mainly consist in abstract classes and interfaces so the different
 implelemtations shall deal with the containing CMS details, generally using the
 corresponding classes of the CMS and delegating the responsibility to them.
 
-There will be two implementations at first:
+There are three implementations up to now:
 
-* A Joomla! version that will work as a Joomla! component.
-* A Stand alone version that can live by itself.
+* The Joomla! version that works as a component [Supported versions: 1.5, 1.6(not tested), 1.7, 2.5].
+* The Drupal version that works as a module [Supported versions: 6.x, 7.x, 8.x].
+* The Stand alone version that can live by itself.
 
 ### About the name
 
@@ -27,7 +28,7 @@ Documentation
 -------------
 
 The Hirudo's documentation is, for now, a work in progress, currently you can see our
-Tutorial documentation (starting above) or the [API documentation](https://github.com/JeyDotC/Hirudo-docs).
+Tutorial documentation (starting below) or the [API documentation](https://github.com/JeyDotC/Hirudo-docs).
 Both are made to be read directly in the repository they are in.
 
 If you've been using Hirudo for a while, you can contribute to the [Wiki](https://github.com/JeyDotC/Hirudo/wiki)
@@ -64,11 +65,18 @@ the ModulesManager class and makes it execute.
 * [hirudo.php](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.php): This is the main entry point for the Joomla! version, it just instantiates the ModulesManager class and makes it execute wraped into a Joomla! controller. 
 In order to make it work as a component just rename this file with the name of your component.
 
-* [hirudo.info](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.info): This file provides information to dupal so it can interact with the framework as a Drupal Module.
+* [hirudo6.info](http://github.com/JeyDotC/Hirudo/blob/master/hirudo6.info),
+[hirudo7.info](http://github.com/JeyDotC/Hirudo/blob/master/hirudo7.info),
+[hirudo8.info](http://github.com/JeyDotC/Hirudo/blob/master/hirudo8.info): These files provide information to dupal so it can interact with the framework as a Drupal Module.
 
-* [hirudo.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.install): This file is called by drupal to install and uninstall hirudo on drupal.
+* [hirudo6.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo6.install),
+[hirudo7.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo7.install),
+[hirudo8.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo8.install): These files are called by Drupal to install and uninstall hirudo. 
+**NOTE:** When hirudo gets installed on Drupal, it creates a block, in order to make it visible you must locate it somewhere in your site.
 
-* [hirudo.module](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.module): This file is the entry point for the Drupal implementation of Hirudo.
+* [hirudo6.module](http://github.com/JeyDotC/Hirudo/blob/master/hirudo6.module),
+[hirudo7.module](http://github.com/JeyDotC/Hirudo/blob/master/hirudo7.module),
+[hirudo8.module](http://github.com/JeyDotC/Hirudo/blob/master/hirudo8.module): These files are the entry point for the Drupal implementation of Hirudo.
 
 * [init.php](http://github.com/JeyDotC/Hirudo/blob/master/init.php): This file just initializes some stuff and creates a couple of constants, it's presence
 is due to the need to know the absolute path to the root folder.

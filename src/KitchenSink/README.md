@@ -11,7 +11,7 @@ used.
 What Goes Here
 --------------
 
-As explained at the previous *README.md* file, an application consists of two
+As explained at the previous *README.md* file, an application consists of three
 folders: 
 
 * [assets/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/assets): In this folder you will put your web stuff, like *css, js and image* files. 
@@ -27,7 +27,11 @@ for example, but the latter is just a convension.
 If you want to know how to do things, go to the [Modules/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Modules)
 folder. In there, you will find a series of modules each one representing a use case.
 
-If you want to know how Hirudo models work, go to the [Modules/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Modules)
+If you want to know how Hirudo models work, go to the [Models/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Models)
 folder. There, you will find a sample model that consists of several entities and
 a component that manages persistence.
+
+Or you can look at the assets [assets/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/assets) 
+folder, where there is a css, a js and also a Master.tpl template that
+serves as a base for all the templates in this sample application.
 
