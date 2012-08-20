@@ -95,7 +95,7 @@ gereally is localhost/HirudoFolder/ and a big "Hello world" message should appea
 find the 'h' parameter which represents a Hirudo call, where the first part is the Application,
 the second is the module and the third(optional) is the method to be executed.
 
-### An importatnt note about Models in Hirudo
+### An important note about Models in Hirudo
 
 Hirudo by itself doesn't provide a persistence layer, instead, there will be some
 extensions that addresses data persistence which will be quite easy to install and

@@ -48,7 +48,9 @@ What Goes Here
 --------------
 
 In this folder you can find the root directory of the framework, some important
-files and the folder where you are going to work. Lets explain each one:
+files and the folder where you are going to work. 
+
+Let explain each one:
 
 * [ext/](http://github.com/JeyDotC/Hirudo/tree/master/ext): Here goes the extensions to the framework: plugins, smarty plugins, configuration, etc.
 
@@ -62,8 +64,8 @@ application code.
 * [index.php](http://github.com/JeyDotC/Hirudo/blob/master/index.php): This is the main entry point for the stand alone version, it just instantiates
 the ModulesManager class and makes it execute.
 
-* [hirudo.php](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.php): This is the main entry point for the Joomla! version, it just instantiates the ModulesManager class and makes it execute wraped into a Joomla! controller. 
-In order to make it work as a component just rename this file with the name of your component.
+* [hirudo.php](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.php): This is the main entry point for the Joomla! version, it just instantiates the ModulesManager class and makes it execute wraped into a Joomla! controller.
+* [hirudo.xml](http://github.com/JeyDotC/Hirudo/blob/master/hirudo.xml): This this file installs hirudo on Joomla!.
 
 * [hirudo6.info](http://github.com/JeyDotC/Hirudo/blob/master/hirudo6.info),
 [hirudo7.info](http://github.com/JeyDotC/Hirudo/blob/master/hirudo7.info),
@@ -72,7 +74,7 @@ In order to make it work as a component just rename this file with the name of y
 * [hirudo6.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo6.install),
 [hirudo7.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo7.install),
 [hirudo8.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo8.install): These files are called by Drupal to install and uninstall hirudo. 
-**NOTE:** When hirudo gets installed on Drupal, it creates a block, in order to make it visible you must locate it somewhere in your site.
+**NOTE:** When hirudo gets installed on Drupal, it creates a block, in order to make it visible you must place it somewhere in your site's structure.
 
 * [hirudo6.module](http://github.com/JeyDotC/Hirudo/blob/master/hirudo6.module),
 [hirudo7.module](http://github.com/JeyDotC/Hirudo/blob/master/hirudo7.module),

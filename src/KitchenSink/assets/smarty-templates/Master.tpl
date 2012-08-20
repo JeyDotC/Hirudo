@@ -11,7 +11,7 @@ To learn more about Smarty's template inheritance see http://www.smarty.net/inhe
         should be at the assets directory under the css/ folder.
         
         Even though you can have any folder structure under the assets folder, you will
-        need just to set the file parameter to: "path/to/my/cssFile.css".
+        need just to set the file parameter to: "AppName::path/to/my/cssFile.css".
         
         Note: this function doesn't come with Smarty, is an extension provided by Hirudo.
         *}
@@ -21,7 +21,7 @@ To learn more about Smarty's template inheritance see http://www.smarty.net/inhe
         The script should be at the assets directory under the js/ folder.
         
         Even though you can have any folder structure under the assets folder, you will
-        need just to set the file parameter to: "path/to/my/cssFile.js".
+        need just to set the file parameter to: "AppName::path/to/my/jsFile.js".
         
         Note: this function doesn't come with Smarty, is an extension provided by Hirudo.
         *}
