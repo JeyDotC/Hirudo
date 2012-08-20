@@ -185,6 +185,12 @@ abstract class Module {
      * @var HeaderBag
      */
     protected $headers;
+    
+    /**
+     *
+     * @var Context\Session The session object
+     */
+    protected $session;
 
     /**
      * @var array<mixed> 
@@ -198,7 +204,7 @@ abstract class Module {
      * @var \ReflectionClass 
      */
     private $reflector;
-
+    
 
     /**
      * Adds a variable to the view so it can access it via the name.
@@ -383,6 +389,7 @@ abstract class Module {
         $this->view = $this->context->getTemplating();
         $this->appName = str_replace("\\Modules\\$this->name", "", $this->reflector->getNamespaceName());
         $this->route->setAppName($this->appName);
+        $this->session = $this->context->getSession();
     }
 
     private function _getViewParts($view) {
