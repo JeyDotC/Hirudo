@@ -27,7 +27,7 @@ class Welcome extends Module {
          * "ModuleName::viewName". And to call a view from another application the 
          * string should look like: "AppName::ModuleName::viewName".
          */
-        $this->display("index");
+        return $this->display("index");
     }
     
     /**
@@ -54,7 +54,7 @@ class Welcome extends Module {
         $this->addMessage(new Message("This is an Error message", "Error Message", Message::ERROR));
         $this->addMessage(new Message("This is a Success message", "Success Message", Message::SUCCESS));
         
-        $this->display("notifications");
+        return $this->display("notifications");
     }
 
     /**

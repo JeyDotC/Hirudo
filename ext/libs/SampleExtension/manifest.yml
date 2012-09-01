@@ -3,7 +3,7 @@ namespaces:
   - Sample
   
 plugins:
-  - Sample\Plugins\ModuleEnhablePlugin
+  - Sample\Plugins\SamplePlugin
   
 services:
   - Sample\Utilities\SomeUsefulClass

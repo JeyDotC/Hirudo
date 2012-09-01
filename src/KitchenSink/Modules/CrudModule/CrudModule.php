@@ -35,7 +35,7 @@ class CrudModule extends Module {
          */
         $this->assign("fooList", $foos);
 
-        $this->display("index");
+        return $this->display("index");
     }
 
     /**
@@ -54,12 +54,12 @@ class CrudModule extends Module {
      * @param string $id
      */
     public function view($id) {
-        
+
         $foo = $this->component("Foo")->get($id);
 
         $this->assign("foo", $foo);
 
-        $this->display("view");
+        return $this->display("view");
     }
 
     /**
@@ -76,8 +76,8 @@ class CrudModule extends Module {
          * To know more about Hirudo routing see: https://github.com/JeyDotC/Hirudo-docs/blob/master/Hirudo/Core/Context/Routing.md 
          */
         $this->assign("action", $this->route->action("save"));
-        
-        $this->display("create");
+
+        return $this->display("create");
     }
 
     /**
@@ -91,9 +91,9 @@ class CrudModule extends Module {
         $this->assign("foo", $foo);
         $this->assign("action", $this->route->action("save"));
 
-        $this->display("update");
+        return $this->display("update");
     }
-    
+
     /**
      * Removes a Foo
      * 
@@ -101,14 +101,14 @@ class CrudModule extends Module {
      */
     public function remove($id) {
         $this->component("Foo")->remove($id);
-        
+
         $this->addMessage(new Message("The Foo have been removed.", "Goodbye, Foo", Message::SUCCESS));
-        
+
         /**
          * In this case we don't use a display call, instead, we can call another method
          * in the same module.
          */
-        $this->index();
+        return $this->index();
     }
 
     /**
@@ -128,12 +128,12 @@ class CrudModule extends Module {
      */
     public function save(Foo $foo) {
         $this->component("Foo")->save($foo);
-        
-        $this->addMessage(new Message("The foo have been saved.", "Saved!", Message::SUCCESS));
-        
-        $this->index();
-    }
 
+        $this->addMessage(new Message("The foo have been saved.", "Saved!", Message::SUCCESS));
+
+        return $this->index();
+    }
+    
 }
 
 ?>

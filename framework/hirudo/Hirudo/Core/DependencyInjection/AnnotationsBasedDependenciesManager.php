@@ -86,7 +86,7 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
     public function resolveDependencies($object) {
         $objectReflection = new \ReflectionClass($object);
 
-        //Resolve property dependency injection.
+        //Resolve properties dependency injection.
         foreach ($objectReflection->getProperties() as /* @var $property \ReflectionProperty */$property) {
 
             $annotation = $this->annotationReader->getPropertyAnnotation($property, "Hirudo\Core\Annotations\Import");
@@ -96,7 +96,7 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
             }
         }
 
-        //Resolve method dependency injection.
+        //Resolve methods dependency injection.
         foreach ($objectReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as /* @var $method \ReflectionMethod */$method) {
             /* @var $annotation Import */
             $annotation = $this->annotationReader->getMethodAnnotation($method, "Hirudo\Core\Annotations\Import");

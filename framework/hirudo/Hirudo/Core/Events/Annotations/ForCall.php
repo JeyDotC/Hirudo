@@ -25,7 +25,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @author JeyDotC
  * 
  * @Annotation
- * @Target("CLASS")
+ * @Target("METHOD", "ANNOTATION")
  */
 class ForCall {
 

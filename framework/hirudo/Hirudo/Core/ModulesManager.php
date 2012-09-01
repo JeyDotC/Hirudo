@@ -20,15 +20,16 @@ namespace Hirudo\Core;
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
-use Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager;
-use Hirudo\Core\Exceptions\ModuleNotFoundException;
+
 use Hirudo\Core\Context as Context;
 use Hirudo\Core\Context\ModuleCall;
-use Hirudo\Lang\Loader;
-//use Hirudo\Core\Events\BeforeTaskEvent;
-//use Hirudo\Core\Events\HirudoStartEvent;
+use Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager;
+use Hirudo\Core\Events\BeforeTaskEvent;
 use Hirudo\Core\Exceptions\HirudoException;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Hirudo\Core\Exceptions\ModuleNotFoundException;
+use Hirudo\Core\Module;
+use Hirudo\Lang\DirectoryHelper;
+use Hirudo\Lang\Loader;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\Yaml\Yaml;
 
@@ -38,7 +39,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @author JeyDotC
  */
-class ModulesManager extends EventDispatcher {
+class ModulesManager {
 
     /**
      *
@@ -50,7 +51,7 @@ class ModulesManager extends EventDispatcher {
      *
      * @var string The name of the root app dir.
      */
-    private $rootAppDir;
+    private $rootApplicationsDir;
 
     /**
      *
@@ -89,7 +90,7 @@ class ModulesManager extends EventDispatcher {
     private function load() {
         $this->dependencyManager->resolveDependencies($this->context);
         $this->loadExtensions();
-        $this->rootAppDir = $this->context->getConfig()->get("businessRoot", "src");
+        $this->rootApplicationsDir = $this->context->getConfig()->get("businessRoot", "src");
     }
 
     /**
@@ -133,9 +134,8 @@ class ModulesManager extends EventDispatcher {
      * @return string The resulting output.
      */
     public function executeCall(ModuleCall $call) {
-        //Register the applications namespace
-        self::$autoLoader->registerNamespace($call->getApp(), Loader::toSinglePath($this->rootAppDir, ""));
-        
+
+        $this->prepareApplication($call->getApp());
         //Sets the current call in context. Possible useless behavior?
         $this->context->setCurrentCall($call);
 
@@ -145,15 +145,27 @@ class ModulesManager extends EventDispatcher {
         $task = $module->getTask($call->getTask());
         $this->resolveTaskRequirements($task);
 
-//        $event = new BeforeTaskEvent($task, $call);
-//        $this->dispatch(BeforeTaskEvent::NAME, $event);
+        $beforeTaskEvent = $this->context->dispatch("beforeTask", new BeforeTaskEvent($task));
 
-//        if ($event->getCallReplaced()) {
-//            return $this->executeCall($event->getCall());
-//        }
+        if ($beforeTaskEvent->isCallReplaced()) {
+            return $this->executeCall($beforeTaskEvent->getCall());
+        }
 
-        $task->invoke();
-        return $module->getRendered();
+        $result = $task->invoke();
+        $afterTaskEvent = $this->context->dispatch("afterTask", new Events\AfterTaskEvent($result));
+        return $afterTaskEvent->getTaskResult();
+    }
+
+    private function prepareApplication($appName) {
+        $appsPath = Loader::toSinglePath($this->rootApplicationsDir, "");
+        self::$autoLoader->registerNamespace($appName, $appsPath);
+
+        $dir = new DirectoryHelper(new \RecursiveDirectoryIterator($appsPath . DS . $appName . DS . "Modules"));
+        $files = $dir->listFiles(2, ".php", true, true);
+
+        foreach ($files as $class) {
+            $this->context->subscribeObject("$appName\Modules\\{$class}\\{$class}");
+        }
     }
 
     /**
@@ -176,11 +188,11 @@ class ModulesManager extends EventDispatcher {
             throw new \Exception("The task [{$this->context->getCurrentCall()}] accepts POST requests only");
         }
 
-        foreach ($task->getGetParams() as /* @var $param \ReflectionParameter */$param) {
+        foreach ($task->getGetParams() as /* @var $param \ReflectionParameter */ $param) {
             $task->setParamValue($param->name, $this->context->getRequest()->get($param->name, $task->getParamValue($param->name)));
         }
 
-        foreach ($task->getPostParams() as /* @var $param ReflectionParameter */$param) {
+        foreach ($task->getPostParams() as /* @var $param ReflectionParameter */ $param) {
             if ($param->getClass() != null) {
                 $object = $param->getClass()->newInstance();
                 $this->context->getRequest()->bind($object, $this->context->getRequest()->post($param->name));
@@ -194,7 +206,7 @@ class ModulesManager extends EventDispatcher {
     /**
      * 
      * @param ModuleCall $call
-     * @return \Hirudo\Core\Module
+     * @return Module
      * @throws ModuleNotFoundException 
      */
     private function resolveModule(ModuleCall $call) {
@@ -213,7 +225,7 @@ class ModulesManager extends EventDispatcher {
     }
 
     private function getFileFromCall(ModuleCall $call) {
-        return Loader::toSinglePath("{$this->rootAppDir}::{$call->getApp()}::Modules::{$call->getModule()}::{$call->getModule()}");
+        return Loader::toSinglePath("{$this->rootApplicationsDir}::{$call->getApp()}::Modules::{$call->getModule()}::{$call->getModule()}");
     }
 
     private function getClassNameFromCall(ModuleCall $call) {
@@ -250,7 +262,7 @@ class ModulesManager extends EventDispatcher {
             }
 
             if (isset($extension["plugins"])) {
-//                $this->registerPlugins($extension["plugins"]);
+                $this->registerPlugins($extension["plugins"]);
             }
 
             if (isset($extension["services"])) {
@@ -282,7 +294,7 @@ class ModulesManager extends EventDispatcher {
 
     private function registerPlugins(array $plugins) {
         foreach ($plugins as $plugin) {
-            $this->addSubscriber(new $plugin());
+            $this->context->subscribeObject(new $plugin());
         }
     }
 
@@ -290,8 +302,7 @@ class ModulesManager extends EventDispatcher {
         $this->dependencyManager->addServices($services);
     }
 
-    private function registerTemplatingExtensions($dir,
-            array $templating_extensions) {
+    private function registerTemplatingExtensions($dir, array $templating_extensions) {
 
         foreach ($templating_extensions as $extensionDir) {
             $this->context->getTemplating()->addExtensionsPath($dir . DS . $extensionDir);
@@ -303,7 +314,7 @@ class ModulesManager extends EventDispatcher {
         $extensions = array();
 
         if ($this->context->getConfig()->get("debug") || !is_file($cacheFile)) {
-            $extensionsDir = new \Hirudo\Lang\DirectoryHelper(new \RecursiveDirectoryIterator(Loader::toSinglePath("ext::libs", "")));
+            $extensionsDir = new DirectoryHelper(new \RecursiveDirectoryIterator(Loader::toSinglePath("ext::libs", "")));
             $files = $extensionsDir->listDirectories(1);
 
             foreach ($files as $file) {

@@ -27,14 +27,14 @@ class Errors extends Module {
         $ex = $this->context->getCurrentCall()->getLastUnhandledException();
         $this->assign("ex", $ex);
 
-        $this->display("index");
+        return $this->display("index");
     }
     
     /**
      * This method is called when the requested module doesn't exist
      */
     public function notFound() {
-        $this->display("404");
+        return $this->display("404");
     }
 
 }

@@ -133,7 +133,7 @@ class Task {
      * Executes the task.
      */
     public function invoke() {
-        $this->reflectionMethod->invokeArgs($this->module, $this->paramValues);
+        return $this->reflectionMethod->invokeArgs($this->module, $this->paramValues);
     }
 
     /**

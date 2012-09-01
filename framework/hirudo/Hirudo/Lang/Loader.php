@@ -118,8 +118,7 @@ final class Loader {
      * @throws InvalidPathException If $string is not a string, is null or is empty.
      * @throws LogicException If $extension is not a string.
      */
-    public static function arrayToPaths(array $array,
-            $extension = Loader::DEFAULT_EXT) {
+    public static function arrayToPaths(array $array, $extension = Loader::DEFAULT_EXT) {
         $paths = array();
         foreach ($array as $package) {
             $actualPaths = self::toPaths($package, $extension);
@@ -190,10 +189,9 @@ final class Loader {
         return $paths;
     }
 
-    public static function toSinglePath($string,
-            $extension = Loader::DEFAULT_EXT) {
+    public static function toSinglePath($string, $extension = Loader::DEFAULT_EXT) {
         $path = "";
-        
+
         if (array_key_exists($string, self::$loadedPaths)) {
             $paths = self::$loadedPaths[$string];
         } else {
@@ -275,11 +273,11 @@ class DirectoryHelper {
      * 
      * @return array The list of absolute paths to the found files.
      */
-    public function listFiles($depth = 1) {
+    public function listFiles($depth = 1, $filterByExtension = "", $trimExtension = false, $base = false) {
         if ($depth < 0) {
             throw new LogicException("depth must be positive.");
         }
-        $paths = $this->recursiveListFiles($this->dir, $depth);
+        $paths = $this->recursiveListFiles($this->dir, $depth, $filterByExtension, $trimExtension, $base);
         return $paths;
     }
 
@@ -291,13 +289,12 @@ class DirectoryHelper {
         return $paths;
     }
 
-    private function recursiveListDirectories(RecursiveDirectoryIterator &$dir,
-            $depth = 1) {
+    private function recursiveListDirectories(RecursiveDirectoryIterator &$dir, $depth = 1) {
         $paths = array();
 
         while ($dir->valid()) {
             if (!$dir->isDot() && $dir->isDir() && $depth > 1) {
-                $paths = array_merge($paths, $this->recursiveListFiles($dir->getChildren(), $depth - 1));
+                $paths = array_merge($paths, $this->recursiveListDirectories($dir->getChildren(), $depth - 1));
             } else if (!$dir->isDot() && $dir->isDir()) {
                 $paths[] = $dir->getPathname();
             }
@@ -307,15 +304,27 @@ class DirectoryHelper {
         return $paths;
     }
 
-    private function recursiveListFiles(RecursiveDirectoryIterator &$dir,
-            $depth = 1) {
+    private function recursiveListFiles(RecursiveDirectoryIterator &$dir, $depth = 1, $filterByExtension = "", $trimExtension = false, $base = false) {
         $paths = array();
 
         while ($dir->valid()) {
             if (!$dir->isDot() && $dir->isDir() && $depth > 1) {
-                $paths = array_merge($paths, $this->recursiveListFiles($dir->getChildren(), $depth - 1));
+                $paths = array_merge($paths, $this->recursiveListFiles($dir->getChildren(), $depth - 1, $filterByExtension, $trimExtension, $base));
             } else if (!$dir->isDot() && $dir->isFile()) {
-                $paths[] = $dir->getPathName();
+                if (!$base) {
+                    $path = $dir->getPathName();
+                } else {
+                    $path = $dir->getBasename();
+                }
+
+                $extensionLength = strlen($filterByExtension);
+                if (empty($filterByExtension) || substr($path, -$extensionLength) == $filterByExtension) {
+                    if ($trimExtension) {
+                        $paths[] = substr($path, 0, strlen($path) - $extensionLength);
+                    } else {
+                        $paths[] = $path;
+                    }
+                }
             }
             $dir->next();
         }

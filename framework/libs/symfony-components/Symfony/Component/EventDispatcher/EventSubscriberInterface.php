@@ -17,8 +17,6 @@ namespace Symfony\Component\EventDispatcher;
  * {@link getSubscribedEvents} and registers the subscriber as a listener for all
  * returned events.
  *
- * @link    www.doctrine-project.org
- * @since   2.0
  * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
  * @author  Jonathan Wage <jonwage@gmail.com>
  * @author  Roman Borschel <roman@code-factory.org>
@@ -35,15 +33,18 @@ interface EventSubscriberInterface
      *
      *  * The method name to call (priority defaults to 0)
      *  * An array composed of the method name to call and the priority
+     *  * An array of arrays composed of the method names to call and respective
+     *    priorities, or 0 if unset
      *
      * For instance:
      *
      *  * array('eventName' => 'methodName')
      *  * array('eventName' => array('methodName', $priority))
+     *  * array('eventName' => array(array('methodName1', $priority), array('methodName2'))
      *
      * @return array The event names to listen to
      *
      * @api
      */
-    static function getSubscribedEvents();
+    public static function getSubscribedEvents();
 }

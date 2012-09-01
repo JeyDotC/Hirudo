@@ -130,13 +130,6 @@ abstract class Module {
     private $view;
 
     /**
-     * The result of the rendering.
-     * 
-     * @var string 
-     */
-    private $rendered = null;
-
-    /**
      * The name of the task being executed.
      * 
      * @var string
@@ -283,15 +276,6 @@ abstract class Module {
     }
 
     /**
-     * Returns the result of the view rendering as a string.
-     * 
-     * @return string The rendered view.
-     */
-    public function getRendered() {
-        return $this->rendered;
-    }
-
-    /**
      * This function is called before a task execution, is
      * useful for taking actions prior the execution of any task such as 
      * initializing objects common to all tasks.
@@ -328,19 +312,7 @@ abstract class Module {
      * to the current module or a string with the "AppName::ModuleName::viewName" format
      * if the view belongs to another module.
      */
-    protected function display($view = null) {
-        $this->rendered = $this->renderGet($view);
-    }
-
-    /**
-     * <p>Renders the given view and returns it as a string without sending it to
-     * the browser.</p>
-     * 
-     * @param string $view The view name
-     * @return string The result of the rendering.
-     * @see Module->display()
-     */
-    protected function renderGet($view) {
+    protected function display($view) {
         $viewParts = $this->_getViewParts($view);
 
         $this->module["appName"] = $this->appName;
