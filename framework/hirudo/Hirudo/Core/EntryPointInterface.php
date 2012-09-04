@@ -7,7 +7,7 @@ namespace Hirudo\Core;
  *
  * @author JeyDotC
  */
-class EntryPointInterface {
+interface EntryPointInterface {
     
     function run();
 }

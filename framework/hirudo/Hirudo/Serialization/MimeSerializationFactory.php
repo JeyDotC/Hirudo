@@ -53,7 +53,7 @@ class MimeSerializationFactory implements SerializationFactory {
 
         if (!isset($this->serializerIinstances[$mime])) {
             $className = "EntitySerializer" . strtoupper($mime);
-            require_once "impl/{$mime}/$className.php";
+            require_once "Impl/{$mime}/$className.php";
             $this->serializerIinstances[$mime] = new $className();
         }
 

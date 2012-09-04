@@ -280,8 +280,13 @@ class ModulesContext extends EventDispatcher {
     public function deferredListener(Event $e) {
         foreach ($this->deferredListeners[$e->getName()] as &$listener) {
             if (!is_object($listener[0])) {
-                $listener[0] = new $listener[0]();
-                $this->dependenciesManager->resolveDependencies($listener[0]);
+                $object = \Hirudo\Core\Util\ModulesRegistry::loadModule($listener[0]);
+                if (!is_object($object)) {
+                    $listener[0] = new $listener[0]();
+                    $this->dependenciesManager->resolveDependencies($listener[0]);
+                } else {
+                    $listener[0] = $object;
+                }
             }
 
             call_user_func($listener, $e);

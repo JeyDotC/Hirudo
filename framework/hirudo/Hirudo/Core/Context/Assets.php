@@ -16,7 +16,8 @@
  *  GNU General Public License for more details.
  * 
  *  You should have received a copy of the GNU General Public License
- *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>. */
+ *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Hirudo\Core\Context;
 
@@ -85,18 +86,19 @@ abstract class Assets {
 
     protected function resolveLocalPath($path) {
         $result = $path;
-        
-        if(strpos($path, "::") !== false){
+
+        if (strpos($path, "::") !== false) {
             $parts = explode("::", $path);
             $src = ModulesContext::instance()->getConfig()->get("businessRoot", "src");
             $base = trim(str_replace("::", "/", $src), "/");
             $result = "$base/$parts[0]/assets/$parts[1]";
-        }else{
+        } else {
             $result = "assets/$result";
         }
-        
+
         return $result;
     }
+
 }
 
 ?>

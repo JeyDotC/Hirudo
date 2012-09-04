@@ -23,7 +23,7 @@ namespace Hirudo\Core;
 
 use Hirudo\Core\Util\Message;
 use Hirudo\Core\Context\ModulesContext;
-use Hirudo\Lang\Loader as Loader;
+use Hirudo\Lang\Loader;
 use Hirudo\Core\Context\Request;
 use Hirudo\Core\Annotations\Import;
 use Hirudo\Core\Context\Routing;

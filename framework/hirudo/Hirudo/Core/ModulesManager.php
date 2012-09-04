@@ -20,7 +20,6 @@ namespace Hirudo\Core;
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 use Hirudo\Core\Context as Context;
 use Hirudo\Core\Context\ModuleCall;
 use Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager;
@@ -58,14 +57,6 @@ class ModulesManager {
      * @var UniversalClassLoader 
      */
     private static $autoLoader;
-
-    /**
-     * Small optimization for enviroments where is highly probable to call
-     * various tasks in the same module.
-     * 
-     * @var array<Module>
-     */
-    private static $loadedModules = array();
 
     /**
      *
@@ -134,7 +125,6 @@ class ModulesManager {
      * @return string The resulting output.
      */
     public function executeCall(ModuleCall $call) {
-
         $this->prepareApplication($call->getApp());
         //Sets the current call in context. Possible useless behavior?
         $this->context->setCurrentCall($call);
@@ -211,12 +201,7 @@ class ModulesManager {
      */
     private function resolveModule(ModuleCall $call) {
         $className = $this->getClassNameFromCall($call);
-        if (!isset(self::$loadedModules[$className])) {
-            $module = new $className();
-            $this->dependencyManager->resolveDependencies($module);
-            self::$loadedModules[$className] = $module;
-        }
-        return self::$loadedModules[$className];
+        return Util\ModulesRegistry::loadModule($className, true);
     }
 
     private function moduleExists(ModuleCall $call) {

@@ -37,7 +37,9 @@ use Hirudo\Lang\Loader;
 Loader::Init(HIRUDO_ROOT);
 
 if (!class_exists("Symfony\Component\ClassLoader\UniversalClassLoader")) {
-    Loader::using("framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader");
+    Loader::using(array(
+            "framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader",
+            ));
 }
 //Load some useful classes.
 Loader::using(array(
@@ -66,6 +68,8 @@ $loader = new UniversalClassLoader();
 $loader->registerNamespaces($namespaces);
 
 $loader->register();
-Hirudo\Core\ModulesManager::setAutoLoader($loader);
+
 AnnotationRegistry::registerLoader(array($loader, "loadClass"));
+Hirudo\Core\ModulesManager::setAutoLoader($loader);
+
 ?>

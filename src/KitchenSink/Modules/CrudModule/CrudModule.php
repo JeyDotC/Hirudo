@@ -133,7 +133,7 @@ class CrudModule extends Module {
 
         return $this->index();
     }
-    
+
 }
 
 ?>

@@ -22,11 +22,15 @@
 namespace Hirudo\Core\DependencyInjection;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Hirudo\Lang\Loader as Loader;
-use Hirudo\Core\Annotations\Import;
+use Doctrine\Common\Annotations\FileCacheReader;
 use Hirudo\Core\Annotations\Export;
-use Symfony\Component\DependencyInjection\ContainerBuilder,
-    Symfony\Component\DependencyInjection\ContainerAware;
+use Hirudo\Core\Annotations\Import;
+use Hirudo\Lang\Loader;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionProperty;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 //A quick fix for a weird issue with the autoloader when dealing with annotations.
 Loader::using("framework::hirudo::Hirudo::Core::Annotations::*");
@@ -48,7 +52,7 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
 
     function __construct() {
         $this->setContainer(new ContainerBuilder());
-        $this->annotationReader = new AnnotationReader();
+        $this->annotationReader = new FileCacheReader(new AnnotationReader(), Loader::toSinglePath("ext::cache::annotations.cache", ""));
     }
 
     /**
@@ -63,7 +67,7 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
     public function addServices(array $implementationClasses) {
         foreach ($implementationClasses as $class) {
             /* @var $annotation Export */
-            $annotation = $this->annotationReader->getClassAnnotation(new \ReflectionClass($class), "Hirudo\Core\Annotations\Export");
+            $annotation = $this->annotationReader->getClassAnnotation(new ReflectionClass($class), "Hirudo\Core\Annotations\Export");
             if ($annotation) {
                 $definition = $this->container->register($annotation->id, $class);
                 if (!empty($annotation->factory)) {
@@ -84,10 +88,10 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
      * @see Export
      */
     public function resolveDependencies($object) {
-        $objectReflection = new \ReflectionClass($object);
+        $objectReflection = new ReflectionClass($object);
 
         //Resolve properties dependency injection.
-        foreach ($objectReflection->getProperties() as /* @var $property \ReflectionProperty */$property) {
+        foreach ($objectReflection->getProperties() as /* @var $property ReflectionProperty */ $property) {
 
             $annotation = $this->annotationReader->getPropertyAnnotation($property, "Hirudo\Core\Annotations\Import");
 
@@ -97,7 +101,7 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
         }
 
         //Resolve methods dependency injection.
-        foreach ($objectReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as /* @var $method \ReflectionMethod */$method) {
+        foreach ($objectReflection->getMethods(ReflectionMethod::IS_PUBLIC) as /* @var $method ReflectionMethod */ $method) {
             /* @var $annotation Import */
             $annotation = $this->annotationReader->getMethodAnnotation($method, "Hirudo\Core\Annotations\Import");
             if ($annotation) {
@@ -106,13 +110,12 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
         }
     }
 
-    private function resolveDependencyForMethod($object,
-            \ReflectionMethod $method, Import $annotation) {
+    private function resolveDependencyForMethod($object, ReflectionMethod $method, Import $annotation) {
 
         $id = $annotation->id;
 
         if (empty($id)) {
-            /* @var $parameters \ReflectionParameter */
+            /* @var $parameters ReflectionParameter */
             $parameters = $method->getParameters();
             $type = $parameters[0]->getClass();
             $id = $type->name;
@@ -128,12 +131,11 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
         $method->invoke($object, $requestedObject);
     }
 
-    private function resolveDependencyForProperty($object,
-            \ReflectionProperty $property, Import $annotation) {
+    private function resolveDependencyForProperty($object, ReflectionProperty $property, Import $annotation) {
         $id = $annotation->id;
 
         if (empty($id)) {
-            $type = new \ReflectionClass($annotation->className);
+            $type = new ReflectionClass($annotation->className);
             $id = $type->name;
 
             if (!$this->container->has($id)) {
@@ -162,64 +164,63 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
     /**
      * Gets the annotations associated to thie given class.
      * 
-     * @param \ReflectionClass $object
+     * @param ReflectionClass $object
      * @return array<mixed> 
      */
-    public function getClassMetadata(\ReflectionClass $object) {
+    public function getClassMetadata(ReflectionClass $object) {
         return $this->annotationReader->getClassAnnotations($object);
     }
 
     /**
      * Gets the annotations associated to thie given method.
      * 
-     * @param \ReflectionMethod $method
+     * @param ReflectionMethod $method
      * @return array<mixed> 
      */
-    public function getMethodMetadata(\ReflectionMethod $method) {
+    public function getMethodMetadata(ReflectionMethod $method) {
         return $this->annotationReader->getMethodAnnotations($method);
     }
 
     /**
      * Gets the annotations associated to thie given property.
      * 
-     * @param \ReflectionProperty $property
+     * @param ReflectionProperty $property
      * @return array<mixed> 
      */
-    public function getPropertyMetadata(\ReflectionProperty $property) {
+    public function getPropertyMetadata(ReflectionProperty $property) {
         return $this->annotationReader->getPropertyAnnotations($property);
     }
 
     /**
      * Gets an annotation associated to thie given class by it's fully qualified class name.
      * 
-     * @param \ReflectionClass $object
+     * @param ReflectionClass $object
      * @param string $metaDataId The annotation's fully qualified class name
      * @return mixed The annotation, or null if it doesn't exists for this class.
      */
-    public function getClassMetadataById(\ReflectionClass $object, $metaDataId) {
+    public function getClassMetadataById(ReflectionClass $object, $metaDataId) {
         return $this->annotationReader->getClassAnnotation($object, $metaDataId);
     }
 
     /**
      * Gets an annotation associated to thie given method by it's fully qualified class name.
      * 
-     * @param \ReflectionMethod $method
+     * @param ReflectionMethod $method
      * @param string $metaDataId The annotation's fully qualified class name
      * @return mixed The annotation, or null if it doesn't exists for this method.
      */
-    public function getMethodMetadataById(\ReflectionMethod $method, $metaDataId) {
+    public function getMethodMetadataById(ReflectionMethod $method, $metaDataId) {
         return $this->annotationReader->getMethodAnnotation($method, $metaDataId);
     }
 
     /**
      * Gets an annotation associated to thie given property by it's fully qualified class name.
      * 
-     * @param \ReflectionProperty $property
+     * @param ReflectionProperty $property
      * @param string $metaDataId The annotation's fully qualified class name
      * @return mixed The annotation, or null if it doesn't exists for this property.
      */
-    public function getPropertyMetadataById(\ReflectionProperty $property,
-            $metaDataId) {
+    public function getPropertyMetadataById(ReflectionProperty $property, $metaDataId) {
         return $this->annotationReader->getPropertyAnnotation($property, $metaDataId);
     }
 
