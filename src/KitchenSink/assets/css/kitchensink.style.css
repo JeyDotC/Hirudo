@@ -13,13 +13,13 @@
 /**
     Notifications styles:
 */
-.message {
+.kitchensink-message {
     padding: 15px;
     color: #FFFFFF;
     text-shadow:1px 1px 1px #333333;
 }
 
-.message.success{
+.kitchensink-message.kitchensink-type-success{
     background-image: linear-gradient(bottom, #459934 0%, #98E698 100%);
     background-image: -o-linear-gradient(bottom, #459934 0%, #98E698 100%);
     background-image: -moz-linear-gradient(bottom, #459934 0%, #98E698 100%);
@@ -34,7 +34,7 @@
         );
 }
 
-.message.error{
+.kitchensink-message.kitchensink-type-error{
     background-image: linear-gradient(bottom, #993434 0%, #E69A9A 100%);
     background-image: -o-linear-gradient(bottom, #993434 0%, #E69A9A 100%);
     background-image: -moz-linear-gradient(bottom, #993434 0%, #E69A9A 100%);
@@ -49,7 +49,7 @@
         );
 }
 
-.message.info{
+.kitchensink-message.kitchensink-type-info{
     background-image: linear-gradient(bottom, #349299 0%, #9ACEE6 100%);
     background-image: -o-linear-gradient(bottom, #349299 0%, #9ACEE6 100%);
     background-image: -moz-linear-gradient(bottom, #349299 0%, #9ACEE6 100%);
@@ -64,7 +64,7 @@
         );
 }
 
-.message.warning{
+.kitchensink-message.kitchensink-type-warning{
     background-image: linear-gradient(bottom, #999934 0%, #E6E69A 100%);
     background-image: -o-linear-gradient(bottom, #999934 0%, #E6E69A 100%);
     background-image: -moz-linear-gradient(bottom, #999934 0%, #E6E69A 100%);

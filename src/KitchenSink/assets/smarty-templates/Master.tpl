@@ -71,7 +71,7 @@ To learn more about Smarty's template inheritance see http://www.smarty.net/inhe
             To know more about arrays in smarty templates see: http://www.smarty.net/docs/en/language.variables.tpl#language.variables.assoc.arrays
             *}
             {foreach $Module.messages as $message}
-                <div class="message {$message->getType()}">
+                <div class="kitchensink-message kitchensink-type-{$message->getType()}">
                     <strong>{$message->getTitle()}: </strong>
                     <span>
                         {$message->getMessage()}
