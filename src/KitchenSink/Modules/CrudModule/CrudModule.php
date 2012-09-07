@@ -5,10 +5,11 @@ namespace KitchenSink\Modules\CrudModule;
 use Hirudo\Core\Module;
 use KitchenSink\Models\Entities\Foo;
 use Hirudo\Core\Util\Message;
+use Hirudo\Core\Events\Annotations\Listen;
 use Hirudo\Core\Annotations\HttpPost;
 
 /**
- * This module represents a tipical Cread, Read, Update, Delete use case with the
+ * This module represents a tipical Create, Read, Update, Delete use case with the
  * Foo entity as the main subject.
  */
 class CrudModule extends Module {
@@ -133,7 +134,7 @@ class CrudModule extends Module {
 
         return $this->index();
     }
-
+    
 }
 
 ?>

@@ -29,14 +29,10 @@ use Hirudo\Core\Context\Request;
 use Hirudo\Core\Context\Routing;
 use Hirudo\Core\Context\Session;
 use Hirudo\Core\DependencyInjection\DependenciesManager;
-use Hirudo\Core\Events\Annotations\Listen;
 use Hirudo\Core\TemplatingInterface;
 use Hirudo\Lang\Loader;
-use ReflectionClass;
-use ReflectionMethod;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Hirudo\Core\Events\Dispatcher\HirudoDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Hirudo\Core\Annotations\Import;
 
 //A quick fix for a weird issue with the autoloader when dealing with annotations.
@@ -48,14 +44,13 @@ Loader::using("framework::hirudo::Hirudo::Core::Events::Annotations::*");
  *
  * @author JeyDotC
  */
-class ModulesContext extends EventDispatcher {
+class ModulesContext extends HirudoDispatcher implements EventDispatcherInterface {
 
     /**
      *
      * @var ModulesContext 
      */
     private static $instance;
-    private $deferredListeners = array();
     private $user;
     private $session;
     private $request;
@@ -249,51 +244,6 @@ class ModulesContext extends EventDispatcher {
 
     public function setDependenciesManager(DependenciesManager $dependenciesManager) {
         $this->dependenciesManager = $dependenciesManager;
-    }
-
-    public function subscribeObject($object) {
-        if ($object instanceof EventSubscriberInterface) {
-            $this->addSubscriber($object);
-        }
-
-        $reflectedObject = new ReflectionClass($object);
-        foreach ($reflectedObject->getMethods(ReflectionMethod::IS_PUBLIC) as /* @var $method ReflectionMethod */ $method) {
-            $listen = $this->dependenciesManager->getMethodMetadataById($method, "\Hirudo\Core\Events\Annotations\Listen");
-            if ($listen instanceof Listen) {
-                if (is_object($object)) {
-                    $this->addListener($listen->to, array($object, $method->getName()), $listen->priority);
-                } else {
-                    $this->subscribeDeferredObject($listen->to, $object, $method->getName());
-                }
-            }
-        }
-    }
-
-    public function subscribeDeferredObject($event, $className, $method) {
-        //Ensure this event listener is registered just once.
-        if (!array_key_exists($event, $this->deferredListeners)) {
-            $this->addListener($event, array($this, "deferredListener"));
-        }
-        $this->deferredListeners[$event][$className] = array($className, $method);
-    }
-
-    public function deferredListener(Event $e) {
-        foreach ($this->deferredListeners[$e->getName()] as &$listener) {
-            if (!is_object($listener[0])) {
-                $object = \Hirudo\Core\Util\ModulesRegistry::loadModule($listener[0]);
-                if (!is_object($object)) {
-                    $listener[0] = new $listener[0]();
-                    $this->dependenciesManager->resolveDependencies($listener[0]);
-                } else {
-                    $listener[0] = $object;
-                }
-            }
-
-            call_user_func($listener, $e);
-            if ($e->isPropagationStopped()) {
-                return;
-            }
-        }
     }
 
 }
