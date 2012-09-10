@@ -26,11 +26,9 @@ class ModulesRegistry {
 
     public static function loadModule($className, $loadIfNotExists = false) {
         if ($loadIfNotExists && !self::moduleIsLoaded($className)) {
-            $module = new $className();
-            if ($module instanceof Module) {
-                ModulesContext::instance()->getDependenciesManager()->resolveDependencies($module);
-                self::$loadedModules[$className] = $module;
-            }
+            $module = Module::createModuleFromClassName($className);
+            ModulesContext::instance()->getDependenciesManager()->resolveDependencies($module);
+            self::$loadedModules[$className] = $module;
         }
         return isset(self::$loadedModules[$className]) ? self::$loadedModules[$className] : null;
     }

@@ -5,7 +5,6 @@ namespace KitchenSink\Modules\CrudModule;
 use Hirudo\Core\Module;
 use KitchenSink\Models\Entities\Foo;
 use Hirudo\Core\Util\Message;
-use Hirudo\Core\Events\Annotations\Listen;
 use Hirudo\Core\Annotations\HttpPost;
 
 /**

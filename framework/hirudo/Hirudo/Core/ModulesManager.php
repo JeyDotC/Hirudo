@@ -63,6 +63,7 @@ class ModulesManager {
      * @var AnnotationsBasedDependenciesManager
      */
     private $dependencyManager;
+    private $loadedApps = array();
 
     /**
      * Creates a new modules manager. 
@@ -94,14 +95,6 @@ class ModulesManager {
         //Get the call from request.
         $call = $this->context->getRequest()->buildModuleCall();
 
-        if ($call->isEmpty()) {
-            $call = $this->getDefaultCall();
-        }
-
-        if (!$this->moduleExists($call)) {
-            $call = $this->getModuleNotFoundCall();
-        }
-
 //        $this->dispatch(HirudoStartEvent::NAME, new HirudoStartEvent());
 
         try {
@@ -125,6 +118,14 @@ class ModulesManager {
      * @return string The resulting output.
      */
     public function executeCall(ModuleCall $call) {
+        if ($call->isEmpty()) {
+            $call = $this->getDefaultCall();
+        }
+
+        if (!$this->moduleExists($call)) {
+            $call = $this->getModuleNotFoundCall();
+        }
+
         $this->prepareApplication($call->getApp());
         //Sets the current call in context. Possible useless behavior?
         $this->context->setCurrentCall($call);
@@ -147,14 +148,17 @@ class ModulesManager {
     }
 
     private function prepareApplication($appName) {
-        $appsPath = Loader::toSinglePath($this->rootApplicationsDir, "");
-        self::$autoLoader->registerNamespace($appName, $appsPath);
+        if (array_search($appName, $this->loadedApps) === false) {
+            $appsPath = Loader::toSinglePath($this->rootApplicationsDir, "");
+            self::$autoLoader->registerNamespace($appName, $appsPath);
 
-        $dir = new DirectoryHelper(new \RecursiveDirectoryIterator($appsPath . DS . $appName . DS . "Modules"));
-        $files = $dir->listFiles(2, ".php", true, true);
+            $dir = new DirectoryHelper(new \RecursiveDirectoryIterator($appsPath . DS . $appName . DS . "Modules"));
+            $files = $dir->listFiles(2, ".php", true, true);
 
-        foreach ($files as $class) {
-            $this->context->subscribeObject("$appName\Modules\\{$class}\\{$class}");
+            foreach ($files as $class) {
+                $this->context->subscribeObject("$appName\Modules\\{$class}\\{$class}");
+            }
+            $this->loadedApps[] = $appName;
         }
     }
 

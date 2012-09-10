@@ -69,13 +69,14 @@ class ListenerHolder {
 
     private function getEffectiveListener() {
         if ($this->isDeferred && !is_object($this->effectiveListener[0])) {
-            $object = ModulesRegistry::loadModule($this->effectiveListener[0]);
-            if (!is_object($object)) {
-                $this->effectiveListener[0] = new $this->effectiveListener[0]();
-                ModulesContext::instance()->getDependenciesManager()->resolveDependencies($this->effectiveListener[0]);
+            if (is_subclass_of($this->effectiveListener[0], "Hirudo\Core\Module")) {
+                $object = ModulesRegistry::loadModule($this->effectiveListener[0], true);
             } else {
-                $this->effectiveListener[0] = $object;
+                $object = new $this->effectiveListener[0]();
+                ModulesContext::instance()->getDependenciesManager()->resolveDependencies($this->effectiveListener[0]);
             }
+
+            $this->effectiveListener[0] = $object;
         }
 
         return $this->effectiveListener;
@@ -126,9 +127,9 @@ class HirudoDispatcher extends EventDispatcher {
         if (!count($listenerList)) {
             return;
         }
-        
+
         $listenerObject = $this->findListener($listener, $listenerList);
-        if($listenerObject !== false){
+        if ($listenerObject !== false) {
             parent::removeListener($eventName, $listenerObject);
         }
     }
@@ -161,6 +162,7 @@ class HirudoDispatcher extends EventDispatcher {
             }
         }
     }
+
 }
 
 ?>

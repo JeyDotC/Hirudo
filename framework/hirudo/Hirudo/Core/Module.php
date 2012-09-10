@@ -21,13 +21,15 @@
 
 namespace Hirudo\Core;
 
-use Hirudo\Core\Util\Message;
-use Hirudo\Core\Context\ModulesContext;
-use Hirudo\Lang\Loader;
-use Hirudo\Core\Context\Request;
 use Hirudo\Core\Annotations\Import;
+use Hirudo\Core\Context\ModulesContext;
+use Hirudo\Core\Context\Request;
 use Hirudo\Core\Context\Routing;
-use Hirudo\Core\Exceptions\HirudoException;
+use Hirudo\Core\Context\Session;
+use Hirudo\Core\Task;
+use Hirudo\Core\Util\Message;
+use Hirudo\Lang\Loader;
+use ReflectionClass;
 
 /**
  * A class that allows the edition of the response headers.
@@ -178,10 +180,10 @@ abstract class Module {
      * @var HeaderBag
      */
     protected $headers;
-    
+
     /**
      *
-     * @var Context\Session The session object
+     * @var Session 
      */
     protected $session;
 
@@ -194,10 +196,9 @@ abstract class Module {
 
     /**
      *
-     * @var \ReflectionClass 
+     * @var ReflectionClass 
      */
     private $reflector;
-    
 
     /**
      * Adds a variable to the view so it can access it via the name.
@@ -258,7 +259,7 @@ abstract class Module {
      * method, the default task is returned, normally the "index" task.
      * 
      * @param string $taskName Thask's name.
-     * @return \Hirudo\Core\Task The representation of the task to be executed.
+     * @return Task The representation of the task to be executed.
      */
     public function getTask($taskName) {
         $this->onModuleReady();
@@ -269,7 +270,7 @@ abstract class Module {
             $this->currentTask = $taskName;
         }
 
-        $reflection = new \ReflectionClass($this);
+        $reflection = new ReflectionClass($this);
         $task = new Task($reflection->getMethod($this->currentTask), $this);
 
         return $task;
@@ -347,21 +348,30 @@ abstract class Module {
     }
 
     /**
-     * Creates a module. 
+     * I don't trust PHP constructors anymore ¬¬
+     * 
+     * @param string $className
      */
-    function __construct() {
-        $this->reflector = new \ReflectionClass($this);
-        $this->headers = new HeaderBag();
-        $this->context = ModulesContext::instance();
-        $this->name = $this->reflector->getShortName();
-        $this->currentUser = $this->context->getCurrentUser();
-        $this->request = $this->context->getRequest();
-        $this->route = $this->context->getRouting();
-        $this->route->setModuleName($this->name);
-        $this->view = $this->context->getTemplating();
-        $this->appName = str_replace("\\Modules\\$this->name", "", $this->reflector->getNamespaceName());
-        $this->route->setAppName($this->appName);
-        $this->session = $this->context->getSession();
+    public static function createModuleFromClassName($className) {
+        if (is_subclass_of($className, "Hirudo\Core\Module")) {
+            $newModule = new $className();
+            $newModule->reflector = new ReflectionClass($newModule);
+            $newModule->headers = new HeaderBag();
+            $newModule->context = ModulesContext::instance();
+            $newModule->name = $newModule->reflector->getShortName();
+            $newModule->currentUser = $newModule->context->getCurrentUser();
+            $newModule->request = $newModule->context->getRequest();
+            $newModule->route = clone $newModule->context->getRouting();
+            $newModule->route->setModuleName($newModule->name);
+            $newModule->view = $newModule->context->getTemplating();
+            $newModule->appName = str_replace("\\Modules\\$newModule->name", "", $newModule->reflector->getNamespaceName());
+            $newModule->route->setAppName($newModule->appName);
+            $newModule->session = $newModule->context->getSession();
+        }else{
+            throw new Exceptions\HirudoException(ModulesContext::instance()->getCurrentCall(), "'$className' must inherit from Hirudo\Core\Module");
+        }
+        
+        return $newModule;
     }
 
     private function _getViewParts($view) {

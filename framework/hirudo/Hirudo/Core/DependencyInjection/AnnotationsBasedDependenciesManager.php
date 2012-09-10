@@ -28,6 +28,7 @@ use Hirudo\Core\Annotations\Import;
 use Hirudo\Lang\Loader;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionParameter;
 use ReflectionProperty;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

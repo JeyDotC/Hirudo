@@ -46,6 +46,10 @@ class BeforeTaskEvent extends Event {
         return $this->call;
     }
 
+    /**
+     * 
+     * @return Task
+     */
     public function getTask() {
         return $this->task;
     }
