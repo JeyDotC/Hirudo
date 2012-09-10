@@ -87,6 +87,7 @@ To learn more about Smarty's template inheritance see http://www.smarty.net/inhe
                 <li><a href="{url call="KitchenSink::Welcome::notifications"}" title="Some kinds of notifications">Notifications</a></li> 
                 <li><a href="{url call="KitchenSink::Welcome::boomPage"}" title="I want to see an explosion!">Exceptions</a></li>
                 <li><a href="{url call="Qwerty::Was::here"}" title="This link is broken">404 Page</a></li>
+                <li><a href="{url call="KitchenSink::EventListening::broadCastEvent"}" title="See event listening in action">Event listening</a></li>
             </ul>
         </div>
 

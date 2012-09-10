@@ -4,9 +4,10 @@ namespace KitchenSink\Modules\EventListening;
 
 use Hirudo\Core\Context\ModuleCall;
 use Hirudo\Core\Events\AfterTaskEvent;
-use Hirudo\Core\Events\BeforeTaskEvent;
 use Hirudo\Core\Events\Annotations\Listen;
+use Hirudo\Core\Events\BeforeTaskEvent;
 use Hirudo\Core\Module;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * Description of EventListeningModule
@@ -37,11 +38,28 @@ class EventListening extends Module {
      * 
      * @param AfterTaskEvent $e
      * 
-     * @Listen(to="afterTask", constraints={"KitchenSink::CrudModule::save"})
+     * @Listen(to="afterTask", constraints={"KitchenSink::EventListening::broadCastEvent"})
      */
     function listenToSpecificCall(AfterTaskEvent $e) {
         $e->getDocument()->find("#Content")
-                ->append("<div style='color:#DDDDDD;'>This content is added by an event listener, to know more about them look at the <strong>KitchenSink\Modules\EventListening\EventListening</strong> class </div>");
+                ->append("<p>This content is added by an event listener, to know more about them look at the <strong>KitchenSink\Modules\EventListening\EventListening</strong> class </p>");
+    }
+
+    function broadCastEvent() {
+        $myCustomEvent = $this->context->dispatch("myCustomEvent", new GenericEvent("A cool Message!"));
+        return $myCustomEvent->getArgument("output");
+    }
+
+    /**
+     * 
+     * @param type $event
+     * @Listen(to="myCustomEvent")
+     */
+    function respondToCustomEvent(GenericEvent $event) {
+        $this->assign("coolMessage", $event->getSubject());
+        $output = $this->display("respond");
+        
+        $event->setArgument("output", $output);
     }
 
 }
