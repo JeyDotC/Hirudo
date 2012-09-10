@@ -3,6 +3,9 @@
 namespace Hirudo\Core\Events;
 
 use Symfony\Component\EventDispatcher\Event;
+use Hirudo\Lang\Loader;
+
+Loader::using("framework::libs::phpQuery::phpQuery");
 
 /**
  * Description of AfterTaskEvent
@@ -11,18 +14,46 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class AfterTaskEvent extends Event {
 
-    private $taskResult;
+    /**
+     *
+     * @var \phpQueryObject
+     */
+    private $dom;
+    
+    private $result;
 
     function __construct($result) {
-        $this->taskResult = $result;
+        $this->result = $result;
     }
 
     public function getTaskResult() {
-        return $this->taskResult;
+        return isset($this->dom) ? $this->dom->htmlOuter() : $this->result;
     }
 
-    public function setTaskResult($taskResult) {
-        $this->taskResult = $taskResult;
+    /**
+     * 
+     * @return \phpQueryObject
+     */
+    public function getDocument($selector = "") {
+        if(!isset($this->dom)){
+            $this->dom = \phpQuery::newDocument($this->result);
+        }
+        
+        if (empty($selector)) {
+            return $this->dom;
+        } else {
+            return $this->dom[$selector];
+        }
+    }
+
+    /**
+     * 
+     * @param type $param
+     * @param type $context
+     * @return \phpQueryObject
+     */
+    public function pq($param, $context = null) {
+        return \phpQuery::pq($param, $context);
     }
 
 }
