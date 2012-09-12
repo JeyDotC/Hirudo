@@ -14,15 +14,6 @@ onModuleNotFound: "KitchenSink::Errors::notFound"
 
 # This is a module to be called in case of any unhandled exception, the value is in format: 
 # "AppName::ModuleName::methodName"
-onError: "KitchenSink::Errors::index"
+onError: "KitchenSink::Errors"
 
 # Indeed, you can put whatever configuration variables needed here:
-
-# Yes, this is a DBAL configuration for doctrine, supposing that you are using the
-# Hirudo's DoctrineDataAccess extension ;)
-dbal:
-  dbname: mydatabase
-  user: root
-  password: 123456
-  host: localhost
-  driver: pdo_mysql

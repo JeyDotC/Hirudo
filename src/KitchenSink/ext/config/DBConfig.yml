@@ -1,0 +1,8 @@
+# Yes, this is a DBAL configuration for doctrine, supposing that you are using the
+# Hirudo's DoctrineDataAccess extension ;)
+dbal:
+  dbname: mydatabase
+  user: root
+  password: 123456
+  host: localhost
+  driver: pdo_mysql

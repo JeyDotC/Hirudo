@@ -1,14 +1,8 @@
-#
+#General activeness of the extension.
+active: true
+
 namespaces: 
-  - Sample
+  - Hirudo\Core\Extensions
   
 plugins:
-  - Sample\Plugins\SamplePlugin
-  
-services:
-  - Sample\Utilities\SomeUsefulClass
-  
-templating_extensions:
-  - Sample/SmartyExtensions
-
-
+  - { class: Hirudo\Core\Extensions\Plugins\TaskPreConditionsPlugin, active: true }

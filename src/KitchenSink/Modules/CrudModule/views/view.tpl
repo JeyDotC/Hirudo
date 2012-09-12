@@ -4,6 +4,7 @@
 {block name="header"}Crud Module | View{/block}
 
 {block name="content"}
+<a href="{url call="KitchenSink::CrudModule::index"}">Back to the Foo list</a>
 <div>
     <h2>Foo number {$foo->getId()}</h2>
     <p>

@@ -309,7 +309,8 @@ class DirectoryHelper {
 
         while ($dir->valid()) {
             if (!$dir->isDot() && $dir->isDir() && $depth > 1) {
-                $paths = array_merge($paths, $this->recursiveListFiles($dir->getChildren(), $depth - 1, $filterByExtension, $trimExtension, $base));
+                $children = $dir->getChildren();
+                $paths = array_merge($paths, $this->recursiveListFiles($children, $depth - 1, $filterByExtension, $trimExtension, $base));
             } else if (!$dir->isDot() && $dir->isFile()) {
                 if (!$base) {
                     $path = $dir->getPathName();

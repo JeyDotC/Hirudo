@@ -6,6 +6,6 @@
 
 {block name="content"}
 <p>
-    {$coolMessage}
+    <em>{$coolMessage}</em>  brough to you by an event listener that listens to a custom event!
 </p>
 {/block}

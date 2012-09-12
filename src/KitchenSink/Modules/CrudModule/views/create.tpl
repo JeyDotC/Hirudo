@@ -4,6 +4,7 @@
 {block name="header"}Crud Module | Create{/block}
 
 {block name="content"}
+<a href="{url call="KitchenSink::CrudModule::index"}">Back to the Foo list</a>
 <form action="{$action}" method="post">
     <label for="foo_description">Description:</label>
     <div>

@@ -4,6 +4,7 @@
 {block name="header"}Crud Module | Update{/block}
 
 {block name="content"}
+<a href="{url call="KitchenSink::CrudModule::index"}">Back to the Foo list</a>
 <form action="{$action}" method="post">
     <input type="hidden" {bind to="foo.id"} id="foo_id" value="{$foo->getId()}" />
     <label for="foo_description">Description:</label>

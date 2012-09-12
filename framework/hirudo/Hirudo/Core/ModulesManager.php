@@ -57,12 +57,6 @@ class ModulesManager {
      * @var UniversalClassLoader 
      */
     private static $autoLoader;
-
-    /**
-     *
-     * @var AnnotationsBasedDependenciesManager
-     */
-    private $dependencyManager;
     private $loadedApps = array();
 
     /**
@@ -72,16 +66,12 @@ class ModulesManager {
      * class names that implement the core functionalities of Hirudo.
      */
     function __construct(array $implementationClasses) {
-        $this->dependencyManager = new AnnotationsBasedDependenciesManager();
-        $this->dependencyManager->addServices($implementationClasses);
+        $dependencyManager = new AnnotationsBasedDependenciesManager();
+        $dependencyManager->addServices($implementationClasses);
         $this->context = Context\ModulesContext::instance();
-        $this->context->setDependenciesManager($this->dependencyManager);
-        $this->load();
-    }
-
-    private function load() {
-        $this->dependencyManager->resolveDependencies($this->context);
-        $this->loadExtensions();
+        $this->context->setDependenciesManager($dependencyManager);
+        $dependencyManager->resolveDependencies($this->context);
+        $this->loadExtensions("ext::libs");
         $this->rootApplicationsDir = $this->context->getConfig()->get("businessRoot", "src");
     }
 
@@ -94,8 +84,6 @@ class ModulesManager {
     public function run() {
         //Get the call from request.
         $call = $this->context->getRequest()->buildModuleCall();
-
-//        $this->dispatch(HirudoStartEvent::NAME, new HirudoStartEvent());
 
         try {
             $output = $this->executeCall($call);
@@ -118,6 +106,8 @@ class ModulesManager {
      * @return string The resulting output.
      */
     public function executeCall(ModuleCall $call) {
+        $this->prepareApplication($call->getApp());
+        
         if ($call->isEmpty()) {
             $call = $this->getDefaultCall();
         }
@@ -126,7 +116,6 @@ class ModulesManager {
             $call = $this->getModuleNotFoundCall();
         }
 
-        $this->prepareApplication($call->getApp());
         //Sets the current call in context. Possible useless behavior?
         $this->context->setCurrentCall($call);
 
@@ -134,7 +123,6 @@ class ModulesManager {
         $module = $this->resolveModule($call);
 
         $task = $module->getTask($call->getTask());
-        $this->resolveTaskRequirements($task);
 
         $beforeTaskEvent = $this->context->dispatch("beforeTask", new BeforeTaskEvent($task));
 
@@ -150,8 +138,11 @@ class ModulesManager {
     private function prepareApplication($appName) {
         if (array_search($appName, $this->loadedApps) === false) {
             $appsPath = Loader::toSinglePath($this->rootApplicationsDir, "");
+            if(!is_file($appsPath . DS . $appName)){
+                $appName = $this->context->getConfig()->get("defaultApplication");
+            }
             self::$autoLoader->registerNamespace($appName, $appsPath);
-
+            
             $dir = new DirectoryHelper(new \RecursiveDirectoryIterator($appsPath . DS . $appName . DS . "Modules"));
             $files = $dir->listFiles(2, ".php", true, true);
 
@@ -159,7 +150,10 @@ class ModulesManager {
                 $this->context->subscribeObject("$appName\Modules\\{$class}\\{$class}");
             }
             $this->loadedApps[] = $appName;
+            $this->loadExtensions("$this->rootApplicationsDir::$appName::ext::libs");
         }
+
+        $this->context->getConfig()->loadApp($appName);
     }
 
     /**
@@ -169,32 +163,6 @@ class ModulesManager {
      */
     public static function setAutoLoader($loader) {
         self::$autoLoader = $loader;
-    }
-
-    /**
-     * Resolves the task's requirements from request.
-     * 
-     * @param Task $task
-     * @throws Exception 
-     */
-    protected function resolveTaskRequirements(Task &$task) {
-        if ($task->isPostOnly() && $this->context->getRequest()->method() != "POST") {
-            throw new \Exception("The task [{$this->context->getCurrentCall()}] accepts POST requests only");
-        }
-
-        foreach ($task->getGetParams() as /* @var $param \ReflectionParameter */ $param) {
-            $task->setParamValue($param->name, $this->context->getRequest()->get($param->name, $task->getParamValue($param->name)));
-        }
-
-        foreach ($task->getPostParams() as /* @var $param ReflectionParameter */ $param) {
-            if ($param->getClass() != null) {
-                $object = $param->getClass()->newInstance();
-                $this->context->getRequest()->bind($object, $this->context->getRequest()->post($param->name));
-                $task->setParamValue($param->name, $object);
-            } else {
-                $task->setParamValue($param->name, $this->context->getRequest()->post($param->name, $task->getParamValue($param->name)));
-            }
-        }
     }
 
     /**
@@ -242,24 +210,30 @@ class ModulesManager {
         return ModuleCall::fromString($this->context->getConfig()->get("onError"));
     }
 
-    private function loadExtensions() {
-        $extensions = $this->getExtensionsConfiguration();
+    private function loadExtensions($extLibs) {
+        $extensions = $this->getExtensionsConfiguration($extLibs);
 
         foreach ($extensions as $dir => $extension) {
-            if (isset($extension["namespaces"])) {
-                $this->registerNamespaces($dir, $extension["namespaces"]);
-            }
+            if (!isset($extension["active"]) || $extension["active"]) {
+                if (isset($extension["includes"])) {
+                    $this->includeLibraries($dir, $extension["includes"]);
+                }
+                
+                if (isset($extension["namespaces"])) {
+                    $this->registerNamespaces($dir, $extension["namespaces"]);
+                }
 
-            if (isset($extension["plugins"])) {
-                $this->registerPlugins($extension["plugins"]);
-            }
+                if (isset($extension["plugins"])) {
+                    $this->registerPlugins($extension["plugins"]);
+                }
 
-            if (isset($extension["services"])) {
-                $this->registerServices($extension["services"]);
-            }
+                if (isset($extension["services"])) {
+                    $this->registerServices($extension["services"]);
+                }
 
-            if (isset($extension["templating_extensions"])) {
-                $this->registerTemplatingExtensions($dir, $extension["templating_extensions"]);
+                if (isset($extension["templating_extensions"])) {
+                    $this->registerTemplatingExtensions($dir, $extension["templating_extensions"]);
+                }
             }
         }
     }
@@ -283,12 +257,16 @@ class ModulesManager {
 
     private function registerPlugins(array $plugins) {
         foreach ($plugins as $plugin) {
-            $this->context->subscribeObject(new $plugin());
+            if (is_string($plugin)) {
+                $this->context->subscribeObject(new $plugin());
+            } else if (is_array($plugin) && $plugin["active"]) {
+                $this->context->subscribeObject(new $plugin["class"]());
+            }
         }
     }
 
     private function registerServices(array $services) {
-        $this->dependencyManager->addServices($services);
+        $this->context->getDependenciesManager()->addServices($services);
     }
 
     private function registerTemplatingExtensions($dir, array $templating_extensions) {
@@ -297,13 +275,19 @@ class ModulesManager {
             $this->context->getTemplating()->addExtensionsPath($dir . DS . $extensionDir);
         }
     }
+    
+    private function includeLibraries($dir, array $libraries) {
+        foreach ($libraries as $library) {
+            require_once $dir . DS . $library;
+        }
+    }
 
-    private function getExtensionsConfiguration() {
-        $cacheFile = Loader::toSinglePath("ext::cache::extensions.config.cache", ".yml");
+    private function getExtensionsConfiguration($extDir) {
+        $cacheFile = Loader::toSinglePath("ext::cache::extensions::" . str_replace("::", ".", $extDir) . ".config.cache", ".yml");
         $extensions = array();
 
         if ($this->context->getConfig()->get("debug") || !is_file($cacheFile)) {
-            $extensionsDir = new DirectoryHelper(new \RecursiveDirectoryIterator(Loader::toSinglePath("ext::libs", "")));
+            $extensionsDir = new DirectoryHelper(new \RecursiveDirectoryIterator(Loader::toSinglePath($extDir, "")));
             $files = $extensionsDir->listDirectories(1);
 
             foreach ($files as $file) {
@@ -311,8 +295,8 @@ class ModulesManager {
                     $extensions[$file] = Yaml::parse($file . DS . "manifest.yml");
                 }
             }
-            if (!Loader::isDir("ext::cache")) {
-                mkdir(Loader::toSinglePath("ext::cache", ""));
+            if (!Loader::isDir("ext::cache::extensions::")) {
+                mkdir(Loader::toSinglePath("ext::cache::extensions::", ""));
             }
 
             $yaml = Yaml::dump($extensions);

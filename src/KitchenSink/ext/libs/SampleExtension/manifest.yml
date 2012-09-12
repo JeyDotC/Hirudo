@@ -1,9 +1,14 @@
-#
+# Be careful on using this part of the manifest as these files get loaded on every request.
+# To load a namespeceless library only when needed, use Hirudo\Lang\Loader::using("path::to::my::lib") 
+# at the file that uses this library.
+includes:
+  - namespaceless-library/ANamespacelessClass.php
+  
 namespaces: 
   - Sample
   
 plugins:
-  - Sample\Plugins\SamplePlugin
+  - { class: Sample\Plugins\SamplePlugin, active: true }
   
 services:
   - Sample\Utilities\SomeUsefulClass

@@ -36,7 +36,7 @@
                     *}
                     <a href="{url call="KitchenSink::CrudModule::view" id=$foo->getId()}">View</a> | 
                     <a href="{url call="KitchenSink::CrudModule::update" id=$foo->getId()}">Edit</a> | 
-                    <a href="{url call="KitchenSink::CrudModule::remove"}">Remove</a>
+                    <a href="{url call="KitchenSink::CrudModule::remove" id=$foo->getId()}">Remove</a>
                 </td>
             </tr>
         {foreachelse}

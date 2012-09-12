@@ -56,6 +56,13 @@ abstract class AppConfig {
      * data, the returned value will be an array.
      */
     public abstract function get($key, $default = null);
+    
+    public abstract function loadApp($appName);
+
+    /**
+     * 
+     */
+    public abstract function has($key);
 
     public final function __set($name, $value) {
         throw new Exception("The config is a read only object.");

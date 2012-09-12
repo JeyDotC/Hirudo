@@ -21,8 +21,8 @@
 
 namespace Hirudo\Impl\Drupal;
 
-use Hirudo\Core\Context\Routing as Routing;
 use Hirudo\Core\Annotations\Export;
+use Hirudo\Core\Context\Routing as Routing;
 
 /**
  * @Export(id="routing")

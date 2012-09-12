@@ -43,17 +43,32 @@ class SAppConfig extends AppConfig {
 
     public function get($key, $default = null) {
         $result = $default;
-        if (isset($this->document[$key])) {
+        if ($this->has($key)) {
             $result = $this->document[$key];
         }
         return $result;
     }
 
     protected function load() {
-        $path = Loader::toSinglePath("ext::config::Config", ".yml");
+        $file = Loader::toSinglePath("ext::config::Config", ".yml");
+        $this->loadYMLFiles(array($file));
+    }
 
-        if (file_exists($path)) {
-            $this->document = Yaml::parse($path);
+    public function has($key) {
+        return isset($this->document[$key]);
+    }
+
+    public function loadApp($appName) {
+        $businesRoot = $this->get("businessRoot", "src");
+        $files = Loader::toPaths("$businesRoot::$appName::ext::config::*", ".yml");
+        $this->loadYMLFiles($files);
+    }
+
+    private function loadYMLFiles(array $files) {
+        foreach ($files as $file) {
+            if (file_exists($file)) {
+                $this->document = array_merge($this->document, Yaml::parse($file));
+            }
         }
     }
 
