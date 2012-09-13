@@ -16,7 +16,7 @@ corresponding classes of the CMS and delegating the responsibility to them.
 There are three implementations up to now:
 
 * The Joomla! version that works as a component [Supported versions: 1.5, 1.6(not tested), 1.7, 2.5].
-* The Drupal version that works as a module [Supported versions: 6.x, 7.x, 8.x].
+* The Drupal version that works as a module and creates a block [Supported versions: 6.x, 7.x, 8.x].
 * The Stand alone version that can live by itself.
 
 ### About the name
@@ -52,10 +52,10 @@ files and the folder where you are going to work.
 
 Let explain each one:
 
-* [ext/](http://github.com/JeyDotC/Hirudo/tree/master/ext): Here goes the extensions to the framework: plugins, smarty plugins, configuration, etc.
+* [ext/](http://github.com/JeyDotC/Hirudo/tree/master/ext): Here goes the global extensions to the framework: plugins, smarty plugins, configuration, etc, those can be used by all applications.
 
 * [framework/](http://github.com/JeyDotC/Hirudo/tree/master/framework): Obviously here goes the framework classes; normally you should not
-look into this folder, unless you are very curious or even have an idea to inprove
+look into this folder, unless you are very curious or even have an idea to improve
 the framework itself ;)
 
 * [src/](http://github.com/JeyDotC/Hirudo/tree/master/src): Here goes your applications. In this place you will put your fantastic 

@@ -3,16 +3,16 @@
 namespace Hirudo\Core\Extensions\Plugins;
 
 use Hirudo\Core\Context\ModulesContext;
-use Hirudo\Core\Context\ModuleCall;
 use Hirudo\Core\Events\Annotations\Listen;
 use Hirudo\Core\Events\BeforeTaskEvent;
 
 /**
- * Description of TaskExecutionCheckout
+ * Tries to resolve the tasks requirements taking data from POST and/or GET 
+ * based on the task's parameters.
  *
  * @author JeyDotC
  */
-class TaskPreConditionsPlugin {
+class TaskRequirementsPlugin {
 
     private $context;
 
@@ -21,16 +21,15 @@ class TaskPreConditionsPlugin {
     }
 
     /**
+     * This method tries to resolve the task requirements by checking its parameters
+     * and looking for the corresponding values in the request variables.
      * 
      * @param BeforeTaskEvent $e
-     * @Listen(to="beforeTask", priority=9)
+     * 
+     * @Listen(to="beforeTask", priority=8)
      */
     function resolveTaskRequirements(BeforeTaskEvent $e) {
         $task = $e->getTask();
-
-        if ($task->isPostOnly() && $this->context->getRequest()->method() != "POST") {
-            throw new \Exception("The task [{$this->context->getCurrentCall()}] accepts POST requests only");
-        }
 
         foreach ($task->getGetParams() as /* @var $param \ReflectionParameter */ $param) {
             $task->setParamValue($param->name, $this->context->getRequest()->get($param->name, $task->getParamValue($param->name)));
@@ -45,27 +44,6 @@ class TaskPreConditionsPlugin {
                 $task->setParamValue($param->name, $this->context->getRequest()->post($param->name, $task->getParamValue($param->name)));
             }
         }
-    }
-
-    /**
-     * 
-     * @param BeforeTaskEvent $e
-     * @Listen(to="beforeTask", priority=10)
-     */
-    function checkIgnoreCall(BeforeTaskEvent $e) {
-        $result = $e->getTask()->getTaskAnnotation("Hirudo\Core\Annotations\IgnoreCall");
-        if (!is_null($result)) {
-            $e->replaceCall($this->getModuleNotFoundCall());
-            $e->stopPropagation();
-        }
-    }
-    
-    function checkRoles(BeforeTaskEvent $e) {
-        
-    }
-
-    private function getModuleNotFoundCall() {
-        return ModuleCall::fromString($this->context->getConfig()->get("onModuleNotFound"));
     }
 
 }

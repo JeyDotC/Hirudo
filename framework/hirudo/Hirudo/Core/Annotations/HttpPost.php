@@ -10,7 +10,11 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Annotation
  * @Target("METHOD")
  */
-class HttpPost {
+class HttpPost extends HttpMethod {
+    public function __construct() {
+        parent::__construct(array("value"=>"POST"));
+    }
+
 }
 
 ?>

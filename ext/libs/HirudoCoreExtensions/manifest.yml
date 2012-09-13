@@ -5,4 +5,9 @@ namespaces:
   - Hirudo\Core\Extensions
   
 plugins:
-  - { class: Hirudo\Core\Extensions\Plugins\TaskPreConditionsPlugin, active: true }
+  #Checks if a task is annotated with the IgnoreCall annotation. If so, it redirects to the onModuleNotFound page
+  - { class: Hirudo\Core\Extensions\Plugins\IgnoreCallPlugin, active: true }
+  #Checks if the task is being called from the correct request mode.
+  - { class: Hirudo\Core\Extensions\Plugins\RequestModePlugin, active: true }
+  #Tries to resolve the tasks requirements taking data from POST and/or GET based on the task's parameters.
+  - { class: Hirudo\Core\Extensions\Plugins\TaskRequirementsPlugin, active: true }

@@ -1,8 +1,16 @@
+#This is the global configuration file, here you can provide some configuration values
+#that will be available for all applications. Note that these values may be overriden
+#by an application.
+
 # The folder where your applications are in. [Optional] it defaults to "src"
 #businessRoot: "src"
 
 # Is Hirudo in development mode? [Optional]
 debug: true
 
+# In this file is important to provide a value for this configuration as Hirudo will try to use
+# it when the application invoked doesn't exist.
+# You may skip this configuration by using url rewrite.
 defaultApplication: "KitchenSink"
+
 # Indeed, you can put whatever configuration variables needed here:
