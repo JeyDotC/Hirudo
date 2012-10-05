@@ -9,6 +9,7 @@ namespaces:
   
 plugins:
   - { class: Sample\Plugins\SamplePlugin, active: true }
+  - { class: Sample\Plugins\OverridingRequestModePlugin, active: true }
   
 services:
   - Sample\Utilities\SomeUsefulClass

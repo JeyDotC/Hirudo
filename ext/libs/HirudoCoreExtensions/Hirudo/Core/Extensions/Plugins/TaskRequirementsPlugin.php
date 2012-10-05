@@ -26,7 +26,7 @@ class TaskRequirementsPlugin {
      * 
      * @param BeforeTaskEvent $e
      * 
-     * @Listen(to="beforeTask", priority=8)
+     * @Listen(to="beforeTask", priority=8, virtual=true, id="task_requirements_resolver")
      */
     function resolveTaskRequirements(BeforeTaskEvent $e) {
         $task = $e->getTask();

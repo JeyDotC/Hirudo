@@ -29,14 +29,15 @@ class RequestModePlugin {
      * @throws Exception When the method is annotated with the Hirudo\Core\Annotations\HttpPost
      * annotation and the method is tried to be accesed via GET.
      * 
-     * @Listen(to="beforeTask", priority=9)
+     * @Listen(to="beforeTask", priority=9, virtual=true, id="check_request_mode")
      */
     function checkRequestMode(BeforeTaskEvent $e) {
         $annotation = $e->getTask()->getTaskAnnotation("Hirudo\Core\Annotations\HttpMethod");
         $currentMethod = $this->context->getRequest()->method();
-        
+        $accectedMethods = implode(", ", $annotation->value);
         if($annotation instanceof HttpMethod &&  !in_array(strtoupper($currentMethod), $annotation->value)){
-            throw new \Exception("The task [{$this->context->getCurrentCall()}] accepts POST requests only");
+            $accectedMethods = implode(" or ", $annotation->value);
+            throw new \Exception("The task [{$this->context->getCurrentCall()}] accepts $accectedMethods requests only, received $currentMethod");
         }
     }
 }

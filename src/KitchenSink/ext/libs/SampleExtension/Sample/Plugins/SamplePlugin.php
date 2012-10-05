@@ -21,7 +21,7 @@ class SamplePlugin {
     public function doNothing(Event $e) {
         return;
     }
-
+    
 }
 
 ?>

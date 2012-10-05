@@ -48,6 +48,24 @@ class Listen {
      * @var int 
      */
     public $priority = 0;
+    
+    /**
+     *
+     * @var boolean 
+     */
+    public $virtual = false;
+    
+    /**
+     *
+     * @var string
+     */
+    public $id = "";
+    
+    /**
+     *
+     * @var string
+     */
+    public $overrides = "";
 }
 
 ?>
