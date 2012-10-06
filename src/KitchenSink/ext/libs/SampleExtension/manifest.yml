@@ -9,7 +9,9 @@ namespaces:
   
 plugins:
   - { class: Sample\Plugins\SamplePlugin, active: true }
-  - { class: Sample\Plugins\OverridingRequestModePlugin, active: true }
+  # Change the active: value to true in order to prove this plugin
+  # This plugin simply overrides the vehavior of the core plugin. Remember to clear the cache!
+  - { class: Sample\Plugins\OverridingRequestModePlugin, active: false }
   
 services:
   - Sample\Utilities\SomeUsefulClass

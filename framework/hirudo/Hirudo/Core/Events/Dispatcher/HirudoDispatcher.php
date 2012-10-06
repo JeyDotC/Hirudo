@@ -4,6 +4,8 @@ namespace Hirudo\Core\Events\Dispatcher;
 
 use Hirudo\Core\Context\ModulesContext;
 use Hirudo\Core\Events\Annotations\Listen;
+use Hirudo\Core\Events\Annotations\OverridesListener;
+use Hirudo\Core\Events\Annotations\VirtualListener;
 use Hirudo\Core\Exceptions\HirudoException;
 use Hirudo\Core\Util\ModulesRegistry;
 use ReflectionClass;
@@ -21,33 +23,35 @@ class ListenerHolder {
     private $effectiveListener;
     private $isVirtual;
     private $virtualId = "";
-    private $overrides = "";
+    private $overrides = false;
+    private $overriddenId = "";
 
     public static function create($listener, $eventName, $constraints, $overrides = "") {
-        return new ListenerHolder($listener, $eventName, $constraints, false, false, "", $overrides);
+        return new ListenerHolder($listener, $eventName, $constraints, false, "", $overrides);
     }
 
     public static function createVirtual($listener, $eventName, $constraints, $virtualId, $overrides = "") {
-        return new ListenerHolder($listener, $eventName, $constraints, false, true, $virtualId, $overrides);
+        return new ListenerHolder($listener, $eventName, $constraints, false, $virtualId, $overrides);
     }
 
     public static function createDeferred($listener, $eventName, $constraints, $overrides = "") {
-        return new ListenerHolder($listener, $eventName, $constraints, true, false, "", $overrides);
+        return new ListenerHolder($listener, $eventName, $constraints, true, "", $overrides);
     }
 
     public static function createVirtualDeferred($listener, $eventName, $constraints, $virtualId, $overrides = "") {
-        return new ListenerHolder($listener, $eventName, $constraints, true, true, $virtualId, $overrides);
+        return new ListenerHolder($listener, $eventName, $constraints, true, $virtualId, $overrides);
     }
-    
-    function __construct($listener, $eventName, $constraints, $isDeferred = false, $isVirtual = false, $virtualId = "", $overrides = "") {
+
+    function __construct($listener, $eventName, $constraints, $isDeferred = false, $virtualId = "", $overrides = "") {
         $this->listener = $listener;
         $this->effectiveListener = $this->listener;
         $this->eventName = $eventName;
         $this->constraints = $constraints;
         $this->isDeferred = $isDeferred;
-        $this->isVirtual = $isVirtual;
+        $this->isVirtual = !empty($virtualId);
         $this->virtualId = $virtualId;
-        $this->overrides = $overrides;
+        $this->overrides = !empty($overrides);
+        $this->overriddenId = $overrides;
     }
 
     public function getOverrides() {
@@ -87,6 +91,10 @@ class ListenerHolder {
 
     public function setListener($listener) {
         $this->listener = $listener;
+    }
+
+    public function getOverriddenId() {
+        return $this->overriddenId;
     }
 
     private function checkConstraints() {
@@ -143,25 +151,21 @@ class HirudoDispatcher extends EventDispatcher {
     public function addListener($eventName, $listener, $priority = 0) {
         $l = $listener;
         if (!($l instanceof ListenerHolder)) {
+            /* @var $l ListenerHolder */
             $l = ListenerHolder::create($listener, $eventName, array());
         }
+
         if ($l->getIsVirtual()) {
-            if (!isset($this->virtualListeners["{$l->getEventName()}-{$l->getVirtualId()}"])) {
-                $this->virtualListeners["{$l->getEventName()}-{$l->getVirtualId()}"] = $l;
-            } else {
+            if (!isset($this->virtualListeners[$l->getVirtualId()])) {
+                $this->virtualListeners[$l->getVirtualId()] = "candidate";
+            }
+            if ($this->virtualListeners[$l->getVirtualId()] == "overridden") {
                 return;
             }
         }
 
-        $overrides = $l->getOverrides();
-        if (!empty($overrides)) {
-            if (isset($this->virtualListeners["{$l->getEventName()}-{$overrides}"])) {
-                $overriden = $this->virtualListeners["{$l->getEventName()}-{$overrides}"];
-                if ($overriden !== "overriden") {
-                    $this->removeListener($l->getEventName(), $overriden);
-                    $this->virtualListeners["{$l->getEventName()}-{$overrides}"] = "overriden";
-                }
-            }
+        if ($l->getOverrides()) {
+            $this->virtualListeners[$l->getOverriddenId()] = "overridden";
         }
 
         parent::addListener($eventName, $l, $priority);
@@ -176,7 +180,9 @@ class HirudoDispatcher extends EventDispatcher {
         foreach ($reflectedObject->getMethods(ReflectionMethod::IS_PUBLIC) as /* @var $method ReflectionMethod */ $method) {
             $listen = ModulesContext::instance()->getDependenciesManager()->getMethodMetadataById($method, "\Hirudo\Core\Events\Annotations\Listen");
             if ($listen instanceof Listen) {
-                $listener = $this->createHolderFromListen(array($object, $method->getName()), $listen, !is_object($object));
+                $virtual = ModulesContext::instance()->getDependenciesManager()->getMethodMetadataById($method, "\Hirudo\Core\Events\Annotations\VirtualListener");
+                $overrides = ModulesContext::instance()->getDependenciesManager()->getMethodMetadataById($method, "\Hirudo\Core\Events\Annotations\OverridesListener");
+                $listener = $this->createHolderFromListen(array($object, $method->getName()), $listen, !is_object($object), $virtual, $overrides);
                 $this->addListener($listener->getEventName(), $listener, $listen->priority);
             }
         }
@@ -219,20 +225,36 @@ class HirudoDispatcher extends EventDispatcher {
      */
     protected function doDispatch($listeners, $eventName, Event $event) {
         foreach ($listeners as /* @var $listener ListenerHolder */ $listener) {
+            if ($listener->getIsVirtual()
+                    && isset($this->virtualListeners[$listener->getVirtualId()])
+                    && $this->virtualListeners[$listener->getVirtualId()] == "overridden") {
+                continue;
+            }
             $listener->run($event);
             if ($event->isPropagationStopped()) {
                 break;
             }
         }
     }
-    
+
     /**
      * 
-     * @param \Hirudo\Core\Events\Annotations\Listen $listen
+     * @param Listen $listen
      * @return ListenerHolder A new Listener holder
      */
-    private function createHolderFromListen($listener, Listen $listen, $deferred = false) {
-        return new ListenerHolder($listener, $listen->to, $listen->constraints, $deferred, $listen->virtual, $listen->id, $listen->overrides);
+    private function createHolderFromListen($listener, Listen $listen, $deferred = false, $virtual = null, $overrides = "") {
+        $virtualId = "";
+        $overridenId = "";
+
+        if ($virtual instanceof VirtualListener) {
+            $virtualId = $virtual->id;
+        }
+
+        if ($overrides instanceof OverridesListener) {
+            $overridenId = $overrides->id;
+        }
+
+        return new ListenerHolder($listener, $listen->to, $listen->constraints, $deferred, $virtualId, $overridenId);
     }
 
 }

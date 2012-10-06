@@ -6,6 +6,7 @@ use Exception;
 use Hirudo\Core\Annotations\HttpMethod;
 use Hirudo\Core\Context\ModulesContext;
 use Hirudo\Core\Events\Annotations\Listen;
+use Hirudo\Core\Events\Annotations\VirtualListener;
 use Hirudo\Core\Events\BeforeTaskEvent;
 
 /**
@@ -29,7 +30,8 @@ class RequestModePlugin {
      * @throws Exception When the method is annotated with the Hirudo\Core\Annotations\HttpPost
      * annotation and the method is tried to be accesed via GET.
      * 
-     * @Listen(to="beforeTask", priority=9, virtual=true, id="check_request_mode")
+     * @Listen(to="beforeTask", priority=9)
+     * @VirtualListener(id="check_request_mode")
      */
     function checkRequestMode(BeforeTaskEvent $e) {
         $annotation = $e->getTask()->getTaskAnnotation("Hirudo\Core\Annotations\HttpMethod");

@@ -4,6 +4,7 @@ namespace Hirudo\Core\Extensions\Plugins;
 
 use Hirudo\Core\Context\ModulesContext;
 use Hirudo\Core\Events\Annotations\Listen;
+use Hirudo\Core\Events\Annotations\VirtualListener;
 use Hirudo\Core\Events\BeforeTaskEvent;
 
 /**
@@ -26,7 +27,8 @@ class TaskRequirementsPlugin {
      * 
      * @param BeforeTaskEvent $e
      * 
-     * @Listen(to="beforeTask", priority=8, virtual=true, id="task_requirements_resolver")
+     * @Listen(to="beforeTask", priority=8)
+     * @VirtualListener(id="task_requirements_resolver")
      */
     function resolveTaskRequirements(BeforeTaskEvent $e) {
         $task = $e->getTask();

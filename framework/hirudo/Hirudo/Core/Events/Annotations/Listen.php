@@ -30,42 +30,25 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target("METHOD")
  */
 class Listen {
+
     /**
      * 
      * @var string
      */
     public $to;
-    
+
     /**
      *
      * @var array<string> 
      */
     public $constraints = array();
 
-
     /**
      *
      * @var int 
      */
     public $priority = 0;
-    
-    /**
-     *
-     * @var boolean 
-     */
-    public $virtual = false;
-    
-    /**
-     *
-     * @var string
-     */
-    public $id = "";
-    
-    /**
-     *
-     * @var string
-     */
-    public $overrides = "";
+
 }
 
 ?>
