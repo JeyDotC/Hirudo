@@ -21,6 +21,7 @@
 
 namespace Hirudo\Core\Context;
 
+use Hirudo\Core\Annotations\Import;
 use Hirudo\Core\Context\AppConfig;
 use Hirudo\Core\Context\Assets;
 use Hirudo\Core\Context\ModuleCall;
@@ -29,11 +30,9 @@ use Hirudo\Core\Context\Request;
 use Hirudo\Core\Context\Routing;
 use Hirudo\Core\Context\Session;
 use Hirudo\Core\DependencyInjection\DependenciesManager;
+use Hirudo\Core\Events\Dispatcher\HirudoDispatcher;
 use Hirudo\Core\TemplatingInterface;
 use Hirudo\Lang\Loader;
-use Hirudo\Core\Events\Dispatcher\HirudoDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Hirudo\Core\Annotations\Import;
 
 //A quick fix for a weird issue with the autoloader when dealing with annotations.
 Loader::using("framework::hirudo::Hirudo::Core::Events::Annotations::*");
@@ -44,7 +43,7 @@ Loader::using("framework::hirudo::Hirudo::Core::Events::Annotations::*");
  *
  * @author JeyDotC
  */
-class ModulesContext extends HirudoDispatcher implements EventDispatcherInterface {
+class ModulesContext {
 
     /**
      *
@@ -57,6 +56,12 @@ class ModulesContext extends HirudoDispatcher implements EventDispatcherInterfac
     private $config;
     private $routing;
     private $templating;
+
+    /**
+     *
+     * @var HirudoDispatcher 
+     */
+    private $dispatcher;
 
     /**
      *
@@ -244,6 +249,14 @@ class ModulesContext extends HirudoDispatcher implements EventDispatcherInterfac
 
     public function setDependenciesManager(DependenciesManager $dependenciesManager) {
         $this->dependenciesManager = $dependenciesManager;
+    }
+
+    public function setDispatcher(HirudoDispatcher $dispatcher) {
+        $this->dispatcher = $dispatcher;
+    }
+
+    public function getDispatcher() {
+        return $this->dispatcher;
     }
 
 }

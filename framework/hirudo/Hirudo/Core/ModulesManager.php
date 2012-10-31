@@ -24,11 +24,14 @@ use Hirudo\Core\Context as Context;
 use Hirudo\Core\Context\ModuleCall;
 use Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager;
 use Hirudo\Core\Events\BeforeTaskEvent;
+use Hirudo\Core\Events\Dispatcher\FileCachedHirudoDispatcher;
+use Hirudo\Core\Events\Dispatcher\HirudoDispatcher;
 use Hirudo\Core\Exceptions\HirudoException;
 use Hirudo\Core\Exceptions\ModuleNotFoundException;
 use Hirudo\Core\Module;
 use Hirudo\Lang\DirectoryHelper;
 use Hirudo\Lang\Loader;
+use RecursiveDirectoryIterator;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\Yaml\Yaml;
 
@@ -70,6 +73,7 @@ class ModulesManager {
         $dependencyManager->addServices($implementationClasses);
         $this->context = Context\ModulesContext::instance();
         $this->context->setDependenciesManager($dependencyManager);
+        $this->context->setDispatcher(new FileCachedHirudoDispatcher(Loader::toSinglePath("ext::cache::listeners", "")));
         $dependencyManager->resolveDependencies($this->context);
         $this->loadExtensions("ext::libs");
         $this->rootApplicationsDir = $this->context->getConfig()->get("businessRoot", "src");
@@ -107,7 +111,7 @@ class ModulesManager {
      */
     public function executeCall(ModuleCall $call) {
         $this->prepareApplication($call->getApp());
-        
+
         if ($call->isEmpty()) {
             $call = $this->getDefaultCall();
         }
@@ -124,30 +128,30 @@ class ModulesManager {
 
         $task = $module->getTask($call->getTask());
 
-        $beforeTaskEvent = $this->context->dispatch("beforeTask", new BeforeTaskEvent($task));
+        $beforeTaskEvent = $this->context->getDispatcher()->dispatch("beforeTask", new BeforeTaskEvent($task));
 
         if ($beforeTaskEvent->isCallReplaced()) {
             return $this->executeCall($beforeTaskEvent->getCall());
         }
 
         $result = $task->invoke();
-        $afterTaskEvent = $this->context->dispatch("afterTask", new Events\AfterTaskEvent($result));
+        $afterTaskEvent = $this->context->getDispatcher()->dispatch("afterTask", new Events\AfterTaskEvent($result));
         return $afterTaskEvent->getTaskResult();
     }
 
     private function prepareApplication($appName) {
         if (array_search($appName, $this->loadedApps) === false) {
             $appsPath = Loader::toSinglePath($this->rootApplicationsDir, "");
-            if(!is_file($appsPath . DS . $appName)){
+            if (!is_file($appsPath . DS . $appName)) {
                 $appName = $this->context->getConfig()->get("defaultApplication");
             }
             self::$autoLoader->registerNamespace($appName, $appsPath);
-            
-            $dir = new DirectoryHelper(new \RecursiveDirectoryIterator($appsPath . DS . $appName . DS . "Modules"));
+
+            $dir = new DirectoryHelper(new RecursiveDirectoryIterator($appsPath . DS . $appName . DS . "Modules"));
             $files = $dir->listFiles(2, ".php", true, true);
 
             foreach ($files as $class) {
-                $this->context->subscribeObject("$appName\Modules\\{$class}\\{$class}");
+                $this->context->getDispatcher()->subscribeObject("$appName\Modules\\{$class}\\{$class}");
             }
             $this->loadedApps[] = $appName;
             $this->loadExtensions("$this->rootApplicationsDir::$appName::ext::libs");
@@ -218,7 +222,7 @@ class ModulesManager {
                 if (isset($extension["includes"])) {
                     $this->includeLibraries($dir, $extension["includes"]);
                 }
-                
+
                 if (isset($extension["namespaces"])) {
                     $this->registerNamespaces($dir, $extension["namespaces"]);
                 }
@@ -258,9 +262,9 @@ class ModulesManager {
     private function registerPlugins(array $plugins) {
         foreach ($plugins as $plugin) {
             if (is_string($plugin)) {
-                $this->context->subscribeObject(new $plugin());
+                $this->context->getDispatcher()->subscribeObject(new $plugin());
             } else if (is_array($plugin) && $plugin["active"]) {
-                $this->context->subscribeObject(new $plugin["class"]());
+                $this->context->getDispatcher()->subscribeObject(new $plugin["class"]());
             }
         }
     }
@@ -275,7 +279,7 @@ class ModulesManager {
             $this->context->getTemplating()->addExtensionsPath($dir . DS . $extensionDir);
         }
     }
-    
+
     private function includeLibraries($dir, array $libraries) {
         foreach ($libraries as $library) {
             require_once $dir . DS . $library;
@@ -283,11 +287,11 @@ class ModulesManager {
     }
 
     private function getExtensionsConfiguration($extDir) {
-        $cacheFile = Loader::toSinglePath("ext::cache::extensions::" . str_replace("::", ".", $extDir) . ".config.cache", ".yml");
+        $cacheFile = Loader::toSinglePath("ext::cache::extensions::" . str_replace("::", ".", $extDir) . ".config.cache", ".php");
         $extensions = array();
 
         if ($this->context->getConfig()->get("debug") || !is_file($cacheFile)) {
-            $extensionsDir = new DirectoryHelper(new \RecursiveDirectoryIterator(Loader::toSinglePath($extDir, "")));
+            $extensionsDir = new DirectoryHelper(new RecursiveDirectoryIterator(Loader::toSinglePath($extDir, "")));
             $files = $extensionsDir->listDirectories(1);
 
             foreach ($files as $file) {
@@ -299,10 +303,9 @@ class ModulesManager {
                 mkdir(Loader::toSinglePath("ext::cache::extensions::", ""));
             }
 
-            $yaml = Yaml::dump($extensions);
-            file_put_contents($cacheFile, $yaml);
+            file_put_contents($cacheFile, '<?php return unserialize(' . var_export(serialize($extensions), true) . ');');
         } else {
-            $extensions = Yaml::parse($cacheFile);
+            $extensions = include $cacheFile;
         }
 
         return $extensions;

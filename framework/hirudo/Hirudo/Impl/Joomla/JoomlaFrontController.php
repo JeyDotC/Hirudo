@@ -21,6 +21,7 @@
 
 namespace Hirudo\Impl\Joomla;
 
+use Hirudo\Core\Context\ModulesContext;
 use Hirudo\Core\ModulesManager;
 
 defined('_JEXEC') or die('Restricted access');
@@ -35,7 +36,7 @@ function joomlaAutoloader($class) {
 }
 
 /**
- * A fix for joomla autoloader, joomla took the wrong desition of overriding
+ * A fix for joomla autoloader, joomla took the wrong decision of overriding
  * the __autoload function instead of registering one via the spl_autoload_register
  * function.
  */
@@ -92,7 +93,7 @@ class JoomlaFrontController extends \JController {
      * @return mixed 
      */
     public function execute($task) {
-        $isAjax = \JRequest::getVar("ajax", false);
+        $isAjax = ModulesContext::instance()->getRequest()->isAjax();
 
         $mainframe = JoomlaHelper::getMainframe();
         $return = parent::execute($task);

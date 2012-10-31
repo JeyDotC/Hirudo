@@ -25,6 +25,7 @@ class ListenerHolder {
     private $virtualId = "";
     private $overrides = false;
     private $overriddenId = "";
+    private $priority;
 
     public static function create($listener, $eventName, $constraints, $overrides = "") {
         return new ListenerHolder($listener, $eventName, $constraints, false, "", $overrides);
@@ -128,6 +129,14 @@ class ListenerHolder {
         return $this->effectiveListener;
     }
 
+    public function getPriority() {
+        return $this->priority;
+    }
+
+    public function setPriority($priority) {
+        $this->priority = $priority;
+    }
+
 }
 
 /**
@@ -175,17 +184,27 @@ class HirudoDispatcher extends EventDispatcher {
         if ($object instanceof EventSubscriberInterface) {
             $this->addSubscriber($object);
         }
-
         $reflectedObject = new ReflectionClass($object);
+        $listeners = $this->loadObjectListeners($reflectedObject, $object);
+        foreach ($listeners as /* @var $listener ListenerHolder */$listener) {
+            $this->addListener($listener->getEventName(), $listener, $listener->getPriority());
+        }
+    }
+
+    protected function loadObjectListeners(ReflectionClass $reflectedObject, $object) {
+        $listeners = array();
         foreach ($reflectedObject->getMethods(ReflectionMethod::IS_PUBLIC) as /* @var $method ReflectionMethod */ $method) {
             $listen = ModulesContext::instance()->getDependenciesManager()->getMethodMetadataById($method, "\Hirudo\Core\Events\Annotations\Listen");
             if ($listen instanceof Listen) {
                 $virtual = ModulesContext::instance()->getDependenciesManager()->getMethodMetadataById($method, "\Hirudo\Core\Events\Annotations\VirtualListener");
                 $overrides = ModulesContext::instance()->getDependenciesManager()->getMethodMetadataById($method, "\Hirudo\Core\Events\Annotations\OverridesListener");
                 $listener = $this->createHolderFromListen(array($object, $method->getName()), $listen, !is_object($object), $virtual, $overrides);
-                $this->addListener($listener->getEventName(), $listener, $listen->priority);
+                $listener->setPriority($listen->priority);
+                $listeners[] = $listener;
             }
         }
+
+        return $listeners;
     }
 
     /**

@@ -53,7 +53,7 @@ class EventListening extends Module {
      * @return string
      */
     function broadCastEvent() {
-        $myCustomEvent = $this->context->dispatch("myCustomEvent", new GenericEvent("A cool Message!"));
+        $myCustomEvent = $this->context->getDispatcher()->dispatch("myCustomEvent", new GenericEvent("A cool Message!"));
         return $myCustomEvent->getArgument("output");
     }
 

@@ -36,7 +36,6 @@ class RequestModePlugin {
     function checkRequestMode(BeforeTaskEvent $e) {
         $annotation = $e->getTask()->getTaskAnnotation("Hirudo\Core\Annotations\HttpMethod");
         $currentMethod = $this->context->getRequest()->method();
-        $accectedMethods = implode(", ", $annotation->value);
         if($annotation instanceof HttpMethod &&  !in_array(strtoupper($currentMethod), $annotation->value)){
             $accectedMethods = implode(" or ", $annotation->value);
             throw new \Exception("The task [{$this->context->getCurrentCall()}] accepts $accectedMethods requests only, received $currentMethod");
