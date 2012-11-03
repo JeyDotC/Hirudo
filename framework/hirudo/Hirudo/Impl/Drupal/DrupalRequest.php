@@ -31,7 +31,6 @@ use Hirudo\Core\Annotations\Export;
  * @author JeyDotC
  * 
  * @Export(id="request", factory="instance")
- * 
  */
 class DrupalRequest extends Request {
 
@@ -84,6 +83,15 @@ class DrupalRequest extends Request {
     public function submitted() {
         return isset($_POST) && count($_POST) > 0;
     }
+
+    public function buildModuleCall() {
+        $app = \arg(1);
+        $module = \arg(2);
+        $task = \arg(3);
+
+        return ModuleCall::fromString("$app::$module::$task");
+    }
+
 }
 
 ?>

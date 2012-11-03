@@ -30,8 +30,7 @@ use Hirudo\Core\Context\Routing as Routing;
 class DrupalRouting extends Routing {
 
     public function appAction($app, $module, $task = "index", array $params = array()) {
-        $params["h"] = "$app/$module/$task";
-        return url("App", array("query" => $params));
+        return url("App/$app/$module/$task", array("query" => $params));
     }
 
     public function redirect($url) {

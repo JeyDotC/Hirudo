@@ -75,6 +75,7 @@ class ModulesManager {
         $this->context->setDependenciesManager($dependencyManager);
         $this->context->setDispatcher(new FileCachedHirudoDispatcher(Loader::toSinglePath("ext::cache::listeners", "")));
         $dependencyManager->resolveDependencies($this->context);
+        //Loading global extensions...
         $this->loadExtensions("ext::libs");
         $this->rootApplicationsDir = $this->context->getConfig()->get("businessRoot", "src");
     }

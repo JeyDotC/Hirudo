@@ -18,6 +18,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
+if (!defined("HIRUDO_DRUPAL_MODULE")) {
+    define("HIRUDO_DRUPAL_MODULE", "hirudo7");
+}
 
 /**
  * This method provides the Hirudo block information that allows Hirudo
@@ -30,8 +33,6 @@ function hirudo7_block_info() {
         "hirudo" => array(
             "info" => "Hirudo framework",
             'cache' => DRUPAL_NO_CACHE,
-            "visibility" => BLOCK_VISIBILITY_LISTED,
-            "pages" => "App",
         )
     );
 }
@@ -46,79 +47,52 @@ function hirudo7_block_view($delta = '') {
     $block = array();
 
     if ($delta == "hirudo") {
-        require_once 'init.php';
-
-        if (!defined("HIRUDO_DRUPAL_MODULE")) {
-            define("HIRUDO_DRUPAL_MODULE", "hirudo7");
-        }
-        
-        $nid = variable_get("fakenode_nid", 0);
-        //Yep, a Dirty Quick fix to hide node's title for this block
-        drupal_add_js("(function ($) { $('#node-$nid').hide() })(jQuery);", 'inline', 'footer');
-
-        $manager = new \Hirudo\Core\ModulesManager(array(
-                    //The request data.
-                    'Hirudo\Impl\Drupal\DrupalRequest',
-                    //The URL builder.
-                    'Hirudo\Impl\Drupal\DrupalRouting',
-                    //The session Manager.
-                    'Hirudo\Impl\Drupal\DrupalSession',
-                    //The current user.
-                    'Hirudo\Impl\Drupal\DrupalPrincipal',
-                    //The configuration manager.
-                    'Hirudo\Impl\StandAlone\SAppConfig',
-                    //The templating system.
-                    'Hirudo\Impl\Common\Templating\SmartyTemplating',
-                    //The Asset system
-                    'Hirudo\Impl\Drupal\DrupalAssets',
-                ));
-
         $block = array(
             "subject" => "<none>",
-            "content" => $manager->run()
+            "content" => run_manager()
         );
     }
 
     return $block;
 }
 
-function hirudo7_node_info() {
-    return array(
-        "hirudo" => array(
-            "name" => "Hirudo PHP Web Framework",
-            "base" => "hirudo",
-            "description" => "A node to hold the Hirudo app presentations.",
-            "has_title" => false,
-        )
+function hirudo7_menu() {
+    $menu = array();
+    $menu["App"] = array(
+        "page callback" => "hirudo7_run",
+        "access callback" => true,
     );
+    return $menu;
 }
 
-function hirudo7_node_type_insert($info) {
-    if ($info->type == "hirudo") {
-        $result = db_query("SELECT nid FROM {node} WHERE type = 'hirudo'");
-        if ($result->rowCount() == 0) {
-            $fakeNode = new stdClass();
-
-            $fakeNode->uid = 1;
-            $fakeNode->status = 1;
-            $fakeNode->type = "hirudo";
-            $fakeNode->language = "und";
-            $fakeNode->name = "JeyDotC";
-            $fakeNode->is_new = true;
-
-            node_save($fakeNode);
-
-            variable_set("fakenode_nid", $fakeNode->nid);
-
-            $source = "node/{$fakeNode->nid}";
-            $alias = "App";
-            $path = array(
-                "source" => $source,
-                "alias" => $alias
-            );
-            path_save($path);
-        }
+function hirudo7_run() {
+    $result = run_manager();
+    if (Hirudo\Core\Context\ModulesContext::instance()->getRequest()->isAjax()) {
+        echo $result;
+    } else {
+        return $result;
     }
+}
+
+function run_manager() {
+    require_once 'init.php';
+    $manager = new \Hirudo\Core\ModulesManager(array(
+                //The request data.
+                'Hirudo\Impl\Drupal\DrupalRequest',
+                //The URL builder.
+                'Hirudo\Impl\Drupal\DrupalRouting',
+                //The session Manager.
+                'Hirudo\Impl\Drupal\DrupalSession',
+                //The current user.
+                'Hirudo\Impl\Drupal\DrupalPrincipal',
+                //The configuration manager.
+                'Hirudo\Impl\StandAlone\SAppConfig',
+                //The templating system.
+                'Hirudo\Impl\Common\Templating\SmartyTemplating',
+                //The Asset system
+                'Hirudo\Impl\Drupal\DrupalAssets',
+            ));
+    return $manager->run();
 }
 
 ?>

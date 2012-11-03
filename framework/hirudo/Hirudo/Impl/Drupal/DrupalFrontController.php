@@ -23,90 +23,65 @@ namespace Hirudo\Impl\Drupal;
 
 use Hirudo\Core\ModulesManager;
 
-defined('_JEXEC') or die('Restricted access');
-
-require_once "DrupalHelper.php";
-
-function joomlaAutoloader($class) {
-    if (\JLoader::load($class)) {
-        return true;
-    }
-    return false;
-}
-
-/**
- * A fix for joomla autoloader, joomla took the wrong desition of overriding
- * the __autoload function instead of registering one via the spl_autoload_register
- * function.
- */
-spl_autoload_register("Hirudo\Impl\Drupal\joomlaAutoloader");
-
-jimport('joomla.application.component.controller');
-
 /**
  * The underscore front controller implementation for joomla.
  *
  * @author Virtualidad
  */
-class DrupalFrontController extends \JController {
+class DrupalFrontController extends ModulesManager {
 
-    /**
-     *
-     * @var \JView
-     */
-    private $view;
-    private $manager;
+    private static $implementationClasses = array();
+    private static $instance;
 
-    /**
-     * Constructs this controller as a joomla controller.
-     */
-    public function __construct(ModulesManager $manager) {
-        //As this is not at a tipical component is necesary to say where are we.
-        parent::__construct(array("base_path" => __DIR__));
-        parent::registerDefaultTask("doTask");
+    public static function setImplementationClasses(array $classes) {
+        self::$implementationClasses = $classes;
+    }
 
-        $this->manager = $manager;
+    public static function setupBlock() {
+        return array(
+            "hirudo" => array(
+                "info" => "Hirudo framework",
+                'cache' => DRUPAL_NO_CACHE,
+            )
+        );
+    }
 
-        $document = &\JFactory::getDocument();
-        //Get the view saying where is it.
-        $this->view = &$this->getView('_', $document->getType(), '', array("base_path" => __DIR__));
+    public static function setupMenu() {
+        $menu = array();
+        $menu["App"] = array(
+            "page callback" => "hirudo6_run",
+            "access callback" => true,
+        );
+        return $menu;
     }
 
     /**
-     * Executes the task taken from request data and orders the view to display.
-     */
-    public function doTask() {
-
-        $html = $this->manager->run();
-
-        if (isset($html)) {
-            $this->view->assignRef("html", $html);
-            $this->view->display();
-        }
-    }
-
-    /**
-     * Executes a task 
      * 
-     * @param string $task
-     * @return mixed 
+     * @return DrupalFrontController
      */
-    public function execute($task) {
-        $isAjax = \JRequest::getVar("ajax", false);
-
-        $mainframe = DrupalHelper::getMainframe();
-        $return = parent::execute($task);
-
-        if ($isAjax) {
-            $mainframe->close();
+    public static function instance() {
+        if (!self::$instance) {
+            self::$instance = new DrupalFrontController();
         }
 
-        return $return;
+        return self::$instance;
     }
 
-    public function run() {
-        $this->execute("");
-        $this->redirect();
+    public function blockView($delta = "") {
+        $block = array();
+
+        if ($delta == "hirudo") {
+            $block = array(
+                "subject" => "<none>",
+                "content" => $this->run()
+            );
+        }
+
+        return $block;
+    }
+    
+    public function __construct() {
+        parent::__construct(self::$implementationClasses);
     }
 
 }
