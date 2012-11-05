@@ -18,24 +18,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
+// no direct access
+defined('_JEXEC') or die('Restricted access');
 
-namespace Hirudo\Impl\Joomla;
+jimport('joomla.application.component.view');
 
 /**
- * Description of _JoomlaHelper
- *
- * @author JeyDotC
+ * HTML View class for the underscore component
  */
-class JoomlaHelper {
-
-    /**
-     *
-     * @return JApplication
-     */
-    public static function getMainframe() {
-        return \JFactory::getApplication();
-    }
-
+class hirudoimpljoomlav15joomlafrontView_ extends JView {
 }
 
 ?>

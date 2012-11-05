@@ -19,28 +19,38 @@
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
 defined('_JEXEC') or die('Restricted access');
+jimport("joomla.version");
+
 require_once 'init.php';
 
-use Hirudo\Impl\Joomla\JoomlaFrontController;
 use Hirudo\Core\ModulesManager;
 
-$controller = new JoomlaFrontController(new ModulesManager(array(
+$jversion = new \JVersion();
+
+$V = "V15";
+
+if ($jversion->isCompatible("3")) {
+    $V = "V30";
+}
+
+$controllerClass = "Hirudo\\Impl\\Joomla\\{$V}\\JoomlaFrontController";
+$controller = new $controllerClass(new ModulesManager(array(
                     //The request data.
-                    "Hirudo\Impl\Joomla\JoomlaRequest",
+                    "Hirudo\\Impl\\Joomla\\{$V}\\JoomlaRequest",
                     //The URL builder.
-                    "\Hirudo\Impl\Joomla\JoomlaRouting",
+                    "\\Hirudo\\Impl\\Joomla\\{$V}\\JoomlaRouting",
                     //The session Manager.
-                    "Hirudo\Impl\Joomla\JoomlaSession",
+                    "Hirudo\\Impl\\Joomla\\{$V}\\JoomlaSession",
                     //The current user.
-                    "Hirudo\Impl\Joomla\JoomlaPrincipal",
+                    "Hirudo\\Impl\\Joomla\\{$V}\\JoomlaPrincipal",
                     //The configuration manager.
-                    'Hirudo\Impl\StandAlone\SAppConfig',
+                    "Hirudo\\Impl\\StandAlone\\SAppConfig",
                     //The templating system.
-                    'Hirudo\Impl\Common\Templating\SmartyTemplating',
+                    "Hirudo\\Impl\\Common\\Templating\\SmartyTemplating",
                     //The Sql Model
-                    "Hirudo\Impl\Joomla\Models\Components\Sql\JoomlaQueryFactory",
+                    "Hirudo\\Impl\\Joomla\\Models\\Components\\Sql\\JoomlaQueryFactory",
                     //The Asset system
-                    'Hirudo\Impl\Joomla\JoomlaAssets',
+                    "Hirudo\\Impl\\Joomla\\{$V}\\JoomlaAssets",
                 )));
 
 $controller->run();

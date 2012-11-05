@@ -19,54 +19,58 @@
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Hirudo\Impl\Joomla;
+namespace Hirudo\Impl\Joomla\V30;
 
-use Hirudo\Core\Context\AppConfig as AppConfig;
+use Hirudo\Core\Context\Principal as Principal;
 use Hirudo\Core\Annotations\Export;
 
-require_once "JoomlaHelper.php";
-
 /**
- * Description of JAppConfig
  *
- * @author JeyDotC
- * 
- * @Export (id="config", factory="instance")
- * 
+ * @Export(id="principal", factory="instance")
  */
-class JoomlaAppConfig extends AppConfig {
+class JoomlaPrincipal extends Principal {
 
     /**
      *
-     * @var JAppConfig
+     * @var JPrincipal
      */
     private static $instance;
 
     /**
      *
-     * @return JAppConfig
+     * @return JPrincipal
      */
     public static function instance() {
         if (!self::$instance) {
-            self::$instance = new JAppConfig();
+            self::$instance = new JoomlaPrincipal();
         }
 
         return self::$instance;
     }
 
     /**
-     *
-     * @var JParameter 
+     * @var JUser
      */
-    private $configObject;
+    private $jUser;
 
-    public function get($key, $default = null) {
-        return $this->configObject->get($key, $default);
+    function __construct() {
+        parent::__construct();
+        $this->jUser = \JFactory::getUser();
+        $this->setName($this->jUser->username);
+        $this->setCredential($this->jUser->password);
+
+        if (!$this->isAnonimous()) {
+            $session = \JFactory::getSession();
+            $extraData = $session->get("__ExtraData", array());
+            foreach ($extraData as $key => $value) {
+                $this->getData()->add($key, $value);
+            }
+            $this->setPermissions($session->get("roles"));
+        }
     }
 
-    protected function load() {
-        $mainframe = JoomlaHelper::getMainframe();
-        $this->configObject = $mainframe->getPageParameters($mainframe->scope);
+    public function isAnonimous() {
+        return $this->jUser->guest;
     }
 
 }

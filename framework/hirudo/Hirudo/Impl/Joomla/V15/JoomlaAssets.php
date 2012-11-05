@@ -1,6 +1,6 @@
 <?php
 
-namespace Hirudo\Impl\Joomla;
+namespace Hirudo\Impl\Joomla\V15;
 
 use Hirudo\Core\Context\Assets;
 use Hirudo\Core\Annotations\Export;

@@ -19,7 +19,7 @@
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Hirudo\Impl\Joomla;
+namespace Hirudo\Impl\Joomla\V30;
 
 use Hirudo\Core\Context\Session;
 use Hirudo\Core\Annotations\Export;

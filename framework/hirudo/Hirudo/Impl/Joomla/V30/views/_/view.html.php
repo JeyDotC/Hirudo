@@ -26,7 +26,7 @@ jimport('joomla.application.component.view');
 /**
  * HTML View class for the underscore component
  */
-class hirudoimpljoomlajoomlafrontView_ extends JView {
+class hirudoimpljoomlav30joomlafrontView_ extends JViewLegacy {
 }
 
 ?>

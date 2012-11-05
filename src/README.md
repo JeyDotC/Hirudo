@@ -20,9 +20,10 @@ controllers in an MVC architecture.
 So, to create an application you just need to create a directory with this structure:
 
     YourApp/
+        ext/ <-- Your extensions and configurations.
         assets/ <-- Your js, css, etc.
         Models/ <-- Your Models layer.
-        Modules/ <-- Your controllers
+        Modules/ <-- Your controllers.
             AModule/
             AnotherModule/
             ...
@@ -32,15 +33,18 @@ You can have various applications, each one with their own *assets*, *Models* la
 own *Modules*.
 
     YourApp/
+        ext/
         assets/
         Models/
         Modules/
     AnotherApp/
+        ext/
         assets/
         Models/
         Modules/
         ...
     LotsOfApps/
+        ext/
         assets/
         Models/
         Modules/
@@ -63,6 +67,8 @@ the templating system or uses views located in another modules.
 The resulting directory listing looks like this:
 
     YourApp/
+        ext/
+        assets/
         Models/ <-- Did I mention that this is optional?
         Modules/
             SomeModule/
@@ -105,7 +111,8 @@ This is due to the need of allowing various persistence mechanisms, like Restful
 clients, ORM based persistence, etc.
 
 There will be an extensions repository for Hirudo very soon, in which you will find various
-persistence mechanisms.
+persistence mechanisms, for now there is a Doctrine based extension which is located
+[here](https://github.com/JeyDotC/HirudOplus-DoctrineDataAccess).
 
 Anyway, Hirudo uses a Components based model, where a component is just a class
 that deals with persistence, this way, an extension mechanism may provide a base

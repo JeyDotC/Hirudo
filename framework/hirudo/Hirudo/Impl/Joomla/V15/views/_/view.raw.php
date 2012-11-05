@@ -26,16 +26,8 @@ jimport('joomla.application.component.view');
 /**
  * HTML View class for the underscore component
  */
-class hirudoimpljoomlajoomlafrontView_ extends JView {
-
-    function display($tpl = null) {
-        $document = &JFactory::getDocument();
-        $document->setMimeEncoding('text/csv');
-        header('Content-Disposition: attachment; filename=Suscritos.xls');
-
-        parent::display($tpl);
-    }
-
+class hirudoimpljoomlav15joomlafrontView_ extends JView {
+    
 }
 
 ?>

@@ -19,7 +19,7 @@
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Hirudo\Impl\Joomla;
+namespace Hirudo\Impl\Joomla\V30;
 
 use Hirudo\Core\Context\ModulesContext;
 use Hirudo\Core\ModulesManager;
@@ -40,7 +40,7 @@ function joomlaAutoloader($class) {
  * the __autoload function instead of registering one via the spl_autoload_register
  * function.
  */
-spl_autoload_register("Hirudo\Impl\Joomla\joomlaAutoloader");
+spl_autoload_register("Hirudo\Impl\Joomla\V30\joomlaAutoloader");
 
 jimport('joomla.application.component.controller');
 
@@ -49,7 +49,7 @@ jimport('joomla.application.component.controller');
  *
  * @author Virtualidad
  */
-class JoomlaFrontController extends \JController {
+class JoomlaFrontController extends \JControllerLegacy {
 
     /**
      *

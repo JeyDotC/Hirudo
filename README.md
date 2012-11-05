@@ -71,11 +71,6 @@ the ModulesManager class and makes it execute.
 [hirudo7.info](http://github.com/JeyDotC/Hirudo/blob/master/hirudo7.info),
 [hirudo8.info](http://github.com/JeyDotC/Hirudo/blob/master/hirudo8.info): These files provide information to dupal so it can interact with the framework as a Drupal Module.
 
-* [hirudo6.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo6.install),
-[hirudo7.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo7.install),
-[hirudo8.install](http://github.com/JeyDotC/Hirudo/blob/master/hirudo8.install): These files are called by Drupal to install and uninstall hirudo. 
-**NOTE:** When hirudo gets installed on Drupal, it creates a block, in order to make it visible you must place it somewhere in your site's structure.
-
 * [hirudo6.module](http://github.com/JeyDotC/Hirudo/blob/master/hirudo6.module),
 [hirudo7.module](http://github.com/JeyDotC/Hirudo/blob/master/hirudo7.module),
 [hirudo8.module](http://github.com/JeyDotC/Hirudo/blob/master/hirudo8.module): These files are the entry point for the Drupal implementation of Hirudo.

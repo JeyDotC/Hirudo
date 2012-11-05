@@ -19,7 +19,7 @@
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Hirudo\Impl\Joomla;
+namespace Hirudo\Impl\Joomla\V15;
 
 use Hirudo\Core\Context\Routing as Routing;
 use Hirudo\Core\Annotations\Export;
@@ -33,11 +33,14 @@ class JoomlaRouting extends Routing {
 
     public function appAction($app, $module, $task = "index", array $params = array()) {
         $mainframe = JoomlaHelper::getMainframe();
+        $config = \JFactory::getConfig();
 
         $uri = \JURI::getInstance();
         $query = $uri->getQuery(true);
 
-        $query["option"] = $mainframe->scope;
+        if (!$config->getValue("sef")) {
+            $query["option"] = $mainframe->scope;
+        }
         $query["h"] = "$app/$module/$task";
 
         $query = array_merge($query, $params);
