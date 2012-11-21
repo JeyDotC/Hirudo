@@ -2,6 +2,8 @@
 
 namespace Hirudo\Core\Events\Dispatcher;
 
+use Hirudo\Core\Events\Dispatcher\HirudoDispatcher;
+
 /**
  * Description of FileCachedHirudoDispatcher
  *

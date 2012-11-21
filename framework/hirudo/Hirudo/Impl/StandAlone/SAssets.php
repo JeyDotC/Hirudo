@@ -13,12 +13,30 @@ use Hirudo\Core\Annotations\Export;
  */
 class SAssets extends Assets {
 
-    public function addCSS($cssPath) {
+    
+    
+    public function aaddCSS($cssPath) {
         return $this->generateCSSTag("./{$this->resolveLocalPath($cssPath)}");
     }
 
-    public function addJavaScript($jsPath) {
+    public function aaddJavaScript($jsPath) {
         return $this->generateScriptTag("./{$this->resolveLocalPath($jsPath)}");
+    }
+
+    public function addCSS($cssPath, $external = false) {
+        if(!$external){
+            return $this->generateCSSTag("./{$this->resolveLocalPath($cssPath)}");
+        }else{
+            return $this->generateCSSTag($cssPath);
+        }
+    }
+
+    public function addJavaScript($jsPath, $external = false) {
+        if(!$external){
+            return $this->generateScriptTag("./{$this->resolveLocalPath($jsPath)}");
+        }else{
+            return $this->generateScriptTag($jsPath);
+        }
     }
 
 }

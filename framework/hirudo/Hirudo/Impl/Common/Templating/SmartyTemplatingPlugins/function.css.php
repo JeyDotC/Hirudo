@@ -15,7 +15,8 @@ use Hirudo\Core\Context\ModulesContext;
  */
 function smarty_function_css($params, $template) {
     $path = $params["file"];
-    
-    return ModulesContext::instance()->getAssets()->addCSS($path);
+    $external = isset($params["external"]) && $params["external"];
+    return ModulesContext::instance()->getAssets()->addCSS($path, $external);
 }
+
 ?>

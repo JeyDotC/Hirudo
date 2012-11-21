@@ -20,13 +20,21 @@ class JoomlaAssets extends Assets {
         $this->componentName = $componentName;
     }
 
-    public function addCSS($cssPath) {
-        \JHtml::stylesheet("components/$this->componentName/{$this->resolveLocalPath($cssPath)}");
+    public function addCSS($cssPath, $external = false) {
+        if (!$external) {
+            \JHtml::stylesheet("components/$this->componentName/{$this->resolveLocalPath($cssPath)}");
+        }else{
+            \JHtml::stylesheet($cssPath);
+        }
         return "";
     }
 
-    public function addJavaScript($jsPath) {
-        \JHtml::script("components/$this->componentName/{$this->resolveLocalPath($jsPath)}");
+    public function addJavaScript($jsPath, $external = false) {
+        if (!$external) {
+            \JHtml::script("components/$this->componentName/{$this->resolveLocalPath($jsPath)}");
+        }else{
+            \JHtml::script($jsPath);
+        }
         return "";
     }
 

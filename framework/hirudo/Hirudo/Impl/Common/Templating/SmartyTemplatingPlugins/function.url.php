@@ -44,7 +44,6 @@ use Hirudo\Core\Context\ModulesContext;
  */
 function smarty_function_url($params, $template) {
     $route = ModulesContext::instance()->getRouting();
-    $url = "";
 
     $action = $params["call"];
     unset($params["call"]);

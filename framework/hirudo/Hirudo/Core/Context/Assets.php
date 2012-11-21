@@ -42,9 +42,11 @@ abstract class Assets {
      * at <code>MyHirudoProject/assets/js/Path/To/MyScript.js</code> the jsPath should be 
      * <code>js/Path/To/MyScript.js</code>.
      * 
+     * @param boolean $external Is the script external to the application? in such case the path is considered absolute.
+     * 
      * @return string The script tag.
      */
-    public abstract function addJavaScript($jsPath);
+    public abstract function addJavaScript($jsPath, $external = false);
 
     /**
      * <p>Creates a link tag. Depending on the CMS it will may automatically insert
@@ -56,9 +58,11 @@ abstract class Assets {
      * at <code>MyHirudoProject/assets/css/Path/To/MyCSS.css</code> the cssPath should be 
      * <code>css/Path/To/MyCSS.css</code>.
      * 
+     * @param boolean $external Is the css external to the application? in such case the path is considered absolute.
+     * 
      * @return string The link tag.
      */
-    public abstract function addCSS($cssPath);
+    public abstract function addCSS($cssPath, $external = false);
 
     /**
      * This helper function generates a script tag which src attribute will
