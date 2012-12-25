@@ -51,12 +51,6 @@ class ModulesManager {
 
     /**
      *
-     * @var string The name of the root app dir.
-     */
-    private $rootApplicationsDir;
-
-    /**
-     *
      * @var UniversalClassLoader 
      */
     private static $autoLoader;
@@ -68,16 +62,25 @@ class ModulesManager {
      * @param array<string> $implementationClasses A list of fully qualified 
      * class names that implement the core functionalities of Hirudo.
      */
-    function __construct(array $implementationClasses) {
-        $dependencyManager = new AnnotationsBasedDependenciesManager();
-        $dependencyManager->addServices($implementationClasses);
+    function __construct($implementationPackage = "standalone") {
+        $config = $this->loadFrameworkLevelConfiguration($implementationPackage);
+
+        $dependencyManager = new $config["metadata_manager"]();
+        $dependencyManager->addServices($config["implementation_package"]);
         $this->context = Context\ModulesContext::instance();
-        $this->context->setDependenciesManager($dependencyManager);
-        $this->context->setDispatcher(new FileCachedHirudoDispatcher(Loader::toSinglePath("ext::cache::listeners", "")));
+        
         $dependencyManager->resolveDependencies($this->context);
+        $this->context->setDependenciesManager($dependencyManager);
+        $this->context->getConfig()->loadValues($config);
+        
+        if ($this->context->getConfig()->get("enviroment") == "dev") {
+            $this->context->setDispatcher(new HirudoDispatcher());
+        } else {
+            $this->context->setDispatcher(new FileCachedHirudoDispatcher(Loader::toSinglePath("ext::cache::listeners", "")));
+        }
+        
         //Loading global extensions...
         $this->loadExtensions("ext::libs");
-        $this->rootApplicationsDir = $this->context->getConfig()->get("businessRoot", "src");
     }
 
     /**
@@ -140,22 +143,37 @@ class ModulesManager {
         return $afterTaskEvent->getTaskResult();
     }
 
+    function loadFrameworkLevelConfiguration($implementationPackage = "standalone") {
+        $frameworkLevelConfiguration = Yaml::parse(Loader::toSinglePath("ext::config::Config", ".yml"));
+        $enviroment = Yaml::parse(Loader::toSinglePath("ext::config::{$frameworkLevelConfiguration["enviroment"]}.$implementationPackage", ".yml"));
+        $config = array_merge($frameworkLevelConfiguration, $enviroment);
+        return $config;
+    }
+
     private function prepareApplication($appName) {
         if (array_search($appName, $this->loadedApps) === false) {
-            $appsPath = Loader::toSinglePath($this->rootApplicationsDir, "");
-            if (!is_file($appsPath . DS . $appName)) {
+            $appPath = Loader::toSinglePath($appName, "");
+            
+            if (empty($appPath)) {
                 $appName = $this->context->getConfig()->get("defaultApplication");
+                if(empty($appName)){
+                    throw new \Exception("Application not found and no default application is setup. You can set a default application at the 'ext/config/Config.yml' file by adding this line: defaultApplication: ApplicationName");
+                }
+                $this->prepareApplication($appName);
+                return;
             }
-            self::$autoLoader->registerNamespace($appName, $appsPath);
+            
+            self::$autoLoader->registerNamespace($appName, dirname($appPath));
 
-            $dir = new DirectoryHelper(new RecursiveDirectoryIterator($appsPath . DS . $appName . DS . "Modules"));
+            $dir = new DirectoryHelper(new RecursiveDirectoryIterator($appPath . DS . "Modules"));
             $files = $dir->listFiles(2, ".php", true, true);
 
             foreach ($files as $class) {
                 $this->context->getDispatcher()->subscribeObject("$appName\Modules\\{$class}\\{$class}");
             }
+
             $this->loadedApps[] = $appName;
-            $this->loadExtensions("$this->rootApplicationsDir::$appName::ext::libs");
+            $this->loadExtensions("$appName::ext::libs");
         }
 
         $this->context->getConfig()->loadApp($appName);
@@ -168,6 +186,14 @@ class ModulesManager {
      */
     public static function setAutoLoader($loader) {
         self::$autoLoader = $loader;
+    }
+
+    /**
+     * 
+     * @return UniversalClassLoader
+     */
+    public static function getAutoLoader() {
+        return self::$autoLoader;
     }
 
     /**
@@ -187,7 +213,7 @@ class ModulesManager {
     }
 
     private function getFileFromCall(ModuleCall $call) {
-        return Loader::toSinglePath("{$this->rootApplicationsDir}::{$call->getApp()}::Modules::{$call->getModule()}::{$call->getModule()}");
+        return Loader::toSinglePath("{$call->getApp()}::Modules::{$call->getModule()}::{$call->getModule()}");
     }
 
     private function getClassNameFromCall(ModuleCall $call) {
@@ -290,8 +316,11 @@ class ModulesManager {
     private function getExtensionsConfiguration($extDir) {
         $cacheFile = Loader::toSinglePath("ext::cache::extensions::" . str_replace("::", ".", $extDir) . ".config.cache", ".php");
         $extensions = array();
+        $enviroment = $this->context->getConfig()->get("enviroment");
 
-        if ($this->context->getConfig()->get("debug") || !is_file($cacheFile)) {
+        if ($enviroment != "dev" && is_file($cacheFile)) {
+            $extensions = include $cacheFile;
+        } else {
             $extensionsDir = new DirectoryHelper(new RecursiveDirectoryIterator(Loader::toSinglePath($extDir, "")));
             $files = $extensionsDir->listDirectories(1);
 
@@ -300,13 +329,13 @@ class ModulesManager {
                     $extensions[$file] = Yaml::parse($file . DS . "manifest.yml");
                 }
             }
-            if (!Loader::isDir("ext::cache::extensions::")) {
-                mkdir(Loader::toSinglePath("ext::cache::extensions::", ""));
-            }
 
-            file_put_contents($cacheFile, '<?php return unserialize(' . var_export(serialize($extensions), true) . ');');
-        } else {
-            $extensions = include $cacheFile;
+            if ($enviroment != "dev") {
+                if (!Loader::isDir("ext::cache::extensions::")) {
+                    mkdir(Loader::toSinglePath("ext::cache::extensions::", ""));
+                }
+                file_put_contents($cacheFile, '<?php return unserialize(' . var_export(serialize($extensions), true) . ');');
+            }
         }
 
         return $extensions;

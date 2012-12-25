@@ -39,16 +39,14 @@ class Task {
      * @var \ReflectionMethod
      */
     private $reflectionMethod;
-    
+
     /**
      *
      * @var DependencyInjection\DependenciesManager 
      */
     private $dependenciesManager;
-    private $getParams = array();
-    private $postParams = array();
+    private $params = array();
     private $paramValues = array();
-    private $isPostOnly = false;
 
     /**
      *
@@ -62,23 +60,14 @@ class Task {
      * @param \ReflectionMethod $reflectionMethod The method to be called.
      * @param \Hirudo\Core\Module $owner The module that is the owner of the task.
      */
-    function __construct(\ReflectionMethod $reflectionMethod,
-            \Hirudo\Core\Module $owner) {
+    function __construct(\ReflectionMethod $reflectionMethod, \Hirudo\Core\Module $owner) {
         $this->dependenciesManager = ModulesContext::instance()->getDependenciesManager();
         $this->reflectionMethod = $reflectionMethod;
         $this->module = $owner;
-
-        $this->isPostOnly = $this->dependenciesManager->getMethodMetadataById($this->reflectionMethod, "Hirudo\Core\Annotations\HttpPost") != null;
-
-        foreach ($this->reflectionMethod->getParameters() as /* @var $parameter \ReflectionParameter */$parameter) {
-
+        
+        foreach ($this->reflectionMethod->getParameters() as /* @var $parameter \ReflectionParameter */ $parameter) {
             $this->paramValues[$parameter->name] = $parameter->isOptional() ? $parameter->getDefaultValue() : null;
-
-            if (!$parameter->isArray() && is_null($parameter->getClass()) && !$this->isPostOnly) {
-                $this->getParams[] = $parameter;
-            } else {
-                $this->postParams[] = $parameter;
-            }
+            $this->params[] = $parameter;
         }
     }
 
@@ -96,17 +85,8 @@ class Task {
      * 
      * @return array<\ReflectionParameter> 
      */
-    public function getGetParams() {
-        return $this->getParams;
-    }
-
-    /**
-     * Gets the method's parameters that should be resolved from POST.
-     * 
-     * @return array<\ReflectionParameter> 
-     */
-    public function getPostParams() {
-        return $this->postParams;
+    public function getParams() {
+        return $this->params;
     }
 
     /**
@@ -162,15 +142,6 @@ class Task {
      */
     public function getModule() {
         return $this->module;
-    }
-
-    /**
-     * Says if the method must be executed only if the request method is POST
-     * 
-     * @return boolean True if the method must be executed only if the request method is POST 
-     */
-    public function isPostOnly() {
-        return $this->isPostOnly;
     }
 
 }

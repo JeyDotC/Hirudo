@@ -164,16 +164,10 @@ abstract class Request {
      * Creates a ModuleCall from request parameters, generally from the URL,
      * the way this done depends on how this class interprets the URLs. 
      * 
-     * @return ModuleCall An instance of ModuleCall based on this class interpretation of the URL
+     * @return ModuleCall An instance of ModuleCall based on this class' interpretation of the URL
      */
     public function buildModuleCall() {
-        $parts = explode("/", $this->get("h"));
-
-        $app = isset($parts[0]) ? $parts[0] : "";
-        $module = isset($parts[1]) ? $parts[1] : "";
-        $task = isset($parts[2]) ? $parts[2] : "index";
-
-        return new ModuleCall($app, $module, $task);
+        return ModuleCall::fromString(str_replace(array("/"), array("::"), $this->get("h")));
     }
 
     /**

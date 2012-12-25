@@ -11,6 +11,7 @@
     This is a list of Foo objects, they live in the session neighborhood:
 </p>
 <a href="{url call="KitchenSink::CrudModule::create"}">Create new Foo</a>
+{nocache}
 <table>
     <thead>
         <tr>
@@ -48,4 +49,5 @@
         {/foreach}
     </tbody>
 </table>
+{/nocache}
 {/block}

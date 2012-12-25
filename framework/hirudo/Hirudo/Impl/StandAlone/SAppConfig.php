@@ -51,6 +51,7 @@ class SAppConfig extends AppConfig {
 
     protected function load() {
         $file = Loader::toSinglePath("ext::config::Config", ".yml");
+        $this->discoverApplicationDirs();
         $this->loadYMLFiles(array($file));
     }
 
@@ -59,9 +60,19 @@ class SAppConfig extends AppConfig {
     }
 
     public function loadApp($appName) {
-        $businesRoot = $this->get("businessRoot", "src");
-        $files = Loader::toPaths("$businesRoot::$appName::ext::config::*", ".yml");
+        $files = Loader::toPaths("$appName::ext::config::*", ".yml");
         $this->loadYMLFiles($files);
+    }
+
+    private function discoverApplicationDirs() {
+        $businessRoots = (array) $this->get("businessRoots", array("src"));
+        foreach ($businessRoots as $businessRoot) {
+            if(!is_dir($businessRoot)){
+                $businessRoot = Loader::toSinglePath($businessRoot, ""); 
+            }
+            
+            Loader::addPath($businessRoot);
+        }
     }
 
     private function loadYMLFiles(array $files) {
@@ -70,6 +81,10 @@ class SAppConfig extends AppConfig {
                 $this->document = array_merge($this->document, Yaml::parse($file));
             }
         }
+    }
+
+    public function loadValues(array $values) {
+        $this->document = array_merge($values);
     }
 
 }

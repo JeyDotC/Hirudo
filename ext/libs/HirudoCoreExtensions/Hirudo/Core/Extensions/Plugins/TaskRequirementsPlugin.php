@@ -33,17 +33,20 @@ class TaskRequirementsPlugin {
     function resolveTaskRequirements(BeforeTaskEvent $e) {
         $task = $e->getTask();
 
-        foreach ($task->getGetParams() as /* @var $param \ReflectionParameter */ $param) {
-            $task->setParamValue($param->name, $this->context->getRequest()->get($param->name, $task->getParamValue($param->name)));
-        }
+        $isPostOnly = $task->getTaskAnnotation("Hirudo\Core\Annotations\HttpPost") != null;
 
-        foreach ($task->getPostParams() as /* @var $param ReflectionParameter */ $param) {
-            if ($param->getClass() != null) {
-                $object = $param->getClass()->newInstance();
-                $this->context->getRequest()->bind($object, $this->context->getRequest()->post($param->name));
-                $task->setParamValue($param->name, $object);
+        foreach ($task->getParams() as /* @var $param \ReflectionParameter */ $param) {
+            $defaultValue = $task->getParamValue($param->name);
+            if (!$param->isArray() && is_null($param->getClass()) && !$isPostOnly) {
+                $task->setParamValue($param->name, $this->context->getRequest()->get($param->name, $defaultValue));
             } else {
-                $task->setParamValue($param->name, $this->context->getRequest()->post($param->name, $task->getParamValue($param->name)));
+                if ($param->getClass() != null) {
+                    $object = $param->getClass()->newInstance();
+                    $this->context->getRequest()->bind($object, $this->context->getRequest()->post($param->name));
+                    $task->setParamValue($param->name, $object);
+                } else {
+                    $task->setParamValue($param->name, $this->context->getRequest()->post($param->name, $defaultValue));
+                }
             }
         }
     }

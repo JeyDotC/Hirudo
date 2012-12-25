@@ -1,0 +1,19 @@
+metadata_manager: Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager
+
+implementation_package:
+  #The request data.
+  - Hirudo\Impl\Joomla\V30\JoomlaRequest
+  #The URL builder.
+  - Hirudo\Impl\Joomla\V30\JoomlaRouting
+  #The session Manager.
+  - Hirudo\Impl\Joomla\V30\JoomlaSession
+  #The current user.
+  - Hirudo\Impl\Joomla\V30\JoomlaPrincipal
+  #The configuration manager.
+  - Hirudo\Impl\StandAlone\SAppConfig
+  #The templating system.
+  - Hirudo\Impl\Common\Templating\SmartyTemplating
+  #The Sql Model
+  - Hirudo\Impl\Joomla\Models\Components\Sql\JoomlaQueryFactory
+  #The Asset system
+  - Hirudo\Impl\Joomla\V30\JoomlaAssets

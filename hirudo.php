@@ -34,24 +34,7 @@ if ($jversion->isCompatible("3")) {
 }
 
 $controllerClass = "Hirudo\\Impl\\Joomla\\{$V}\\JoomlaFrontController";
-$controller = new $controllerClass(new ModulesManager(array(
-                    //The request data.
-                    "Hirudo\\Impl\\Joomla\\{$V}\\JoomlaRequest",
-                    //The URL builder.
-                    "\\Hirudo\\Impl\\Joomla\\{$V}\\JoomlaRouting",
-                    //The session Manager.
-                    "Hirudo\\Impl\\Joomla\\{$V}\\JoomlaSession",
-                    //The current user.
-                    "Hirudo\\Impl\\Joomla\\{$V}\\JoomlaPrincipal",
-                    //The configuration manager.
-                    "Hirudo\\Impl\\StandAlone\\SAppConfig",
-                    //The templating system.
-                    "Hirudo\\Impl\\Common\\Templating\\SmartyTemplating",
-                    //The Sql Model
-                    "Hirudo\\Impl\\Joomla\\Models\\Components\\Sql\\JoomlaQueryFactory",
-                    //The Asset system
-                    "Hirudo\\Impl\\Joomla\\{$V}\\JoomlaAssets",
-                )));
+$controller = new $controllerClass(new ModulesManager("joomla-{$V}"));
 
 $controller->run();
 ?>

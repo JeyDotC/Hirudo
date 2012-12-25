@@ -107,7 +107,7 @@ class ListenerHolder {
             $result = preg_match('/^' . $callRegex . '$/', $call);
             if ($result) {
                 return true;
-            } else if ($result === false && ModulesContext::instance()->getConfig()->get("debug")) {
+            } else if ($result === false && ModulesContext::instance()->getConfig()->get("enviroment") == "dev") {
                 throw new HirudoException($call, "One of your event listeners has an error on its constraints: Constraint[/^$callRegex\$/], Event[$this->eventName]");
             }
         }

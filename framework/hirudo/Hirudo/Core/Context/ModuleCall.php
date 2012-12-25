@@ -69,7 +69,7 @@ class ModuleCall {
      */
     public static function fromString($string) {
         $parts = explode("::", $string);
-        return new ModuleCall($parts[0], isset($parts[1])? $parts[1] : "", isset($parts[2])? $parts[2] : "");
+        return new ModuleCall($parts[0], isset($parts[1])? $parts[1] : "", isset($parts[2])? $parts[2] : "index");
     }
 
     /**

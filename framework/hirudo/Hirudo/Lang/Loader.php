@@ -142,6 +142,9 @@ final class Loader {
      * @throws LogicException If $extension is not a string.
      */
     public static function toPaths($string, $extension = Loader::DEFAULT_EXT) {
+        if(empty($string)){
+            return array();
+        }
         //Check if the path and extension are correct.
         self::validateArgs($string, $extension);
 
@@ -216,6 +219,9 @@ final class Loader {
     }
 
     public static function isDir($dir) {
+        if(empty($dir)){
+            return false;
+        }
         $dir = self::toSinglePath($dir, "");
         return is_dir($dir);
     }

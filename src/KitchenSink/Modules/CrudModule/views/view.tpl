@@ -6,6 +6,7 @@
 {block name="content"}
 <a href="{url call="KitchenSink::CrudModule::index"}">Back to the Foo list</a>
 <div>
+    {nocache}
     <h2>Foo number {$foo->getId()}</h2>
     <p>
         {$foo->getDescription()}
@@ -19,5 +20,6 @@
             Bar name: {$foo->getBar()->getName()}
         </p>
     </div>
+    {/nocache}
 </div>
 {/block}

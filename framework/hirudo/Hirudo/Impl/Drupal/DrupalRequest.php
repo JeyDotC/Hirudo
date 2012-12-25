@@ -88,7 +88,7 @@ class DrupalRequest extends Request {
         $app = \arg(1);
         $module = \arg(2);
         $task = \arg(3);
-
+        
         return ModuleCall::fromString("$app::$module::$task");
     }
 

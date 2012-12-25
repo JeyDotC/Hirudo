@@ -48,9 +48,9 @@ class SmartyTemplating implements TemplatingInterface {
         $this->smarty = new \Smarty();
         $this->addExtensionsPath(dirname(__FILE__) . "/SmartyTemplatingPlugins");
 
-        $isDebuging = ModulesContext::instance()->getConfig()->get("debug");
+        $enviroment = ModulesContext::instance()->getConfig()->get("enviroment");
 
-        if ($isDebuging) {
+        if ($enviroment == "dev") {
             $this->smarty->caching = \Smarty::CACHING_OFF;
         }else{
             $this->smarty->caching = \Smarty::CACHING_LIFETIME_CURRENT;

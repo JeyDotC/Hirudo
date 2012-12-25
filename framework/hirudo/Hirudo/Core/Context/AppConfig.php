@@ -58,6 +58,11 @@ abstract class AppConfig {
     public abstract function get($key, $default = null);
     
     public abstract function loadApp($appName);
+    
+    /**
+     * 
+     */
+    public abstract function loadValues(array $values);
 
     /**
      * 

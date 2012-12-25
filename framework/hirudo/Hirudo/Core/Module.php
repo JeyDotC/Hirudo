@@ -233,7 +233,7 @@ abstract class Module {
      */
     protected function component($name) {
         $app = $this->appName;
-        $componentName = $name;
+        $componentName = str_replace("/", "\\", $name);
 
         $parts = explode("::", $name);
         if (count($parts) > 1) {
@@ -353,29 +353,38 @@ abstract class Module {
      * @param string $className
      */
     public static function createModuleFromClassName($className) {
-        if (is_subclass_of($className, "Hirudo\Core\Module")) {
-            $newModule = new $className();
-            $newModule->reflector = new ReflectionClass($newModule);
-            $newModule->headers = new HeaderBag();
-            $newModule->context = ModulesContext::instance();
-            $newModule->name = $newModule->reflector->getShortName();
-            $newModule->currentUser = $newModule->context->getCurrentUser();
-            $newModule->request = $newModule->context->getRequest();
-            $newModule->route = clone $newModule->context->getRouting();
-            $newModule->route->setModuleName($newModule->name);
-            $newModule->view = $newModule->context->getTemplating();
-            $newModule->appName = str_replace("\\Modules\\$newModule->name", "", $newModule->reflector->getNamespaceName());
-            $newModule->route->setAppName($newModule->appName);
-            $newModule->session = $newModule->context->getSession();
-        }else{
+        if (!class_exists($className)) {
+            throw new Exceptions\HirudoException(ModulesContext::instance()->getCurrentCall(), "Class '$className' couldn't be loaded or does not exist.");
+        }
+
+        if (!is_subclass_of($className, "Hirudo\Core\Module")) {
             throw new Exceptions\HirudoException(ModulesContext::instance()->getCurrentCall(), "'$className' must inherit from Hirudo\Core\Module");
         }
-        
+
+        $newModule = new $className();
+        $newModule->reflector = new ReflectionClass($newModule);
+        $newModule->headers = new HeaderBag();
+        $newModule->context = ModulesContext::instance();
+        $newModule->name = $newModule->reflector->getShortName();
+        $newModule->currentUser = $newModule->context->getCurrentUser();
+        $newModule->request = $newModule->context->getRequest();
+        $newModule->route = clone $newModule->context->getRouting();
+        $newModule->route->setModuleName($newModule->name);
+        $newModule->view = $newModule->context->getTemplating();
+        $namespaceParts = explode("\\", $newModule->reflector->getNamespaceName());
+        $newModule->appName = $namespaceParts[0];
+        $newModule->route->setAppName($newModule->appName);
+        $newModule->session = $newModule->context->getSession();
+
         return $newModule;
     }
 
     private function _getViewParts($view) {
-        $viewParts = array("app" => $this->appName, "module" => $this->name, "view" => $this->currentTask,);
+        $viewParts = array(
+            "app" => $this->appName,
+            "module" => $this->name,
+            "view" => $this->currentTask,
+        );
 
         if (!empty($view)) {
             $viewPartsFound = explode("::", $view);
@@ -402,12 +411,7 @@ abstract class Module {
      * @return string The directory that contains this module. 
      */
     public function getModuleDir($appName, $name) {
-        $base = $this->context->getConfig()->get("businessRoot", "src");
-        if (!empty($base)) {
-            $base .= "::";
-        }
-
-        $dir = Loader::toSinglePath("$base$appName::Modules::$name::", "");
+        $dir = Loader::toSinglePath("$appName::Modules::$name::", "");
         return $dir;
     }
 

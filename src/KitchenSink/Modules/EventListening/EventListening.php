@@ -45,7 +45,13 @@ class EventListening extends Module {
      */
     function listenToSpecificCall(AfterTaskEvent $e) {
         $e->getDocument()->find("#Content")
-                ->append("<p>This content is added by an event listener, to know more about them look at the <strong>KitchenSink\Modules\EventListening\EventListening</strong> class </p>");
+                ->append("<p>
+                            This content is added by an event listener, to know more about them look at the 
+                            <a href='https://github.com/JeyDotC/Hirudo/blob/master/src/KitchenSink/Modules/EventListening/EventListening.php#L39'
+                                target='new'>
+                                <strong>KitchenSink\Modules\EventListening\EventListening</strong>
+                            </a> class.
+                          </p>");
     }
 
     /**

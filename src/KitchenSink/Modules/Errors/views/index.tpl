@@ -102,10 +102,12 @@ This is another function:
 </style>
 
 <div>
+    {nocache}
     {*
     Here we call our PrintException function defined above.
     *}
     {call name="PrintException" ex=$ex}
+    {/nocache}
 </div>
 
 {/block}

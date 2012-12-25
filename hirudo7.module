@@ -76,22 +76,7 @@ function hirudo7_run() {
 
 function run_manager() {
     require_once 'init.php';
-    $manager = new \Hirudo\Core\ModulesManager(array(
-                //The request data.
-                'Hirudo\Impl\Drupal\DrupalRequest',
-                //The URL builder.
-                'Hirudo\Impl\Drupal\DrupalRouting',
-                //The session Manager.
-                'Hirudo\Impl\Drupal\DrupalSession',
-                //The current user.
-                'Hirudo\Impl\Drupal\DrupalPrincipal',
-                //The configuration manager.
-                'Hirudo\Impl\StandAlone\SAppConfig',
-                //The templating system.
-                'Hirudo\Impl\Common\Templating\SmartyTemplating',
-                //The Asset system
-                'Hirudo\Impl\Drupal\DrupalAssets',
-            ));
+    $manager = new \Hirudo\Core\ModulesManager("drupal");
     return $manager->run();
 }
 

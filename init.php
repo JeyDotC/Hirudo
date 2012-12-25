@@ -18,6 +18,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 // TODO: Remove or wrap this class
 require_once 'ChromePhp.php';
 
@@ -31,45 +32,42 @@ if (!defined("HIRUDO_ROOT")) {
 
 //A file loader helper.
 require_once HIRUDO_ROOT . DS . "framework" . DS . "hirudo" . DS . "Hirudo" . DS . "Lang" . DS . "Loader.php";
+require_once HIRUDO_ROOT . DS . "framework" . DS . "hirudo" . DS . "Hirudo" . DS . "Lang" . DS . "Enum.php";
 
 use Hirudo\Lang\Loader;
 
 Loader::Init(HIRUDO_ROOT);
 
+//Include the UniversalClassLoader.php file if necesary.
 if (!class_exists("Symfony\Component\ClassLoader\UniversalClassLoader")) {
     Loader::using(array(
-            "framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader",
-            ));
+        "framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader",
+    ));
 }
-//Load some useful classes.
-Loader::using(array(
-    "framework::libs::symfony-components::Symfony::Component::Yaml::*",
-    "framework::libs::doctrine-common::Doctrine::Common::Annotations::AnnotationRegistry",
-    "framework::hirudo::Hirudo::Lang::Enum",
-));
 
-use Symfony\Component\ClassLoader\UniversalClassLoader;
-use Symfony\Component\Yaml\Yaml;
+//Instantiate the autoloader, create the apc version if APC is available.
+if (extension_loaded('apc') && ini_get('apc.enabled')) {
+    if (!class_exists("Symfony\Component\ClassLoader\ApcUniversalClassLoader")) {
+        Loader::using(array(
+            "framework::libs::symfony-components::Symfony::Component::ClassLoader::ApcUniversalClassLoader",
+        ));
+    }
+    $loader = new Symfony\Component\ClassLoader\ApcUniversalClassLoader("hirudo");
+} else {
+    $loader = new Symfony\Component\ClassLoader\UniversalClassLoader();
+}
+
+//Using AnnotationRegistry seems useless for some reason :/
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-$autoloadPath = Loader::toSinglePath("ext::config::Autoload", ".yml");
-$namespacesDir = Yaml::parse($autoloadPath);
-$namespaces = array();
-
-foreach ($namespacesDir["namespaces"] as $namespace => &$value) {
-    $dir = $value;
-    if (!is_dir($dir)) {
-        $dir = Loader::toSinglePath($value, "");
-    }
-    $namespaces[$namespace] = $dir;
-}
-
-$loader = new UniversalClassLoader();
-$loader->registerNamespaces($namespaces);
+$loader->registerNamespaces(array(
+    "Hirudo" => Loader::toSinglePath("framework::hirudo", ""),
+    "Symfony\Component" => Loader::toSinglePath("framework::libs::symfony-components", ""),
+    "Doctrine\Common" => Loader::toSinglePath("framework::libs::doctrine-common", ""),
+));
 
 $loader->register();
 
 AnnotationRegistry::registerLoader(array($loader, "loadClass"));
 Hirudo\Core\ModulesManager::setAutoLoader($loader);
-
 ?>
