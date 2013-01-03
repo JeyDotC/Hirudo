@@ -2,6 +2,10 @@
 
 namespace KitchenSink\Modules\Errors;
 
+use Hirudo\Core\Annotations\IgnoreCall;
+use Hirudo\Core\Events\Annotations\Listen;
+use Hirudo\Core\Events\Annotations\OverridesListener;
+use Hirudo\Core\Events\TaskErrorEvent;
 use Hirudo\Core\Module;
 
 /**
@@ -13,23 +17,18 @@ class Errors extends Module {
 
     /**
      * This method is called when there is an exception.
+     * 
+     * @Listen(to="taskError")
+     * @OverridesListener(id="error_listener")
+     * @IgnoreCall
      */
-    public function index() {
-        /**
-         * Here you can see one of the Hirudo's shorcuts, is an instance of the
-         * ModulesContext class. This class holds objects like
-         * Session, Request, Config among others. In this case we are accessing to
-         * the Current call, which maps the currently requested module and also
-         * holds the last occurred exception.
-         * 
-         * To know more about the objects available in the module see: https://github.com/JeyDotC/Hirudo-docs/blob/master/Hirudo/Core/Module.md#field-detail
-         */
-        $ex = $this->context->getCurrentCall()->getLastUnhandledException();
+    public function onError(TaskErrorEvent $e) {
+        $ex = $e->getException();
         $this->assign("ex", $ex);
 
-        return $this->display("index");
+        $e->setResult($this->display("index"));
     }
-    
+
     /**
      * This method is called when the requested module doesn't exist
      */

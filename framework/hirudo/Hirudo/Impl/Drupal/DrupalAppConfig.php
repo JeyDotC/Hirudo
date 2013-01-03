@@ -36,37 +36,42 @@ require_once "DrupalHelper.php";
  */
 class DrupalAppConfig extends AppConfig {
 
+    private $values = array();
+
     /**
      *
-     * @var JAppConfig
+     * @var DrupalAppConfig
      */
     private static $instance;
 
     /**
      *
-     * @return JAppConfig
+     * @return DrupalAppConfig
      */
     public static function instance() {
         if (!self::$instance) {
-            self::$instance = new JAppConfig();
+            self::$instance = new DrupalAppConfig();
         }
 
         return self::$instance;
     }
 
-    /**
-     *
-     * @var JParameter 
-     */
-    private $configObject;
-
-    public function get($key, $default = null) {
-        return $this->configObject->get($key, $default);
+    protected function load() {
     }
 
-    protected function load() {
-        $mainframe = DrupalHelper::getMainframe();
-        $this->configObject = $mainframe->getPageParameters($mainframe->scope);
+    public function get($key, $default = null) {
+    }
+
+    public function has($key) {
+        
+    }
+
+    public function loadApp($appName) {
+        
+    }
+
+    public function loadValues(array $values) {
+        
     }
 
 }

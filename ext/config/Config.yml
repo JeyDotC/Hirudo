@@ -6,8 +6,8 @@
 #businessRoots: ["src"]
 
 #The framework's mode.
-#enviroment: "dev"
-enviroment: "prod"
+enviroment: "dev"
+#enviroment: "prod"
 #enviroment: "test"
 
 # In this file is important to provide a value for this configuration as Hirudo will try to use

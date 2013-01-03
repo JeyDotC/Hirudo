@@ -11,3 +11,5 @@ plugins:
   - { class: Hirudo\Core\Extensions\Plugins\RequestModePlugin, active: true }
   #Tries to resolve the tasks requirements taking data from POST and/or GET based on the task's parameters.
   - { class: Hirudo\Core\Extensions\Plugins\TaskRequirementsPlugin, active: true }
+  #Hirudo's default error listener.
+  - { class: Hirudo\Core\Extensions\Plugins\TaskErrorDefaultPlugin, active: true }

@@ -96,12 +96,9 @@ class ModulesManager {
         try {
             $output = $this->executeCall($call);
         } catch (\Exception $ex) {
-            $lastUnhandledException = $ex instanceof HirudoException ? $ex : new HirudoException($call, "", $ex);
-
-            $errorCall = $this->getErrorCall();
-            $errorCall->setLastUnhandledException($lastUnhandledException);
-
-            $output = $this->executeCall($errorCall);
+            $unhandledException = $ex instanceof HirudoException ? $ex : new HirudoException($call, "", $ex);
+            $errorEvent = $this->context->getDispatcher()->dispatch("taskError", new Events\TaskErrorEvent($unhandledException));
+            $output = $errorEvent->getResult();
         }
 
         return $output;
@@ -114,11 +111,11 @@ class ModulesManager {
      * @return string The resulting output.
      */
     public function executeCall(ModuleCall $call) {
-        $this->prepareApplication($call->getApp());
-
         if ($call->isEmpty()) {
             $call = $this->getDefaultCall();
         }
+        
+        $this->prepareApplication($call->getApp());
 
         if (!$this->moduleExists($call)) {
             $call = $this->getModuleNotFoundCall();
@@ -143,7 +140,7 @@ class ModulesManager {
         return $afterTaskEvent->getTaskResult();
     }
 
-    function loadFrameworkLevelConfiguration($implementationPackage = "standalone") {
+    private function loadFrameworkLevelConfiguration($implementationPackage = "standalone") {
         $frameworkLevelConfiguration = Yaml::parse(Loader::toSinglePath("ext::config::Config", ".yml"));
         $enviroment = Yaml::parse(Loader::toSinglePath("ext::config::{$frameworkLevelConfiguration["enviroment"]}.$implementationPackage", ".yml"));
         $config = array_merge($frameworkLevelConfiguration, $enviroment);
@@ -154,7 +151,7 @@ class ModulesManager {
         if (array_search($appName, $this->loadedApps) === false) {
             $appPath = Loader::toSinglePath($appName, "");
             
-            if (empty($appPath)) {
+            if (empty($appPath) || !file_exists($appPath)) {
                 $appName = $this->context->getConfig()->get("defaultApplication");
                 if(empty($appName)){
                     throw new \Exception("Application not found and no default application is setup. You can set a default application at the 'ext/config/Config.yml' file by adding this line: defaultApplication: ApplicationName");
@@ -231,14 +228,6 @@ class ModulesManager {
 
     private function getModuleNotFoundCall() {
         return ModuleCall::fromString($this->context->getConfig()->get("onModuleNotFound"));
-    }
-
-    /**
-     *
-     * @return ModuleCall
-     */
-    private function getErrorCall() {
-        return ModuleCall::fromString($this->context->getConfig()->get("onError"));
     }
 
     private function loadExtensions($extLibs) {

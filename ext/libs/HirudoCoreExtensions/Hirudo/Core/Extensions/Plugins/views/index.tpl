@@ -1,11 +1,3 @@
-{extends file="KitchenSink::smarty-templates/Master"|toAssetPath}
-
-{block name="title"}Boom!{/block}
-
-{block name="header"}An Exception ocurred :({/block}
-
-{block name="content"}
-
 {*
 Oh, well, this file is kind of messy, but its only purpose is to print an exception
 in a pretty way. The function below allows to create some kind of inline function.
@@ -74,46 +66,50 @@ This is another function:
 </ol>
 {/function}
 
+<html>
+    <head>
+        <title>Boom!</title>
+        <style type="text/css">
+            {literal}
+                .dl, .dt, .dd{
+                    text-align: left;
+                    display: block !important;
+                    float: none !important;
+                }
+                .dd .dl{
+                    margin-left: 80px;
+                }
+                .debug-file{
+                    color:#990000;
+                }
+                .debug-line{
+                    color:green; 
+                }
 
-<style type="text/css">
-    {literal}
-        .dl, .dt, .dd{
-            text-align: left;
-            display: block !important;
-            float: none !important;
-        }
-        .dd .dl{
-            margin-left: 80px;
-        }
-        .debug-file{
-            color:#990000;
-        }
-        .debug-line{
-            color:green; 
-        }
-
-        .debug-message{
-            color: #3366FF;
-        }
-        .debug-literal{
-            color: #E03F0D;
-        }
-        .stack-trace div.method-call {
-            margin-left: 10px;
-        }
-        .stack-trace li {
-            margin-bottom: 5px;
-        }
-    {/literal}
-</style>
-
-<div>
-    {nocache}
-    {*
-    Here we call our PrintException function defined above.
-    *}
-    {call name="PrintException" ex=$ex}
-    {/nocache}
-</div>
-
-{/block}
+                .debug-message{
+                    color: #3366FF;
+                }
+                .debug-literal{
+                    color: #E03F0D;
+                }
+                .stack-trace div.method-call {
+                    margin-left: 10px;
+                }
+                .stack-trace li {
+                    margin-bottom: 5px;
+                }
+            {/literal}
+        </style>
+    </head>
+    <body>
+        <h1>An Exception ocurred :(</h1>
+        <div>
+            {nocache}
+            {*
+            Here we call our PrintException function defined above.
+            *}
+            {call name="PrintException" ex=$ex}
+            {/nocache}
+        </div>
+    </body>
+</html>
