@@ -5,14 +5,27 @@ namespace Hirudo\Core\Annotations;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * Signals a task to accept a set of request types only. Can be one or
- * more of: GET, POST, PUT or DELETE
+ * Tells to the task parameter resolver plugin how to resolve the method parameters.
  * 
+ * This annotation is optional, omiting it will cause the plugin to use inteligent 
+ * gess to determine the parameters' sources.
+ * 
+ * @author JeyDotC
  * @Annotation
- * @Target("METHOD")
+ * @Target({"METHOD"})
  */
-class HttpMethod {
+class Resolve {
 
+    /**
+     * An array where keys are the task's paremeters names and the values are the
+     * sources from which the plugin will look for such values.
+     * 
+     * The default available sources are "get", "post", "cookie", "env" and "server"
+     * But other extensions may provide their own values so they can resolve parameters
+     * from any kind of sources.
+     * 
+     * @var array
+     */
     public $value;
 
     public function __construct(array $values) {

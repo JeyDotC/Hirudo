@@ -20,6 +20,7 @@ namespace Hirudo\Core;
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 use Hirudo\Core\Context as Context;
 use Hirudo\Core\Context\ModuleCall;
 use Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager;
@@ -33,6 +34,7 @@ use Hirudo\Lang\DirectoryHelper;
 use Hirudo\Lang\Loader;
 use RecursiveDirectoryIterator;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -68,17 +70,17 @@ class ModulesManager {
         $dependencyManager = new $config["metadata_manager"]();
         $dependencyManager->addServices($config["implementation_package"]);
         $this->context = Context\ModulesContext::instance();
-        
+
         $dependencyManager->resolveDependencies($this->context);
         $this->context->setDependenciesManager($dependencyManager);
         $this->context->getConfig()->loadValues($config);
-        
+
         if ($this->context->getConfig()->get("enviroment") == "dev") {
             $this->context->setDispatcher(new HirudoDispatcher());
         } else {
             $this->context->setDispatcher(new FileCachedHirudoDispatcher(Loader::toSinglePath("ext::cache::listeners", "")));
         }
-        
+
         //Loading global extensions...
         $this->loadExtensions("ext::libs");
     }
@@ -114,8 +116,10 @@ class ModulesManager {
         if ($call->isEmpty()) {
             $call = $this->getDefaultCall();
         }
-        
+
         $this->prepareApplication($call->getApp());
+        
+        $this->context->getDispatcher()->dispatch("applicationLoaded", new Event());
 
         if (!$this->moduleExists($call)) {
             $call = $this->getModuleNotFoundCall();
@@ -150,16 +154,16 @@ class ModulesManager {
     private function prepareApplication($appName) {
         if (array_search($appName, $this->loadedApps) === false) {
             $appPath = Loader::toSinglePath($appName, "");
-            
+
             if (empty($appPath) || !file_exists($appPath)) {
                 $appName = $this->context->getConfig()->get("defaultApplication");
-                if(empty($appName)){
+                if (empty($appName)) {
                     throw new \Exception("Application not found and no default application is setup. You can set a default application at the 'ext/config/Config.yml' file by adding this line: defaultApplication: ApplicationName");
                 }
                 $this->prepareApplication($appName);
                 return;
             }
-            
+
             self::$autoLoader->registerNamespace($appName, dirname($appPath));
 
             $dir = new DirectoryHelper(new RecursiveDirectoryIterator($appPath . DS . "Modules"));
@@ -242,7 +246,11 @@ class ModulesManager {
                 if (isset($extension["namespaces"])) {
                     $this->registerNamespaces($dir, $extension["namespaces"]);
                 }
+            }
+        }
 
+        foreach ($extensions as $dir => $extension) {
+            if (!isset($extension["active"]) || $extension["active"]) {
                 if (isset($extension["plugins"])) {
                     $this->registerPlugins($extension["plugins"]);
                 }
