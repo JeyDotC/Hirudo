@@ -47,6 +47,13 @@ final class Export {
      * @var string 
      */
     public $factory = "";
+    
+    /**
+     * Optional tags.
+     * 
+     * @var array
+     */
+    public $tags = array();
 
 }
 

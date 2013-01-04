@@ -53,6 +53,15 @@ final class Import {
     public $id = null;
 
     /**
+     * A dependency tag. This is used to load dependencies through a tag instead
+     * of an id, allowing to have a collection of dependencies related by tag. 
+     * 
+     * @var string
+     */
+    public $tag = null;
+
+
+    /**
      * A dependency class name. This is useful if the dependency class is instantiable
      * and direct instantiation is acceptable. To import interfaces, abstract
      * classes or classes with some kind of special instatiation issue 

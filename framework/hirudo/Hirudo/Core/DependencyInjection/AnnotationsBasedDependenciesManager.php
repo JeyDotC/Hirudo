@@ -32,6 +32,7 @@ use ReflectionParameter;
 use ReflectionProperty;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 //A quick fix for a weird issue with the autoloader when dealing with annotations.
 Loader::using("framework::hirudo::Hirudo::Core::Annotations::*");
@@ -66,13 +67,18 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
      * @see Export the @Export annotation for more information about exporting classes.
      */
     public function addServices(array $implementationClasses) {
+
         foreach ($implementationClasses as $class) {
             /* @var $annotation Export */
             $annotation = $this->annotationReader->getClassAnnotation(new ReflectionClass($class), "Hirudo\Core\Annotations\Export");
             if ($annotation) {
+                /* @var $definition Definition */
                 $definition = $this->container->register($annotation->id, $class);
                 if (!empty($annotation->factory)) {
                     $definition->setFactoryClass($class)->setFactoryMethod($annotation->factory);
+                }
+                foreach ($annotation->tags as $tag) {
+                    $definition->addTag($tag);
                 }
             }
         }
@@ -116,37 +122,58 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
         $id = $annotation->id;
 
         if (empty($id)) {
-            /* @var $parameters ReflectionParameter */
-            $parameters = $method->getParameters();
-            $type = $parameters[0]->getClass();
-            $id = $type->name;
+            if (empty($annotation->tag)) {
+                /* @var $parameters ReflectionParameter */
+                $parameters = $method->getParameters();
+                $type = $parameters[0]->getClass();
+                $id = $type->name;
 
-            if (!$this->container->has($id)) {
-                $this->container->register($id, $type->newInstance());
+                if (!$this->container->has($id)) {
+                    $this->container->register($id, $type->newInstance());
+                }
             }
         }
 
-        $requestedObject = $this->container->get($id);
-
-        $this->resolveDependencies($requestedObject);
-        $method->invoke($object, $requestedObject);
+        if (!empty($id)) {
+            $requestedObject = $this->container->get($id);
+            $this->resolveDependencies($requestedObject);
+            $method->invoke($object, $requestedObject);
+        } else {
+            $servicesIds = $this->container->findTaggedServiceIds($annotation->tag);
+            foreach ($servicesIds as $serviceId => $attr) {
+                $requestedObject = $this->container->get($serviceId);
+                $this->resolveDependencies($requestedObject);
+                $method->invoke($object, $requestedObject);
+            }
+        }
     }
 
     private function resolveDependencyForProperty($object, ReflectionProperty $property, Import $annotation) {
         $id = $annotation->id;
 
         if (empty($id)) {
-            $type = new ReflectionClass($annotation->className);
-            $id = $type->name;
+            if (empty($annotation->tag)) {
+                $type = new ReflectionClass($annotation->className);
+                $id = $type->name;
 
-            if (!$this->container->has($id)) {
-                $this->container->register($id, $type->newInstance());
+                if (!$this->container->has($id)) {
+                    $this->container->register($id, $type->newInstance());
+                }
             }
         }
 
-        $requestedObject = $this->container->get($id);
-
-        $this->resolveDependencies($requestedObject);
+        if (!empty($id)) {
+            $requestedObject = $this->container->get($id);
+            $this->resolveDependencies($requestedObject);
+        } else {
+            $servicesIds = $this->container->findTaggedServiceIds($annotation->tag);
+            $requestedObject = array();
+            foreach ($servicesIds as $serviceId => $attr) {
+                $requested = $this->container->get($serviceId);
+                $this->resolveDependencies($requested);
+                $requestedObject[] = $requested;
+            }
+        }
 
         $makeUnaccesible = false;
 
