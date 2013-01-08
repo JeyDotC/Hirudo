@@ -34,11 +34,6 @@ class ModuleCall {
     private $app;
     private $module;
     private $task;
-    /**
-     *
-     * @var HirudoException
-     */
-    private $lastUnhandledException;
 
     /**
      * Creates a module call.
@@ -48,14 +43,12 @@ class ModuleCall {
      * @param string $task The task this module should execute.
      * @param UnderscoreException $lastUnhandledException If there where any unhandled exception on a previous module excecution.
      */
-    function __construct($app, $module, $task = "index",
-            UnderscoreException $lastUnhandledException = null) {
+    function __construct($app, $module, $task = "index") {
         $this->app = $app;
         $this->module = $module;
         $this->task = $task;
-        $this->lastUnhandledException = $lastUnhandledException;
     }
-    
+
     public function isEmpty() {
         return empty($this->app) && empty($this->module);
     }
@@ -69,7 +62,7 @@ class ModuleCall {
      */
     public static function fromString($string) {
         $parts = explode("::", $string);
-        return new ModuleCall($parts[0], isset($parts[1])? $parts[1] : "", isset($parts[2])? $parts[2] : "index");
+        return new ModuleCall($parts[0], isset($parts[1]) ? $parts[1] : "", isset($parts[2]) ? $parts[2] : "");
     }
 
     /**
@@ -126,33 +119,6 @@ class ModuleCall {
         $this->task = $task;
     }
 
-    /**
-     * Gets the last Unhandled exception from a previous module execution.
-     * 
-     * @return HirudoException An instance of HirudoException, null if there were no exceptions on a previous module excecution.
-     */
-    public function getLastUnhandledException() {
-        return $this->lastUnhandledException;
-    }
-
-    /**
-     * Sets the last Unhandled exception from a previous module execution.
-     * 
-     * @param HirudoException $lastUnhandledException 
-     */
-    public function setLastUnhandledException(HirudoException $lastUnhandledException) {
-        $this->lastUnhandledException = $lastUnhandledException;
-    }
-
-    /**
-     * Were there an exception from a previous module execution?
-     * 
-     * @return boolean 
-     */
-    public function hasUnhandledException() {
-        return $this->lastUnhandledException instanceof HirudoException;
-    }
-    
     /**
      * Represents this module call as string with the "AppName::ModuleName::taskName" format.
      * 

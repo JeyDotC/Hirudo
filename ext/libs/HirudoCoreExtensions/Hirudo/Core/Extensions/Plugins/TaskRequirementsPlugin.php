@@ -61,7 +61,7 @@ class TaskRequirementsPlugin {
         $task = $e->getTask();
 
         /* @var $resolve Resolve */
-        $resolve = $task->getTaskAnnotation("Hirudo\Core\Annotations\Resolve");
+        $resolve = $task->getTaskAnnotation("Hirudo\Core\Extensions\TaskRequirements\Resolve");
         $isPostOnly = $task->getTaskAnnotation("Hirudo\Core\Annotations\HttpPost") != null;
 
         foreach ($task->getParams() as /* @var $param ReflectionParameter */ $param) {

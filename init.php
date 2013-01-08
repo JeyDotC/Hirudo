@@ -69,5 +69,6 @@ $loader->registerNamespaces(array(
 $loader->register();
 
 AnnotationRegistry::registerLoader(array($loader, "loadClass"));
+AnnotationRegistry::registerAutoloadNamespace("Hirudo", Loader::toSinglePath("framework::hirudo", ""));
 Hirudo\Core\ModulesManager::setAutoLoader($loader);
 ?>

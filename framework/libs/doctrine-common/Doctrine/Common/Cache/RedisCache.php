@@ -20,26 +20,50 @@
 
 namespace Doctrine\Common\Cache;
 
+use Redis;
+
 /**
- * APC cache provider.
+ * Redis cache provider.
  *
  * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link    www.doctrine-project.org
- * @since   2.0
- * @author  Benjamin Eberlei <kontakt@beberlei.de>
- * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @author  Jonathan Wage <jonwage@gmail.com>
- * @author  Roman Borschel <roman@code-factory.org>
- * @author  David Abdemoulaie <dave@hobodave.com>
+ * @since   2.2
+ * @author  Osman Ungur <osmanungur@gmail.com>
  */
-class ApcCache extends CacheProvider
+class RedisCache extends CacheProvider
 {
+    /**
+     * @var Redis
+     */
+    private $redis;
+
+    /**
+     * Sets the redis instance to use.
+     *
+     * @param Redis $redis
+     */
+    public function setRedis(Redis $redis)
+    {
+        $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
+        $this->redis = $redis;
+    }
+
+    /**
+     * Gets the redis instance used by the cache.
+     *
+     * @return Redis
+     */
+    public function getRedis()
+    {
+        return $this->redis;
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function doFetch($id)
     {
-        return apc_fetch($id);
+        return $this->redis->get($id);
     }
 
     /**
@@ -47,7 +71,7 @@ class ApcCache extends CacheProvider
      */
     protected function doContains($id)
     {
-        return apc_exists($id);
+        return $this->redis->exists($id);
     }
 
     /**
@@ -55,7 +79,11 @@ class ApcCache extends CacheProvider
      */
     protected function doSave($id, $data, $lifeTime = 0)
     {
-        return (bool) apc_store($id, $data, (int) $lifeTime);
+        $result = $this->redis->set($id, $data);
+        if ($lifeTime > 0) {
+            $this->redis->expire($id, $lifeTime);        
+        }
+        return $result;
     }
 
     /**
@@ -63,7 +91,7 @@ class ApcCache extends CacheProvider
      */
     protected function doDelete($id)
     {
-        return apc_delete($id);
+        return $this->redis->delete($id);
     }
 
     /**
@@ -71,7 +99,7 @@ class ApcCache extends CacheProvider
      */
     protected function doFlush()
     {
-        return apc_clear_cache() && apc_clear_cache('user');
+        return $this->redis->flushDB();
     }
 
     /**
@@ -79,15 +107,13 @@ class ApcCache extends CacheProvider
      */
     protected function doGetStats()
     {
-        $info = apc_cache_info();
-        $sma  = apc_sma_info();
-
+        $info = $this->redis->info();
         return array(
-            Cache::STATS_HITS              => $info['num_hits'],
-            Cache::STATS_MISSES            => $info['num_misses'],
-            Cache::STATS_UPTIME            => $info['start_time'],
-            Cache::STATS_MEMORY_USAGE      => $info['mem_size'],
-            Cache::STATS_MEMORY_AVAILIABLE => $sma['avail_mem'],
+            Cache::STATS_HITS   => false,
+            Cache::STATS_MISSES => false,
+            Cache::STATS_UPTIME => $info['uptime_in_seconds'],
+            Cache::STATS_MEMORY_USAGE       => $info['used_memory'],
+            Cache::STATS_MEMORY_AVAILIABLE  => false
         );
     }
 }

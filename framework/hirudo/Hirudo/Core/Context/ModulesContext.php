@@ -34,9 +34,6 @@ use Hirudo\Core\Events\Dispatcher\HirudoDispatcher;
 use Hirudo\Core\TemplatingInterface;
 use Hirudo\Lang\Loader;
 
-//A quick fix for a weird issue with the autoloader when dealing with annotations.
-Loader::using("framework::hirudo::Hirudo::Core::Events::Annotations::*");
-
 /**
  * This class holds the instances of the objects that implements
  * the Hirudo abstract classes.

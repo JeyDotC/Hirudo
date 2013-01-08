@@ -21,10 +21,13 @@ namespace Hirudo\Core;
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Cache\FilesystemCache;
 use Hirudo\Core\Context as Context;
 use Hirudo\Core\Context\ModuleCall;
 use Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager;
 use Hirudo\Core\Events\BeforeTaskEvent;
+use Hirudo\Core\Events\Dispatcher\CachedHirudoDispatcher;
 use Hirudo\Core\Events\Dispatcher\FileCachedHirudoDispatcher;
 use Hirudo\Core\Events\Dispatcher\HirudoDispatcher;
 use Hirudo\Core\Exceptions\HirudoException;
@@ -78,7 +81,7 @@ class ModulesManager {
         if ($this->context->getConfig()->get("enviroment") == "dev") {
             $this->context->setDispatcher(new HirudoDispatcher());
         } else {
-            $this->context->setDispatcher(new FileCachedHirudoDispatcher(Loader::toSinglePath("ext::cache::listeners", "")));
+            $this->context->setDispatcher(new CachedHirudoDispatcher(new HirudoDispatcher(), new FilesystemCache(Loader::toSinglePath("ext::cache::listeners", ""))));
         }
 
         //Loading global extensions...
@@ -113,12 +116,13 @@ class ModulesManager {
      * @return string The resulting output.
      */
     public function executeCall(ModuleCall $call) {
+
+        $this->prepareApplication($call->getApp());
+
         if ($call->isEmpty()) {
             $call = $this->getDefaultCall();
         }
 
-        $this->prepareApplication($call->getApp());
-        
         $this->context->getDispatcher()->dispatch("applicationLoaded", new Event());
 
         if (!$this->moduleExists($call)) {
@@ -280,6 +284,7 @@ class ModulesManager {
                 }
             }
             self::$autoLoader->registerNamespace($namespace, $folder);
+            AnnotationRegistry::registerAutoloadNamespace($namespace, $folder);
         }
     }
 

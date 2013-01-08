@@ -22,20 +22,17 @@
 namespace Hirudo\Core\DependencyInjection;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\FileCacheReader;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\FilesystemCache;
 use Hirudo\Core\Annotations\Export;
 use Hirudo\Core\Annotations\Import;
 use Hirudo\Lang\Loader;
 use ReflectionClass;
 use ReflectionMethod;
-use ReflectionParameter;
 use ReflectionProperty;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 
-//A quick fix for a weird issue with the autoloader when dealing with annotations.
-Loader::using("framework::hirudo::Hirudo::Core::Annotations::*");
 
 /**
  * A dependencies manager that uses the doctrine's doc-block annotations system
@@ -54,7 +51,7 @@ class AnnotationsBasedDependenciesManager extends ContainerAware implements Depe
 
     function __construct() {
         $this->setContainer(new ContainerBuilder());
-        $this->annotationReader = new FileCacheReader(new AnnotationReader(), Loader::toSinglePath("ext::cache::annotations.cache", ""));
+        $this->annotationReader = new CachedReader(new AnnotationReader(), new FilesystemCache(Loader::toSinglePath("ext::cache::annotations.cache", "")));
     }
 
     /**
