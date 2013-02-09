@@ -29,6 +29,11 @@ class AfterTaskEvent extends Event {
     public function getTaskResult() {
         return isset($this->dom) ? $this->dom->htmlOuter() : $this->result;
     }
+    
+    public function replaceTaskResult($resultReplacement) {
+        $this->dom = null;
+        $this->result = $resultReplacement;
+    }
 
     /**
      * 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hirudo\Core\Extensions\TaskRequirements;
+namespace Hirudo\Core\Extensions\TaskRequirements\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\Target;
 

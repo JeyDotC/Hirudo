@@ -21,8 +21,6 @@
 
 namespace Hirudo\Serialization;
 
-require_once "SerializationFactory.php";
-
 /**
  * A default SerializationFactory implementation. This one creates
  * the serializer and the de-serializer based on a mime type.
@@ -38,7 +36,7 @@ class MimeSerializationFactory implements SerializationFactory {
 
     public function getMime($mimeType) {
         $slashPos = strrpos($mimeType, "/");
-        return strtolower(substr($mimeType, $slashPos + 1));
+        return ucfirst(strtolower(substr($mimeType, $slashPos + 1)));
     }
 
     /**
@@ -52,8 +50,7 @@ class MimeSerializationFactory implements SerializationFactory {
         $mime = $this->getMime($mimeType);
 
         if (!isset($this->serializerIinstances[$mime])) {
-            $className = "EntitySerializer" . strtoupper($mime);
-            require_once "Impl/{$mime}/$className.php";
+            $className = "Hirudo\\Serialization\\Impl\\{$mime}\\EntitySerializer" . strtoupper($mime);
             $this->serializerIinstances[$mime] = new $className();
         }
 
@@ -70,8 +67,7 @@ class MimeSerializationFactory implements SerializationFactory {
         $mime = $this->getMime($mimeType);
 
         if (!isset($this->deserializerIinstances[$mime])) {
-            $className = "EntityDeserializer" . strtoupper($mime);
-            require_once "impl/{$mime}/$className.php";
+            $className = "Hirudo\\Serialization\\Impl\\{$mime}\\EntityDeserializer" . strtoupper($mime);
             $this->deserializerIinstances[$mime] = new $className();
         }
 

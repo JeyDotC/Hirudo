@@ -21,9 +21,6 @@
 
 namespace Hirudo\Serialization;
 
-require_once 'EntitySerializerBase.php';
-require_once 'EntityDeserializerBase.php';
-
 /**
  * An interface to serialization and deserialization factories.
  */

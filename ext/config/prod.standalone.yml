@@ -1,5 +1,7 @@
 metadata_manager: Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager
 
+cache: { type: filesystem, cache_folder: "ext::cache" }
+
 implementation_package:
   #The request data.
   - Hirudo\Impl\StandAlone\SARequest

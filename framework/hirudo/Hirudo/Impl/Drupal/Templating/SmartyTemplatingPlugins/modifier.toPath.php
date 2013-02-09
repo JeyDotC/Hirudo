@@ -19,22 +19,26 @@
  * along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Hirudo\Serialization\Impl\Json;
-
-use Hirudo\Serialization\EntitySerializerBase;
+use Hirudo\Lang\Loader;
 
 /**
- * JSON implementation of EntitySerializerBase. Converts the given object
- * into a JSON string.
+ * <p>Converts the given string into a valid absolute path using the 
+ * {@link Loader::toSinglePath()} method.</p>
  * 
- * @author JeyDotC
+ * 
+ * @param string $string The path to be converted.
+ * @param string $extension = ".tpl" The extension of the required path.
+ * @return string The resulting path.
+ * 
+ * @see Loader::using() For details about the string format required by this 
+ * method.
+ * 
+ * @throws InvalidPathException If $string is not a string, is null or is empty.
+ * @throws LogicException If $extension is not a string.
  */
-class EntitySerializerJSON extends EntitySerializerBase {
-
-    protected function doSerialize($array) {
-        return json_encode($array);
-    }
-
+function smarty_modifier_toPath($string, $extension = ".tpl") {
+    $resultingPaths = Loader::toSinglePath($string, $extension);
+    return $resultingPaths;
 }
 
 ?>

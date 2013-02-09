@@ -10,6 +10,7 @@ use Hirudo\Core\Events\Annotations\VirtualListener;
 use Hirudo\Core\Events\BeforeTaskEvent;
 use Hirudo\Core\Extensions\TaskRequirements\RequestRequirementResolver;
 use Hirudo\Core\Extensions\TaskRequirements\RequirementResolverInterface;
+use Hirudo\Core\Extensions\WebApi\WebApiRequirementResolver;
 use ReflectionParameter;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -41,7 +42,7 @@ class TaskRequirementsPlugin {
 
     /**
      * 
-     * @param \Symfony\Component\EventDispatcher\Event $e
+     * @param Event $e
      * @Listen(to="applicationLoaded")
      */
     function onApplicationLoaded(Event $e) {
@@ -61,11 +62,11 @@ class TaskRequirementsPlugin {
         $task = $e->getTask();
 
         /* @var $resolve Resolve */
-        $resolve = $task->getTaskAnnotation("Hirudo\Core\Extensions\TaskRequirements\Resolve");
+        $resolve = $task->getTaskAnnotation("Hirudo\Core\Extensions\TaskRequirements\Annotations\Resolve");
         $isPostOnly = $task->getTaskAnnotation("Hirudo\Core\Annotations\HttpPost") != null;
 
         foreach ($task->getParams() as /* @var $param ReflectionParameter */ $param) {
-            if ($resolve == null || !array_key_exists($param->name, $resolve->value)) {
+            if ($resolve == null || (!array_key_exists($param->name, $resolve->value) && !array_key_exists("__all", $resolve->value))) {
                 $source = "";
                 if (!$param->isArray() && is_null($param->getClass()) && !$isPostOnly) {
                     $source = "get";
@@ -75,8 +76,8 @@ class TaskRequirementsPlugin {
                 $task->setParamValue($param->name, $this->resolvers["default_resolver"]->resolve($param, $source));
             } else {
                 foreach ($this->resolvers as $resolver) {
-                    $source = $resolve->value[$param->name];
-                    if ($resolver->suports($resolve->value[$param->name])) {
+                    $source = array_key_exists($param->name, $resolve->value) ? $resolve->value[$param->name] : $resolve->value["__all"];
+                    if ($resolver->suports($source)) {
                         $task->setParamValue($param->name, $resolver->resolve($param, $source));
                     }
                 }

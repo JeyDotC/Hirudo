@@ -13,3 +13,9 @@ plugins:
   - { class: Hirudo\Core\Extensions\Plugins\TaskRequirementsPlugin, active: true }
   #Hirudo's default error listener.
   - { class: Hirudo\Core\Extensions\Plugins\TaskErrorDefaultPlugin, active: true }
+  #Restful API System
+  - { class: Hirudo\Core\Extensions\Plugins\WebApiPlugin, active: true }
+  
+  
+services:
+  - Hirudo\Core\Extensions\WebApi\WebApiRequirementResolver

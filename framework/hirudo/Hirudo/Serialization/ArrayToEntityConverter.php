@@ -127,7 +127,7 @@ class ArrayToEntityConverter {
         }
     }
 
-    private function typeIsPrimitive($type) {
+    public function typeIsPrimitive($type) {
         return in_array(strtolower($type), self::$knownPrimitiveTypes);
     }
 

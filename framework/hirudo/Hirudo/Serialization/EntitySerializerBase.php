@@ -21,8 +21,6 @@
 
 namespace Hirudo\Serialization;
 
-require_once "EntityToArrayConverter.php";
-
 /**
  * A base class for entity serialization.
  */

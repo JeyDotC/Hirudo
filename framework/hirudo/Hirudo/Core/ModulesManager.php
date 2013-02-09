@@ -20,15 +20,12 @@ namespace Hirudo\Core;
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Cache\FilesystemCache;
 use Hirudo\Core\Context as Context;
 use Hirudo\Core\Context\ModuleCall;
-use Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager;
 use Hirudo\Core\Events\BeforeTaskEvent;
 use Hirudo\Core\Events\Dispatcher\CachedHirudoDispatcher;
-use Hirudo\Core\Events\Dispatcher\FileCachedHirudoDispatcher;
 use Hirudo\Core\Events\Dispatcher\HirudoDispatcher;
 use Hirudo\Core\Exceptions\HirudoException;
 use Hirudo\Core\Exceptions\ModuleNotFoundException;
@@ -53,7 +50,7 @@ class ModulesManager {
      * @var Context\ModulesContext 
      */
     private $context;
-
+    
     /**
      *
      * @var UniversalClassLoader 
@@ -70,6 +67,14 @@ class ModulesManager {
     function __construct($implementationPackage = "standalone") {
         $config = $this->loadFrameworkLevelConfiguration($implementationPackage);
 
+        if (isset($config["cache"]) && isset($config["cache"]["factory_class"])) {
+            $config["cache_factory"] = new $config["cache"]["factory_class"]();
+        } else {
+            $config["cache_factory"] = new Cache\DefaultCacheFactory();
+        }
+
+        $config["cache_factory"]->setConfiguration(isset($config["cache"]) ? $config["cache"] : array());
+
         $dependencyManager = new $config["metadata_manager"]();
         $dependencyManager->addServices($config["implementation_package"]);
         $this->context = Context\ModulesContext::instance();
@@ -81,7 +86,10 @@ class ModulesManager {
         if ($this->context->getConfig()->get("enviroment") == "dev") {
             $this->context->setDispatcher(new HirudoDispatcher());
         } else {
-            $this->context->setDispatcher(new CachedHirudoDispatcher(new HirudoDispatcher(), new FilesystemCache(Loader::toSinglePath("ext::cache::listeners", ""))));
+            $this->context->setDispatcher(
+                    new CachedHirudoDispatcher(
+                            new HirudoDispatcher(), $this->context->getConfig()->get("cache_factory")->createCacheInstance("listeners")
+            ));
         }
 
         //Loading global extensions...
