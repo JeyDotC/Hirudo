@@ -23,40 +23,6 @@ if (!defined("HIRUDO_DRUPAL_MODULE")) {
     define("HIRUDO_DRUPAL_MODULE", "hirudo8");
 }
 
-/**
- * This method provides the Hirudo block information that allows Hirudo
- * applications to be rendered on drupal.
- * 
- * @return array The block configuration.
- */
-function hirudo8_block_info() {
-    return array(
-        "hirudo" => array(
-            "info" => "Hirudo framework",
-            'cache' => DRUPAL_NO_CACHE,
-        )
-    );
-}
-
-/**
- * Renders the Hirudo block. Also invokes the Hirudo process.
- * 
- * @param string $delta The block's delta, it should be "hirudo" in order to render. 
- * @return array The rendered block
- */
-function hirudo8_block_view($delta = '') {
-    $block = array();
-
-    if ($delta == "hirudo") {
-        $block = array(
-            "subject" => "<none>",
-            "content" => run_manager()
-        );
-    }
-
-    return $block;
-}
-
 function hirudo8_menu() {
     $menu = array();
     $menu["App"] = array(
