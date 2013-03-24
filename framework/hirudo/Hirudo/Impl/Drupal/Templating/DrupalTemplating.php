@@ -60,13 +60,12 @@ class DrupalTemplating implements TemplatingInterface {
     /**
      * Renders the view and retuns it as a string.
      * 
-     * @param string $moduleDir The absolute path to the module.
      * @param string $view The name of the view to be rendered.
      * 
      * @return string The output of the view as a string. 
      */
-    public function display($moduleDir, $view) {
-        return $this->delegate->fetch($moduleDir . "views" . DS . "$view.php");
+    public function display($view) {
+        return $this->delegate->fetch("$view.php");
     }
 
     /**

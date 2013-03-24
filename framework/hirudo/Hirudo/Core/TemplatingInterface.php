@@ -48,7 +48,7 @@ interface TemplatingInterface {
      * 
      * @return string The output of the view as a string. 
      */
-    public function display($moduleDir, $view);
+    public function display($view);
     
     /**
      * Tells to the Templating system the location of an extensions folder, allowing

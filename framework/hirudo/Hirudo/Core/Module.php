@@ -104,6 +104,20 @@ class HeaderBag {
 
 }
 
+class Redirection {
+
+    private $url;
+
+    function __construct($url) {
+        $this->url = $url;
+    }
+
+    public function getUrl() {
+        return $this->url;
+    }
+
+}
+
 /**
  * A module represents a single use case in the business logic.
  * 
@@ -313,7 +327,8 @@ abstract class Module {
      * to the current module or a string with the "AppName::ModuleName::viewName" format
      * if the view belongs to another module.
      */
-    protected function display($view) {
+    protected function display($view, array $data = array()) {
+        $this->assignMany($data);
         $viewParts = $this->_getViewParts($view);
 
         $this->module["appName"] = $this->appName;
@@ -326,7 +341,7 @@ abstract class Module {
 
         $this->assign("Module", $this->module);
 
-        return $this->view->display($this->getModuleDir($viewParts["app"], $viewParts["module"]), $viewParts["view"]);
+        return $this->view->display($this->getModuleDir($viewParts["app"], $viewParts["module"]) . "views" . DS . $viewParts["view"]);
     }
 
     /**
@@ -431,6 +446,10 @@ abstract class Module {
      */
     public function getAppName() {
         return $this->appName;
+    }
+
+    protected function redirect($url) {
+        return new Redirection($url);
     }
 
 }

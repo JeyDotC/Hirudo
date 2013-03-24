@@ -23,7 +23,7 @@ class TaskErrorDefaultPlugin {
     function onError(TaskErrorEvent $e) {
         $templating = ModulesContext::instance()->getTemplating();
         $templating->assign("ex", $e->getException());
-        echo $templating->display(dirname(__FILE__) . DS, "index");
+        echo $templating->display(dirname(__FILE__) . DS . "views" . DS . "index");
     }
 
 }

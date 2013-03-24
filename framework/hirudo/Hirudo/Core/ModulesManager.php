@@ -50,7 +50,7 @@ class ModulesManager {
      * @var Context\ModulesContext 
      */
     private $context;
-    
+
     /**
      *
      * @var UniversalClassLoader 
@@ -88,7 +88,7 @@ class ModulesManager {
         } else {
             $this->context->setDispatcher(
                     new CachedHirudoDispatcher(
-                            new HirudoDispatcher(), $this->context->getConfig()->get("cache_factory")->createCacheInstance("listeners")
+                    new HirudoDispatcher(), $this->context->getConfig()->get("cache_factory")->createCacheInstance("listeners")
             ));
         }
 
@@ -102,10 +102,12 @@ class ModulesManager {
      * 
      * @return string The program's output. 
      */
-    public function run() {
-        //Get the call from request.
-        $call = $this->context->getRequest()->buildModuleCall();
-
+    public function run($call = null) {
+        if (!$call instanceof ModuleCall) {
+            //Get the call from request.
+            $call = $this->context->getRequest()->buildModuleCall();
+        }
+        
         try {
             $output = $this->executeCall($call);
         } catch (\Exception $ex) {
@@ -151,9 +153,13 @@ class ModulesManager {
             return $this->executeCall($beforeTaskEvent->getCall());
         }
 
-        $result = $task->invoke();
-        $afterTaskEvent = $this->context->getDispatcher()->dispatch("afterTask", new Events\AfterTaskEvent($result));
-        return $afterTaskEvent->getTaskResult();
+        $afterTaskEvent = $this->context->getDispatcher()->dispatch("afterTask", new Events\AfterTaskEvent($task->invoke()));
+        $result = $afterTaskEvent->getTaskResult();
+        if ($result instanceof Redirection) {
+            $this->context->getRouting()->redirect($result->getUrl());
+        }
+
+        return $result;
     }
 
     private function loadFrameworkLevelConfiguration($implementationPackage = "standalone") {
@@ -163,7 +169,7 @@ class ModulesManager {
         return $config;
     }
 
-    private function prepareApplication($appName) {
+    public function prepareApplication($appName) {
         if (array_search($appName, $this->loadedApps) === false) {
             $appPath = Loader::toSinglePath($appName, "");
 

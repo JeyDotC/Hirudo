@@ -80,8 +80,8 @@ class SmartyTemplating implements TemplatingInterface {
      * 
      * @return string The output of the view as a string. 
      */
-    public function display($moduleDir, $view) {
-        return $this->smarty->fetch("file:" . $moduleDir . "views" . DS . "$view.tpl");
+    public function display($view) {
+        return $this->smarty->fetch("file:$view.tpl");
     }
 
     /**
