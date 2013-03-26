@@ -1,0 +1,11 @@
+#General activeness of the extension.
+active: true
+
+namespaces:
+  - UIExtensions
+
+plugins:
+  { class: UIExtensions\Plugins\RegisterExtension, active: true}
+  
+templating_extensions:
+  - UIExtensions/SmartyExtensions
