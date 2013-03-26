@@ -70,14 +70,21 @@ class CrudModule extends Module {
          * Note that, in this case, we are programatically creating a URL, instead
          * of using the {url} smarty function in the template.
          * 
-         * Every module in Hirudo has an instance of Hirudo/Core/Context/Routing
+         * Every module in Hirudo has an instance of Hirudos/Core/Context/Routing
          * named 'route'.
          * 
          * To know more about Hirudo routing see: https://github.com/JeyDotC/Hirudo-docs/blob/master/Hirudo/Core/Context/Routing.md 
          */
         $this->assign("action", $this->route->action("save"));
 
-        return $this->display("create");
+        /**
+         * This time we are sending to the view a value named "foo", this is another
+         * way of sending data to the view and is just like calling $this->assignMany
+         * right before calling the display function.
+         */
+        return $this->display("create", array(
+                    "foo" => new Foo(),
+        ));
     }
 
     /**
