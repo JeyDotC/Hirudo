@@ -51,6 +51,20 @@ interface TemplatingInterface {
     public function display($view);
     
     /**
+     * Renders the first found view.
+     * 
+     * @param array $views A list of view file names.
+     *
+     * @return string The output of the view as a string. 
+     */
+    public function pick(array $views);
+    
+    /**
+     * @return string The file extension supported by this template engine.
+     */
+    public function getFileExtension();
+    
+    /**
      * Tells to the Templating system the location of an extensions folder, allowing
      * it to load and use its extensions.
      * 

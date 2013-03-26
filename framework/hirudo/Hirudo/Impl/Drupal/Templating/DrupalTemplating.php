@@ -21,8 +21,9 @@
 
 namespace Hirudo\Impl\Drupal\Templating;
 
-use Hirudo\Core\TemplatingInterface;
 use Hirudo\Core\Context\ModulesContext;
+use Hirudo\Core\Exceptions\TemplateNotFoundException;
+use Hirudo\Core\TemplatingInterface;
 
 /**
  * A delegate based templating system.
@@ -93,6 +94,20 @@ class DrupalTemplating implements TemplatingInterface {
      */
     public function addExtensionsPath($path) {
         //$this->delegate->addPluginsDir($path);
+    }
+
+    public function pick(array $views) {
+        foreach ($views as $view) {
+            if (file_exists("$view.php")) {
+                return $this->display($view);
+            }
+        }
+
+        throw new TemplateNotFoundException(implode(" or ", $views));
+    }
+
+    public function getFileExtension() {
+        return ".php";
     }
 
 }

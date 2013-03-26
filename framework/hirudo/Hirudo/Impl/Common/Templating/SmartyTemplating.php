@@ -21,11 +21,14 @@
 
 namespace Hirudo\Impl\Common\Templating;
 
-use Hirudo\Core\TemplatingInterface;
 use Hirudo\Core\Context\ModulesContext;
+use Hirudo\Core\Exceptions\TemplateNotFoundException;
+use Hirudo\Core\TemplatingInterface;
 use Hirudo\Lang\Loader;
+use Smarty;
 
 Loader::using("framework::libs::smarty::Smarty.class");
+require_once 'helperFunctions.php';
 
 /**
  * A Smarty based templating system.
@@ -45,17 +48,17 @@ class SmartyTemplating implements TemplatingInterface {
      * Creates a new instance of smarty templating.
      */
     function __construct() {
-        $this->smarty = new \Smarty();
+        $this->smarty = new Smarty();
         $this->addExtensionsPath(dirname(__FILE__) . "/SmartyTemplatingPlugins");
 
         $enviroment = ModulesContext::instance()->getConfig()->get("enviroment");
 
         if ($enviroment == "dev") {
-            $this->smarty->caching = \Smarty::CACHING_OFF;
-        }else{
-            $this->smarty->caching = \Smarty::CACHING_LIFETIME_CURRENT;
+            $this->smarty->caching = Smarty::CACHING_OFF;
+        } else {
+            $this->smarty->caching = Smarty::CACHING_LIFETIME_CURRENT;
         }
-        
+
         $this->smarty->setCacheDir(Loader::toSinglePath("ext::cache::smarty::cache", ""))
                 ->setCompileDir(Loader::toSinglePath("ext::cache::smarty::compile", ""));
     }
@@ -109,6 +112,20 @@ class SmartyTemplating implements TemplatingInterface {
      */
     public function addExtensionsPath($path) {
         $this->smarty->addPluginsDir($path);
+    }
+
+    public function pick(array $views) {
+        foreach ($views as $view) {
+            if (file_exists($view)) {
+                return $this->display("$view.tpl");
+            }
+        }
+
+        throw new TemplateNotFoundException(implode(" or ", $views));
+    }
+
+    public function getFileExtension() {
+        return ".tpl";
     }
 
 }

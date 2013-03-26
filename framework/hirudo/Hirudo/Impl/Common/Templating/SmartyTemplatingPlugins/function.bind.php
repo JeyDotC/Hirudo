@@ -36,6 +36,8 @@
  * @param array $params
  * @param Smarty_Internal_Template $template
  * @return string The resulting name attribute.
+ * 
+ * @deprecated since version 0.1
  */
 function smarty_function_bind($params, $template) {
     $to = $params["to"];
