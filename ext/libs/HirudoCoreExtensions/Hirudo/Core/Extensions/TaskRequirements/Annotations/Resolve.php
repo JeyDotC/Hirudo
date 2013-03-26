@@ -24,6 +24,9 @@ class Resolve {
      * But other extensions may provide their own values so they can resolve parameters
      * from any kind of sources.
      * 
+     * Use "__all" key to mean that all the parameters should be resolved from 
+     * the same source.
+     * 
      * @var array
      */
     public $value;

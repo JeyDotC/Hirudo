@@ -3,7 +3,7 @@
 namespace Hirudo\Core\Extensions\WebApi;
 
 /**
- * Description of Headers
+ * Helper class for dealing with header variables.
  *
  * @author JeyDotC
  */
@@ -11,6 +11,13 @@ class Headers {
 
     private static $headers;
 
+    /**
+     * Gets a header value. It takes care of some special cases.
+     * 
+     * @param string $key The header variable name.
+     * 
+     * @return string The value corresponding to the given variable name.
+     */
     public static function get($key) {
         if(!isset(self::$headers)){
             self::$headers = self::parseRequestHeaders();

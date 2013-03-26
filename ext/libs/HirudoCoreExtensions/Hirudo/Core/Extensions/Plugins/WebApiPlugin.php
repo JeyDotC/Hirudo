@@ -8,7 +8,7 @@ use Hirudo\Core\Extensions\WebApi\ApiResponse;
 use \Hirudo\Core\Events\Annotations\Listen;
 
 /**
- * Description of WebApiResponse
+ * Allows tasks to be defined as REST-like api methods.
  *
  * @author JeyDotC
  */
@@ -17,9 +17,9 @@ class WebApiPlugin {
     private $taskIsApi = false;
 
     /**
+     * Checks if the task to be executed is intended to be a REST-like method.
      * 
-     * 
-     * @param BeforeTaskEvent $e
+     * @param BeforeTaskEvent $e Information about the task to be executed.
      * 
      * @Listen(to="beforeTask", priority=8)
      */
@@ -28,7 +28,9 @@ class WebApiPlugin {
     }
 
     /**
-     * 
+     * If the previously executed method is an API method, the result of it
+     * will be encoded to the format requested by the request headers in the
+     * <code>Accept:</code> parametter.
      * 
      * @param AfterTaskEvent $e
      * 

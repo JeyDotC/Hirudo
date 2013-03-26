@@ -8,13 +8,15 @@ use Hirudo\Core\Events\Annotations\VirtualListener;
 use Hirudo\Core\Events\TaskErrorEvent;
 
 /**
- * Description of TaskErrorDefaultPlugin
+ * This plugin shows a default error page with debug information
+ * when an unhandled exception occurs during a task execution.
  *
  * @author JeyDotC
  */
 class TaskErrorDefaultPlugin {
 
     /**
+     * Listens to the taskError event in order to present a default error page.
      * 
      * @param TaskErrorEvent $e
      * @Listen(to="taskError")

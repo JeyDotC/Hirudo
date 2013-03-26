@@ -3,7 +3,10 @@
 namespace Hirudo\Core\Extensions\TaskRequirements;
 
 /**
- * Description of RequirementsResolverInterface
+ * Interface for all requirement resolvers. 
+ * 
+ * A resolver is a class that resolves parameters values based on the information
+ * available about the parameter and the given source.
  *
  * @author JeyDotC
  */

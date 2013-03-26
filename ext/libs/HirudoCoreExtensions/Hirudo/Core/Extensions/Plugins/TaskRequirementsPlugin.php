@@ -10,14 +10,17 @@ use Hirudo\Core\Events\Annotations\VirtualListener;
 use Hirudo\Core\Events\BeforeTaskEvent;
 use Hirudo\Core\Extensions\TaskRequirements\RequestRequirementResolver;
 use Hirudo\Core\Extensions\TaskRequirements\RequirementResolverInterface;
-use Hirudo\Core\Extensions\WebApi\WebApiRequirementResolver;
-use ReflectionParameter;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Tries to resolve the tasks requirements taking data from POST and/or GET 
- * based on the task's parameters.
+ * Tries to resolve the task's requirements taking data from the known
+ * resolvers.
  *
+ * The resolvers are those classes that implement the 
+ * {@link Hirudo\Core\Extensions\TaskRequirements\RequirementResolverInterface}
+ * interface and are registered as services under the tag 
+ * <code>requirements_resolver</code>
+ * 
  * @author JeyDotC
  */
 class TaskRequirementsPlugin {
@@ -25,13 +28,18 @@ class TaskRequirementsPlugin {
     private $context;
     private $resolvers = array();
 
+    /**
+     * Constructs a new TaskRequirementsPlugin with a default resolver.
+     * 
+     * @see Hirudo\Core\Extensions\TaskRequirements\RequestRequirementResolver
+     */
     function __construct() {
         $this->context = ModulesContext::instance();
-        //The default resolver
         $this->resolvers["default_resolver"] = new RequestRequirementResolver();
     }
 
     /**
+     * This method gathers all the available resolvers.
      * 
      * @param RequirementResolverInterface $resolver
      * @Import(tag="requirements_resolver")
@@ -41,6 +49,7 @@ class TaskRequirementsPlugin {
     }
 
     /**
+     * Look for application-local resolvers.
      * 
      * @param Event $e
      * @Listen(to="applicationLoaded")
@@ -50,8 +59,8 @@ class TaskRequirementsPlugin {
     }
 
     /**
-     * This method tries to resolve the task requirements by checking its parameters
-     * and looking for the corresponding values in the request variables.
+     * Attempts to resolve the task's requirements delegating the job to the 
+     * known resolvers.
      * 
      * @param BeforeTaskEvent $e
      * 

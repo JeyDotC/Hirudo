@@ -10,7 +10,8 @@ use Hirudo\Core\Events\Annotations\VirtualListener;
 use Hirudo\Core\Events\BeforeTaskEvent;
 
 /**
- * Description of RequestModePlugin
+ * This plugin ensures that a task can only be called when the current HTTP
+ * method matches any of the HTTP methods accepted by the task.
  *
  * @author JeyDotC
  */
@@ -27,8 +28,9 @@ class RequestModePlugin {
      * it accepts based on its annotations.
      * 
      * @param BeforeTaskEvent $e
-     * @throws Exception When the method is annotated with the Hirudo\Core\Annotations\HttpPost
-     * annotation and the method is tried to be accesed via GET.
+     * 
+     * @throws Exception When the current HTTP method doesn't match any of the
+     * task's accepted HTTP methods
      * 
      * @Listen(to="beforeTask", priority=9)
      * @VirtualListener(id="check_request_mode")
