@@ -1,9 +1,10 @@
 <?php
 
-namespace UIExtensions\Html;
+namespace Hirudo\Lang;
 
 /**
- * Utility functions for the UI extensions.
+ * Utility functions grouped here
+ * until I find a better place for them.
  *
  * @author JeyDotC
  */
@@ -28,6 +29,10 @@ class Util {
         }
 
         return $type;
+    }
+    
+    public static function pascalCaseSplit($string) {
+        return \preg_replace(array('/(?<=[^A-Z])([A-Z])/', '/(?<=[^0-9])([0-9])/'), ' $0', $input);
     }
 
 }

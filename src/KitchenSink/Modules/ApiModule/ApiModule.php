@@ -43,8 +43,19 @@ class ApiModule extends Module {
      * @Api
      * @HttpMethod("POST")
      */
-    public function save(Foo $foo) {
-        $this->component("Foo")->save($foo);
+    public function create(Foo $foo) {
+        $this->component("Foo")->save($foo->getDescription(), $foo->getBar()->getName());
+    }
+    
+    /**
+     * 
+     * @param \KitchenSink\Models\Entities\Foo $foo
+     * 
+     * @Api
+     * @HttpMethod("PUT")
+     */
+    public function update(Foo $foo) {
+        $this->component("Foo")->update($foo->getId(), $foo->getDescription(), $foo->getBar()->getName());
     }
     
     /**

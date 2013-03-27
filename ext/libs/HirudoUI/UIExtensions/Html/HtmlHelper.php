@@ -95,10 +95,12 @@ class HtmlHelper {
         } else if (file_exists($userTemplates["default"] . $this->view->getFileExtension())) {
             return $this->view->display($userTemplates["default"]);
         } else if (file_exists($defaultTemplates["requested"] . ".php")) {
-            return include $defaultTemplates["requested"] . ".php";
+            include $defaultTemplates["requested"] . ".php";
         } else {
-            return include $defaultTemplates["default"] . ".php";
+            include $defaultTemplates["default"] . ".php";
         }
+        
+        return "";
     }
 
     private function loadContext($for, $at, $root) {

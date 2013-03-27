@@ -17,6 +17,7 @@ use KitchenSink\Models\Entities\Bar;
  * @author JeyDotC
  */
 class FooComponent {
+
     /**
      *
      * @var \Hirudo\Core\Context\Session
@@ -53,19 +54,35 @@ class FooComponent {
     }
 
     /**
-     * Stores a Foo into session.
      * 
-     * @param \KitchenSink\Models\Entities\Foo $foo
+     * @param string $description
+     * @param string $barName
      */
-    public function save(Foo $foo) {
+    public function save($description, $barName) {
+        $foo = new Foo();
+        $foo->setBar(new Bar());
+        $foo->setDescription($description);
+        $foo->getBar()->setName($barName);
+        
+        $this->persist($foo);
+    }
+
+    public function update($id, $description, $barName) {
+        $foo = $this->get($id);
+        $foo->setDescription($description);
+        $foo->getBar()->setName($barName);
+        
+        $this->persist($foo);
+    }
+
+    protected function persist(Foo $foo) {
         if (!$foo->getId()) {
             $foo->setId($this->createId());
         }
-
+        
         if (!$foo->getBar()->getId()) {
             $foo->getBar()->setId($this->createId());
         }
-
         $foos = $this->getAll();
         $foos[$foo->getId()] = $foo;
         $this->session->put("FooList", serialize($foos));

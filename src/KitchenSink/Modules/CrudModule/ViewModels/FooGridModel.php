@@ -30,7 +30,7 @@ class FooGridModel extends GridModel {
                     $routing = ModulesContext::instance()->getRouting();
                     $params = array("id" => $foo->getId(),);
                     return "<a href='{$routing->appAction("KitchenSink", "CrudModule", "view", $params)}'>View</a> | 
-                            <a href='{$routing->appAction("KitchenSink", "CrudModule", "update", $params)}'>Edit</a> | 
+                            <a href='{$routing->appAction("KitchenSink", "CrudModule", "edit", $params)}'>Edit</a> | 
                             <a href='{$routing->appAction("KitchenSink", "CrudModule", "remove", $params)}'>Remove</a>";
                 })->named("Actions");
         return $this;

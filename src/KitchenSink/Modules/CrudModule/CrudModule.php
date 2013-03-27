@@ -83,7 +83,7 @@ class CrudModule extends Module {
          * right before calling the display function.
          */
         return $this->display("create", array(
-                    "foo" => new Foo(),
+                    "foo" => new ViewModels\FooViewModel(),
         ));
     }
 
@@ -92,13 +92,13 @@ class CrudModule extends Module {
      * 
      * @param type $id
      */
-    public function update($id) {
+    public function edit($id) {
         $foo = $this->component("Foo")->get($id);
 
-        $this->assign("foo", $foo);
-        $this->assign("action", $this->route->action("save"));
-
-        return $this->display("update");
+        return $this->display("edit", array(
+                    "foo" => ViewModels\FooViewModel::fromEntity($foo),
+                    "action" => $this->route->action("update"),
+        ));
     }
 
     /**
@@ -119,7 +119,7 @@ class CrudModule extends Module {
     }
 
     /**
-     * Saves a foo.
+     * Saves a new foo.
      * 
      * Note the presence of a type hinted $foo param. For these cases, the parameter
      * is resolved from post by obtaining an array which name coincides with the
@@ -129,18 +129,31 @@ class CrudModule extends Module {
      * that this method only accepts POST requests. Any atempt to access this method
      * via GET, will cause an exception.
      * 
-     * @param Foo $foo
+     * @param ViewModels\FooViewModel $foo
      * 
      * @HttpPost
      */
-    public function save(Foo $foo) {
-        $this->component("Foo")->save($foo);
+    public function save(ViewModels\FooViewModel $foo) {
+        $this->component("Foo")->save($foo->description, $foo->bar->name);
 
         $this->addMessage(new Message("The foo have been saved.", "Saved!", Message::SUCCESS));
 
         return $this->index();
     }
-    
+
+    /**
+     * @param ViewModels\FooViewModel $foo
+     * 
+     * @HttpPost
+     */
+    public function update(ViewModels\FooViewModel $foo) {
+        $this->component("Foo")->update($foo->id, $foo->description, $foo->bar->name);
+
+        $this->addMessage(new Message("The foo have been updated.", "Saved!", Message::SUCCESS));
+
+        return $this->index();
+    }
+
 }
 
 ?>

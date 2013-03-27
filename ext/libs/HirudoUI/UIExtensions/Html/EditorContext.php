@@ -3,7 +3,9 @@
 namespace UIExtensions\Html;
 
 use Hirudo\Core\Context\ModulesContext;
+use Hirudo\Lang\Util;
 use ReflectionProperty;
+use UIExtensions\Annotations\DisplayName;
 
 /**
  * This class holds information about the field that is being
@@ -118,7 +120,7 @@ class EditorContext {
         $displayName = $this->reflectionProperty->name;
 
         $annotation = $this->getMetadataById("UIExtensions\Annotations\DisplayName");
-        if ($annotation instanceof Annotations\DisplayName) {
+        if ($annotation instanceof DisplayName) {
             $displayName = $annotation->name;
         }
 
