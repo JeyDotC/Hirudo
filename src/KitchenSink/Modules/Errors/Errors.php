@@ -18,6 +18,17 @@ class Errors extends Module {
     /**
      * This method is called when there is an exception.
      * 
+     * The Listen annotation tells to Hirudo that this method listens to
+     * the "taskError" event.
+     * 
+     * The OverridesListener indicates that this listener overrides any virtual
+     * listener with the id "error_listener". An event listener can be declared
+     * as virtual which means that it can be overriden for other listeners instead
+     * of being called along them.
+     * 
+     * The IgnoreCall annotation prevents this method from being called through
+     * HTTP
+     * 
      * @Listen(to="taskError")
      * @OverridesListener(id="error_listener")
      * @IgnoreCall

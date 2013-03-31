@@ -125,7 +125,7 @@ class CrudModule extends Module {
      * is resolved from post by obtaining an array which name coincides with the
      * param name. The properties are set using the keys of such array.
      * 
-     * Also note the presence of the @HttpPost annotation. That annotation indicates
+     * Also note the presence of the HttpPost annotation. That annotation indicates
      * that this method only accepts POST requests. Any atempt to access this method
      * via GET, will cause an exception.
      * 

@@ -36,6 +36,9 @@
             
             The generated field will have the current field's value and the name
             will be the propper format: foo[bar][name].
+            
+            It will also generate a label for the field which defaults to the viewmodel's
+            field name.
             *}
             {editor for="foo.bar.name"}
         </fieldset>

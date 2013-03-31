@@ -6,4 +6,5 @@ defaultModule: "KitchenSink::Welcome::index"
 # in format: "AppName::ModuleName::methodName"
 onModuleNotFound: "KitchenSink::Errors::notFound"
 
-# Indeed, you can put whatever configuration variables needed here:
+# Indeed, you can put whatever configuration variables needed here: From a module
+# you can access to configuration values through $this->context->getConfig()->get("key");

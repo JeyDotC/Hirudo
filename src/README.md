@@ -6,7 +6,7 @@ What Goes Here
 
 Welcome to the *src* folder, here go your applications.
 
-In Hirudo, an *application* is just a folder with three folders inside:
+In Hirudo, an *application* is just a folder with four folders inside:
 
 * An *assets* folder to place your assets, such as javascripts, css and Master templates. 
 
@@ -16,6 +16,8 @@ expected to be in the model layer of an MVC architecture are stored.
 * A *Modules* folder. This one contains a series of directories, each one represents
 a Module. A *Module* is the implamentation of a use case and is equivalent to
 controllers in an MVC architecture.
+
+* The *ext* folder stores your application's configuration and libraries.
 
 So, to create an application you just need to create a directory with this structure:
 
@@ -29,8 +31,8 @@ So, to create an application you just need to create a directory with this struc
             ...
             LotsOfModules/
 
-You can have various applications, each one with their own *assets*, *Models* layer and with their
-own *Modules*.
+You can have various applications, each one with their own *assets*, *Models*, 
+*ext* and  *Modules* folders.
 
     YourApp/
         ext/

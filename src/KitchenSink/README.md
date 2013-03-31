@@ -11,16 +11,23 @@ used.
 What Goes Here
 --------------
 
-As explained at the previous *README.md* file, an application consists of three
+As explained at the previous *README.md* file, an application consists of four
 folders: 
 
-* [assets/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/assets): In this folder you will put your web stuff, like *css, js and image* files. 
-Also you can put your special templates like, the *Master.tpl* or *Base.twig* templates 
+* [assets/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/assets): 
+In this folder you will put your web stuff, like *css, js and image* files. Also 
+you can put your special templates like, the *Master.tpl* or *Base.twig* templates 
 for example, but the latter is just a convension.
 
-* [Models/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Models) That holds persistence layer (entities and components).
+* [Models/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Models):
+That holds persistence layer (entities and components).
 
-* [Modules/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Modules) That holds the business logic of your app.
+* [Modules/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/Modules):
+That holds the business logic of your app.
+
+* [ext/](http://github.com/JeyDotC/Hirudo/tree/master/src/KitchenSink/ext):
+Here goes your configuration files and external libraries or just classes you
+don't know where to put.
 
 ### Where to go now
 
