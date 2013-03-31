@@ -13,7 +13,7 @@ abstract class GridRenderer {
     private $text = "";
     private $visibleColumns;
 
-    public function render(GridModel $gridModel, array $dataSource) {
+    public function render(GridModel $gridModel, $dataSource) {
         $this->gridModel = $gridModel;
         $this->dataSource = $dataSource;
 
