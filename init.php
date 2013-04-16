@@ -18,10 +18,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-// TODO: Remove or wrap this class
-require_once 'ChromePhp.php';
-
 if (!defined("DS")) {
     define("DS", DIRECTORY_SEPARATOR);
 }
@@ -31,44 +27,32 @@ if (!defined("HIRUDO_ROOT")) {
 }
 
 //A file loader helper.
-require_once HIRUDO_ROOT . DS . "framework" . DS . "hirudo" . DS . "Hirudo" . DS . "Lang" . DS . "Loader.php";
-require_once HIRUDO_ROOT . DS . "framework" . DS . "hirudo" . DS . "Hirudo" . DS . "Lang" . DS . "Enum.php";
+require_once HIRUDO_ROOT . DS . "framework" . DS . "Hirudo" . DS . "Lang" . DS . "Loader.php";
 
 use Hirudo\Lang\Loader;
 
 Loader::Init(HIRUDO_ROOT);
 
-//Include the UniversalClassLoader.php file if necesary.
-if (!class_exists("Symfony\Component\ClassLoader\UniversalClassLoader")) {
-    Loader::using(array(
-        "framework::libs::symfony-components::Symfony::Component::ClassLoader::UniversalClassLoader",
-    ));
-}
+/* @var $composerLoader Composer\Autoload\ClassLoader */
+$composerLoader = require_once HIRUDO_ROOT . "/vendor/autoload.php";
 
 //Instantiate the autoloader, create the apc version if APC is available.
 if (extension_loaded('apc') && ini_get('apc.enabled')) {
-    if (!class_exists("Symfony\Component\ClassLoader\ApcUniversalClassLoader")) {
-        Loader::using(array(
-            "framework::libs::symfony-components::Symfony::Component::ClassLoader::ApcUniversalClassLoader",
-        ));
-    }
-    $loader = new Symfony\Component\ClassLoader\ApcUniversalClassLoader("hirudo");
+    $loader = new Symfony\Component\ClassLoader\ApcClassLoader("hirudo", $composerLoader);
 } else {
-    $loader = new Symfony\Component\ClassLoader\UniversalClassLoader();
+    $loader = new \Symfony\Component\ClassLoader\UniversalClassLoader();
 }
 
 //Using AnnotationRegistry seems useless for some reason :/
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-$loader->registerNamespaces(array(
-    "Hirudo" => Loader::toSinglePath("framework::hirudo", ""),
-    "Symfony\Component" => Loader::toSinglePath("framework::libs::symfony-components", ""),
-    "Doctrine\Common" => Loader::toSinglePath("framework::libs::doctrine-common", ""),
-));
+$loader->registerNamespace("Hirudo", HIRUDO_ROOT . "/framework");
 
 $loader->register();
 
 AnnotationRegistry::registerLoader(array($loader, "loadClass"));
-AnnotationRegistry::registerAutoloadNamespace("Hirudo", Loader::toSinglePath("framework::hirudo", ""));
+AnnotationRegistry::registerLoader(array($composerLoader, "loadClass"));
+AnnotationRegistry::registerAutoloadNamespace("Hirudo", HIRUDO_ROOT . "/framework");
+
 Hirudo\Core\ModulesManager::setAutoLoader($loader);
 ?>

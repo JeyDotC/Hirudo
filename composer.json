@@ -1,0 +1,11 @@
+{
+    "require": {
+        "symfony/class-loader": "2.2.0",
+        "symfony/dependency-injection": "2.2.0",
+        "symfony/event-dispatcher": "2.2.0",
+        "symfony/yaml": "2.2.0",
+        "doctrine/common": "2.3.0",
+        "electrolinux/phpquery": "0.9.6",
+        "smarty/smarty": "3.1.13"
+    }
+}

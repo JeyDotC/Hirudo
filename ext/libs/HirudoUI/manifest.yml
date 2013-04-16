@@ -5,6 +5,7 @@ namespaces:
   - UIExtensions
 
 plugins:
+  # Adds the HtmlHelper object to the template before it gets rendered
   { class: UIExtensions\Plugins\RegisterExtension, active: true}
   
 templating_extensions:
