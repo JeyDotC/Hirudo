@@ -17,3 +17,4 @@ implementation_package:
   - Hirudo\Impl\Common\Templating\SmartyTemplating
   #The Asset system
   - Hirudo\Impl\Drupal\DrupalAssets
+  - Hirudo\Impl\Drupal\DrupalPage

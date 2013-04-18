@@ -17,3 +17,4 @@ implementation_package:
   - Hirudo\Impl\Joomla\Models\Components\Sql\JoomlaQueryFactory
   #The Asset system
   - Hirudo\Impl\Joomla\V15\JoomlaAssets
+  - Hirudo\Impl\Joomla\V15\JoomlaPage

@@ -70,9 +70,11 @@ class EventListening extends Module {
      * @IgnoreCall
      */
     function respondToCustomEvent(GenericEvent $event) {
-        $this->assign("coolMessage", $event->getSubject());
-        $output = $this->display("respond");
-        
+        $this->page->setTitle("Custom event response");
+        $output = $this->display("respond", array(
+            "coolMessage" => $event->getSubject()
+        ));
+
         $event->setArgument("output", $output);
     }
 

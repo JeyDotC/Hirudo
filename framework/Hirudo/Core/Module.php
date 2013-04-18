@@ -200,6 +200,12 @@ abstract class Module {
      * @var Session 
      */
     protected $session;
+    
+    /**
+     *
+     * @var Context\Page
+     */
+    protected $page;
 
     /**
      * @var array<mixed> 
@@ -338,6 +344,7 @@ abstract class Module {
         $this->module["views"] = "{$this->getModuleDir($this->appName, $this->name)}" . "views" . DS;
         $this->module["businessRoot"] = Loader::toSinglePath($this->context->getConfig()->get("businessRoot", "src"), DS);
         $this->module["baseURL"] = $this->route->getBaseURL();
+        $this->module["page"] = $this->page;
 
         $this->assign("Module", $this->module);
 
@@ -376,6 +383,7 @@ abstract class Module {
             throw new Exceptions\HirudoException(ModulesContext::instance()->getCurrentCall(), "'$className' must inherit from Hirudo\Core\Module");
         }
 
+        /* @var $newModule Module */
         $newModule = new $className();
         $newModule->reflector = new ReflectionClass($newModule);
         $newModule->headers = new HeaderBag();
@@ -390,6 +398,7 @@ abstract class Module {
         $newModule->appName = $namespaceParts[0];
         $newModule->route->setAppName($newModule->appName);
         $newModule->session = $newModule->context->getSession();
+        $newModule->page = $newModule->context->getPage();
 
         return $newModule;
     }

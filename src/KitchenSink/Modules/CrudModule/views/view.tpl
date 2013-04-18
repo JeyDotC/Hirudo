@@ -1,6 +1,8 @@
 {extends file="KitchenSink::smarty-templates/Master"|toAssetPath}
 
-
+{block "title"}
+    {page_title t="Crud Module | View"}
+{/block}
 {block name="header"}Crud Module | View{/block}
 
 {block name="content"}

@@ -1,6 +1,8 @@
 {extends file="KitchenSink::smarty-templates/Master"|toAssetPath}
 
-{block name="title"}404 - Not found{/block}
+{block "title"}
+    {page_title t="404 - Not found"}
+{/block}
 
 {block name="header"}404 - Page not found{/block}
 

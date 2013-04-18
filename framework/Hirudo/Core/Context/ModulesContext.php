@@ -56,6 +56,12 @@ class ModulesContext {
 
     /**
      *
+     * @var Page
+     */
+    private $page;
+
+    /**
+     *
      * @var HirudoDispatcher 
      */
     private $dispatcher;
@@ -242,6 +248,23 @@ class ModulesContext {
      */
     public function setAssets(Assets $assets) {
         $this->assets = $assets;
+    }
+
+    /**
+     * 
+     * @return Page
+     */
+    public function getPage() {
+        return $this->page;
+    }
+
+    /**
+     * 
+     * @param \Hirudo\Core\Context\Page $page
+     * @Import(id="page")
+     */
+    public function setPage(Page $page) {
+        $this->page = $page;
     }
 
     public function setDependenciesManager(DependenciesManager $dependenciesManager) {

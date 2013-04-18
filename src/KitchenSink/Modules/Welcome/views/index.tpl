@@ -22,11 +22,14 @@
 *}
 {extends file="KitchenSink::smarty-templates/Master"|toAssetPath}
 
-{*Here we override the title of the parent template, which is at the head > title tag.*}
-{block name="title"}Hirudo KitchenSink{/block}
+{block "title"}
+    {page_title t="Welcome to Hirudo"}
+{/block}
 
 {*This is the main title of the page, the one at the #Header > h1 tag*}
-{block name="header"}Welcome to Hirudo KitchenSink{/block}
+{block name="header"}
+    Welcome to Hirudo KitchenSink
+{/block}
 
 {*An this is our main content.*}
 {block name="content"}

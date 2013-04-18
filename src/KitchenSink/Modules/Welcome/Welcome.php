@@ -29,7 +29,7 @@ class Welcome extends Module {
          */
         return $this->display("index");
     }
-    
+
     /**
      * This method illustrates how to add notifications to the view.
      */
@@ -49,11 +49,12 @@ class Welcome extends Module {
          * application, all notifications are represented by the parent template Master.tpl at
          * the assets/smarty-templates/ folder of Hirudo.
          */
-        $this->addMessage(new Message("This is an Info message", "Info Message", Message::INFO));
-        $this->addMessage(new Message("This is a Warning message", "Warning Message", Message::WARNING));
-        $this->addMessage(new Message("This is an Error message", "Error Message", Message::ERROR));
-        $this->addMessage(new Message("This is a Success message", "Success Message", Message::SUCCESS));
-        
+        $this->page
+                ->addMessage(new Message("This is an Info message", "Info Message", Message::INFO))
+                ->addMessage(new Message("This is a Warning message", "Warning Message", Message::WARNING))
+                ->addMessage(new Message("This is an Error message", "Error Message", Message::ERROR))
+                ->addMessage(new Message("This is a Success message", "Success Message", Message::SUCCESS));
+
         return $this->display("notifications");
     }
 
@@ -67,7 +68,7 @@ class Welcome extends Module {
      */
     public function boomPage() {
         throw new \Exception(
-                "<p>This exception is thrown intentionally, as you can see, the exceptions are managed by the Errors module.</p>
+        "<p>This exception is thrown intentionally, as you can see, the exceptions are managed by the Errors module.</p>
                 <p>The module chosen to be used as the exceptions manager can be configured at the ext/config/Config.yml file by setting the onError value.</p>");
     }
 

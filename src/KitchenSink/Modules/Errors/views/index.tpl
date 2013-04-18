@@ -1,6 +1,8 @@
 {extends file="KitchenSink::smarty-templates/Master"|toAssetPath}
 
-{block name="title"}Boom!{/block}
+{block "title"}
+    {page_title t="Boom!"}
+{/block}
 
 {block name="header"}An Exception ocurred :({/block}
 

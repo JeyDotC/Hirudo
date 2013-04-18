@@ -1,6 +1,8 @@
 {extends file="KitchenSink::smarty-templates/Master"|toAssetPath}
 
-{block name="title"}Custom event response{/block}
+{block "title"}
+    {page_title t="Events"}
+{/block}
 
 {block name="header"}Responding to a custom event{/block}
 

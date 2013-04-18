@@ -27,18 +27,9 @@ To learn more about Smarty's template inheritance see http://www.smarty.net/inhe
         *}
         {js file="KitchenSink::js/script.js"}
         <title>
-            {*
-            This is a block section. These represent the overridable parts of this
-            template. Any child template can optionally override these sections
-            by just creating a block with the same name.
-            
-            This feature allow to do even more, the parent template can decide where
-            the child overrides will appear, or the children templates can decide to
-            append ther contents instead of overriding it.
-            
-            To know all the cool stuff about the block sections see: http://www.smarty.net/docs/en/language.function.block.tpl
-            *}
-            {block name="title"}Hirudo KitchenSink{/block}
+            {block "title"}
+                {page_title t="Hirudo KitchenSink"}
+            {/block}
         </title>
     </head>
     <body>
@@ -57,6 +48,27 @@ To learn more about Smarty's template inheritance see http://www.smarty.net/inhe
             <h1>{block name="header"}Here you can put your default title{/block}</h1>
         </div>
 
+        {page_add_breadcrumb title=$Module.appName call="{$Module.appName}::Welcome::index"}
+        {if $Module.task != "index"}
+            {page_add_breadcrumb title=$Module.name call="{$Module.appName}::{$Module.name}::index"}
+            {page_add_breadcrumb title=$Module.task}
+        {else}
+            {page_add_breadcrumb title=$Module.name}
+        {/if}
+
+        {page_breadcrumbs}
+        <div id="Breadcrumbs">
+            {foreach $Module.page->getBreadcrumbs() as $breadcrumb}
+                {if $breadcrumb->getUrl()}
+                    <a href="{$breadcrumb->getUrl()}">{$breadcrumb->getTitle()}</a> / 
+                {else}
+                    {$breadcrumb->getTitle()} / 
+                {/if}
+            {/foreach}
+        </div>
+        {/page_breadcrumbs}
+
+        {page_messages}
         <div id="Notifications">
             {*
             This is a normal smarty foreach. But where did that '$Module'
@@ -70,7 +82,7 @@ To learn more about Smarty's template inheritance see http://www.smarty.net/inhe
             To know more about this variable see: https://github.com/JeyDotC/Hirudo-docs/blob/master/Hirudo/Core/Module.md#display
             To know more about arrays in smarty templates see: http://www.smarty.net/docs/en/language.variables.tpl#language.variables.assoc.arrays
             *}
-            {foreach $Module.messages as $message}
+            {foreach $Module.page->getMessages() as $message}
                 <div class="kitchensink-message kitchensink-type-{$message->getType()}">
                     <strong>{$message->getTitle()}: </strong>
                     <span>
@@ -79,6 +91,7 @@ To learn more about Smarty's template inheritance see http://www.smarty.net/inhe
                 </div>
             {/foreach}
         </div>
+        {/page_messages}
 
         <div id="Navigation">
             <ul>
@@ -93,10 +106,10 @@ To learn more about Smarty's template inheritance see http://www.smarty.net/inhe
 
         <div id="Content">
             {block name="content"}
-            This content gets overriden by the child template, if it does so.
-            You can create as many block sections as you like. See 
-            http://www.smarty.net/docs/en/language.function.block.tpl
-            for more details.
+                This content gets overriden by the child template, if it does so.
+                You can create as many block sections as you like. See 
+                http://www.smarty.net/docs/en/language.function.block.tpl
+                for more details.
             {/block}
         </div>
     </body>
