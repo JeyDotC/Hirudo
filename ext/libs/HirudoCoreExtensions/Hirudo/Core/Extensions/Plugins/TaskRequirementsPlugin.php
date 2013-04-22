@@ -19,7 +19,8 @@ use Symfony\Component\EventDispatcher\Event;
  * The resolvers are those classes that implement the 
  * {@link Hirudo\Core\Extensions\TaskRequirements\RequirementResolverInterface}
  * interface and are registered as services under the tag 
- * <code>requirements_resolver</code>
+ * <code>requirements_resolver</code> using the Hirudo\Core\Annotations\Export
+ * annotation.
  * 
  * @author JeyDotC
  */

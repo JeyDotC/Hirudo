@@ -324,6 +324,7 @@ abstract class Module {
      *              <li>views =&gt; The absolute path to the views folder for this module. [This value seems to be unnecesary, is left for historical reasons]</li>
      *              <li>baseURL =&gt; The current base URL</li>
      *              <li>messages =&gt; The list of added {@link Message} objects</li>
+     *              <li>page =&gt; The page context {@link Context\Page}</li>
      *          </ul>
      *          
      *      </dd>

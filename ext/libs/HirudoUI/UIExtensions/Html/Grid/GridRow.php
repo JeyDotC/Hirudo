@@ -28,6 +28,13 @@ class GridRow {
         return $attributes($data);
     }
 
+    /**
+     * Set the custom attributes for this row.
+     * 
+     * @param \Closure<GridRowViewData, array> $attributes A callback that 
+     * receives the current row and returns the row's attributes as an array of
+     * key-value pairs.
+     */
     public function setAttributes(\Closure $attributes) {
         $this->attributes = $attributes;
     }

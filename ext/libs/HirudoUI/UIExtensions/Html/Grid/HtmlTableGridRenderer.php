@@ -2,13 +2,17 @@
 
 namespace UIExtensions\Html\Grid;
 
-/// <summary>
-/// renders a grid as an HTML table.
-/// </summary>
+/**
+ * Renders a grid as an HTML table.
+ * 
+ */
 class HtmlTableGridRenderer extends GridRenderer {
 
     private $defaultCssClass = "grid";
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderHeaderCellEnd() {
         $this->renderText("</th>");
     }
@@ -17,6 +21,9 @@ class HtmlTableGridRenderer extends GridRenderer {
         $this->renderText("<th>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderHeaderCellStart(GridColumn $column) {
         $attributes = $column->getHeaderAttributes();
 
@@ -29,6 +36,9 @@ class HtmlTableGridRenderer extends GridRenderer {
         $this->renderText("<th$attrs>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderRowStart(GridRowViewData $rowData) {
         $attributes = $this->gridModel->getSections()->getRow()->getAttributes($rowData);
 
@@ -45,14 +55,23 @@ class HtmlTableGridRenderer extends GridRenderer {
         $this->renderText("<tr$attributeString>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderRowEnd() {
         $this->renderText("</tr>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderEndCell() {
         $this->renderText("</td>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderStartCell(GridColumn $column, GridRowViewData $rowData) {
         $attrs = $this->buildHtmlAttributes($column->getAttributes($rowData));
         if (strlen($attrs) > 0)
@@ -61,6 +80,9 @@ class HtmlTableGridRenderer extends GridRenderer {
         $this->renderText("<td$attrs>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderHeadStart() {
         $attributes = $this->buildHtmlAttributes($this->gridModel->getSections()->getHeaderRow()->getAttributes(new GridRowViewData(null, false)));
         if (strlen($attributes) > 0) {
@@ -70,10 +92,16 @@ class HtmlTableGridRenderer extends GridRenderer {
         $this->renderText("<thead><tr$attributes>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderHeadEnd() {
         $this->renderText("</tr></thead>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderGridStart() {
         if (!array_key_exists("class", $this->gridModel->getAttributes())) {
             $attr = $this->gridModel->getAttributes();
@@ -89,10 +117,16 @@ class HtmlTableGridRenderer extends GridRenderer {
         $this->renderText("<table$attrs>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderGridEnd($isEmpty) {
         $this->renderText("</table>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderEmpty() {
         $this->renderHeadStart();
         $this->renderEmptyHeaderCellStart();
@@ -103,18 +137,27 @@ class HtmlTableGridRenderer extends GridRenderer {
         $this->renderBodyEnd();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderBodyStart() {
         $this->renderText("<tbody>");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function renderBodyEnd() {
         $this->renderText("</tbody>");
     }
 
-    /// <summary>
-    /// Converts the specified attributes dictionary of key-value pairs into a $of HTML attributes. 
-    /// </summary>
-    /// <returns></returns>
+    /**
+     * Converts the specified attributes dictionary of key-value pairs into a 
+     * list of HTML attributes. 
+     * 
+     * @param array $attributes
+     * @return string The attributes representation with the form $key="$value"
+     */
     protected function buildHtmlAttributes(array $attributes) {
         $attrs = "";
         foreach ($attributes as $key => $value) {

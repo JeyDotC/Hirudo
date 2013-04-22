@@ -3,7 +3,7 @@
 namespace Hirudo\Lang;
 
 /**
- * Description of ArrayEnum
+ * Base class for arrayEnums.
  *
  * @author JeyDotC
  */

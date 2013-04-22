@@ -3,8 +3,9 @@
 namespace UIExtensions\Html\Grid;
 
 /**
- * Description of Day
- *
+ * Represents a day in the calendar. It holds all the entities associated to this
+ * day.
+ * 
  * @author JeyDotC
  */
 class Day {
@@ -16,10 +17,20 @@ class Day {
     private $day;
     private $data = array();
 
+    /**
+     * Creates a new day.
+     * 
+     * @param int $day The day of the month (1-31).
+     */
     function __construct($day) {
         $this->day = $day;
     }
 
+    /**
+     * Adds an item to this day.
+     * 
+     * @param mixed $data The item to be added.
+     */
     public function add($data) {
         $this->data[] = $data;
     }

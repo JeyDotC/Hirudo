@@ -11,7 +11,7 @@ use Hirudo\Core\Module;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
- * Description of EventListeningModule
+ * @todo Refactor this module to something clearer.
  *
  * @author JeyDotC
  */

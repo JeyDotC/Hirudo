@@ -184,19 +184,45 @@ class GridColumn {
         return $value;
     }
 
+    /**
+     * Is this column visible?
+     * 
+     * @return boolean true if this column will be displayed, false otherwise.
+     */
     public function getVisible() {
         return $this->visible;
     }
 
+    /**
+     * Shows or hides this column depending on the value of parameter visible.
+     * 
+     * @param boolean $visible if true, shows this column; otherwise, hides this column
+     * 
+     * @return \UIExtensions\Html\Grid\GridColumn
+     */
     public function setVisible($visible) {
         $this->visible = $visible;
         return $this;
     }
 
+    /**
+     * Gets the table's thead attributes.
+     * 
+     * @return array The list of attributes to be rendered for the header, keys
+     * are attribute names and values are attribute values. 
+     */
     public function getHeaderAttributes() {
         return $this->headerAttributes;
     }
 
+    /**
+     * Sets the table's thead attributes.
+     * 
+     * @param array $headerAttributes The list of attributes to be rendered for 
+     * the header, keys are attribute names and values are attribute values. 
+     * 
+     * @return \UIExtensions\Html\Grid\GridColumn $this
+     */
     public function setHeaderAttributes($headerAttributes) {
         $this->headerAttributes = $headerAttributes;
         return $this;

@@ -17,4 +17,5 @@ implementation_package:
   - Hirudo\Impl\StandAlone\Models\Components\Sql\SAQueryFactory
   #The Asset system
   - Hirudo\Impl\StandAlone\SAssets
+  #The page context
   - Hirudo\Impl\StandAlone\SAPage

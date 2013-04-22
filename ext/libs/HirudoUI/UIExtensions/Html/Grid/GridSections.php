@@ -2,6 +2,10 @@
 
 namespace UIExtensions\Html\Grid;
 
+/**
+ * Sections for a grid.
+ * 
+ */
 class GridSections {
 
     private $row;

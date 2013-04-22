@@ -1,8 +1,3 @@
-{*
-Oh, well, this file is kind of messy, but its only purpose is to print an exception
-in a pretty way. The function below allows to create some kind of inline function.
-Which can be called with the {call} function. 
-*}
 {function name="PrintException" ex=""}
 <h3>{get_class($ex)}</h3>
 <div class = "debug-message">{$ex->getMessage()}</div>
@@ -26,9 +21,6 @@ Which can be called with the {call} function.
 </div>
 {/function}
 
-{*
-This is another function:
-*}
 {function name="PrintStackTrace" stack=array()}
 <ol class="stack-trace">
     {foreach $stack as $item}
@@ -105,9 +97,6 @@ This is another function:
         <h1>An Exception ocurred :(</h1>
         <div>
             {nocache}
-            {*
-            Here we call our PrintException function defined above.
-            *}
             {call name="PrintException" ex=$ex}
             {/nocache}
         </div>

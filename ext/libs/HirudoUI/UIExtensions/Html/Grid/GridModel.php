@@ -24,7 +24,7 @@ class GridModel {
     /**
      * Creates a new grid model.
      * 
-     * Avoid overriding this constructor, override the init method instead.
+     * Do NOT override this constructor, override the init method instead.
      */
     public function __construct() {
         $this->sections = new GridSections();
@@ -104,20 +104,42 @@ class GridModel {
         return $this;
     }
 
+    /**
+     * Gets the table attributes.
+     * 
+     * @return array
+     */
     public function getAttributes() {
         return $this->attributes;
     }
 
+    /**
+     * Sets the table attributes.
+     * 
+     * @param array $attributes
+     * @return \UIExtensions\Html\Grid\GridModel This
+     */
     public function setAttributes($attributes) {
         $this->attributes = $attributes;
         return $this;
     }
 
+    /**
+     * Sets a custom grid renderer.
+     * 
+     * @param \UIExtensions\Html\Grid\GridRenderer $renderer The new grid renderer.
+     * @return \UIExtensions\Html\Grid\GridModel This
+     */
     public function renderUsing(GridRenderer $renderer) {
         $this->renderer = $renderer;
         return $this;
     }
 
+    /**
+     * Creates a new ColumBuilder.
+     * 
+     * @return \UIExtensions\Html\Grid\ColumnBuilder The new ColumnBuilder.
+     */
     protected function createColumnBuilder() {
         return new ColumnBuilder();
     }

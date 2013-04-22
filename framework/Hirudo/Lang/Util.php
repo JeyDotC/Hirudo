@@ -31,6 +31,13 @@ class Util {
         return $type;
     }
     
+    /**
+     * Splits the given pascal-case string into its components. For example, this
+     * string <code>MyPascalCaseString</code> shall become <code>My Pascal Case String</code>
+     * 
+     * @param string $string The string to be splitted.
+     * @return string The splitted string.
+     */
     public static function pascalCaseSplit($string) {
         return \preg_replace(array('/(?<=[^A-Z])([A-Z])/', '/(?<=[^0-9])([0-9])/'), ' $0', $input);
     }
