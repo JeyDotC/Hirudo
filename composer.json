@@ -6,7 +6,7 @@
     "homepage": "https://github.com/JeyDotC/Hirudo",
     "license": "GNU/GPL",
     "authors": [
-        {"name": "Jeysson Jose Guevara Mendivil", "email": "jeydotc@gmail.com"},
+        {"name": "Jeysson Jose Guevara Mendivil", "email": "jeydotc@gmail.com"}
     ],
     "minimum-stability": "dev",
     "require": {
