@@ -9,13 +9,33 @@
         {"name": "Jeysson Jose Guevara Mendivil", "email": "jeydotc@gmail.com"}
     ],
     "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/JeyDotC/hirudo-core"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/JeyDotC/hirudo-stand-alone"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/JeyDotC/hirdudo-for-joomla"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/JeyDotC/hirdudo-for-drupal"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/JeyDotC/hirudo-templating-smarty"
+        }
+    ],
     "require": {
-        "symfony/class-loader": "2.2.0",
-        "symfony/dependency-injection": "2.2.0",
-        "symfony/event-dispatcher": "2.2.0",
-        "symfony/yaml": "2.2.0",
-        "doctrine/common": "2.3.0",
-        "electrolinux/phpquery": "0.9.6",
-        "smarty/smarty": "3.1.13"
+        "hirudo/core": "*",
+        "hirudo/stand-alone": "*",
+        "hirudo/for-joomla": "*",
+        "hirudo/for-drupal": "*",
+        "hirudo/templating-smarty": "*"
     }
 }

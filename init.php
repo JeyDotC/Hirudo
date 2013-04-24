@@ -26,15 +26,12 @@ if (!defined("HIRUDO_ROOT")) {
     define("HIRUDO_ROOT", dirname(__FILE__));
 }
 
-//A file loader helper.
-require_once HIRUDO_ROOT . DS . "framework" . DS . "Hirudo" . DS . "Lang" . DS . "Loader.php";
+/* @var $composerLoader Composer\Autoload\ClassLoader */
+$composerLoader = require_once HIRUDO_ROOT . "/vendor/autoload.php";
 
 use Hirudo\Lang\Loader;
 
 Loader::Init(HIRUDO_ROOT);
-
-/* @var $composerLoader Composer\Autoload\ClassLoader */
-$composerLoader = require_once HIRUDO_ROOT . "/vendor/autoload.php";
 
 //Instantiate the autoloader, create the apc version if APC is available.
 if (extension_loaded('apc') && ini_get('apc.enabled')) {
@@ -46,13 +43,10 @@ if (extension_loaded('apc') && ini_get('apc.enabled')) {
 //Using AnnotationRegistry seems useless for some reason :/
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-$loader->registerNamespace("Hirudo", HIRUDO_ROOT . "/framework");
-
 $loader->register();
 
 AnnotationRegistry::registerLoader(array($loader, "loadClass"));
 AnnotationRegistry::registerLoader(array($composerLoader, "loadClass"));
-AnnotationRegistry::registerAutoloadNamespace("Hirudo", HIRUDO_ROOT . "/framework");
 
 Hirudo\Core\ModulesManager::setAutoLoader($loader);
 ?>

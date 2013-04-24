@@ -12,9 +12,7 @@ implementation_package:
   #The configuration manager.
   - Hirudo\Impl\StandAlone\SAppConfig
   #The templating system.
-  - Hirudo\Impl\Common\Templating\SmartyTemplating
-  #The Sql Model
-  - Hirudo\Impl\Joomla\Models\Components\Sql\JoomlaQueryFactory
+  - Hirudo\Impl\Templating\Smarty\SmartyTemplating
   #The Asset system
   - Hirudo\Impl\Joomla\V30\JoomlaAssets
   #The page context

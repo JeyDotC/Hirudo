@@ -12,9 +12,7 @@ implementation_package:
   #The configuration manager.
   - Hirudo\Impl\StandAlone\SAppConfig
   #The templating system.
-  - Hirudo\Impl\Common\Templating\SmartyTemplating
-  #The Sql Model
-  - Hirudo\Impl\StandAlone\Models\Components\Sql\SAQueryFactory
+  - Hirudo\Impl\Templating\Smarty\SmartyTemplating
   #The Asset system
   - Hirudo\Impl\StandAlone\SAssets
   #The page context
