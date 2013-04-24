@@ -2,7 +2,7 @@
     "name": "hirudo/hirudo",
     "type": "library",
     "description": "Framework for PHP 5.3+ which goal is to abstract developers from challenges of creating extensions for CMSs",
-    "keywords": ["framework", "CMS", "integration"],
+    "keywords": ["framework", "CMS", "integration", "standalone"],
     "homepage": "https://github.com/JeyDotC/Hirudo",
     "license": "GNU/GPL",
     "authors": [
@@ -20,22 +20,12 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/JeyDotC/hirdudo-for-joomla"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/JeyDotC/hirdudo-for-drupal"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/JeyDotC/hirudo-templating-smarty"
         }
     ],
     "require": {
         "hirudo/core": "*",
         "hirudo/stand-alone": "*",
-        "hirudo/for-joomla": "*",
-        "hirudo/for-drupal": "*",
         "hirudo/templating-smarty": "*"
     }
 }
