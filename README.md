@@ -58,10 +58,6 @@ Let explain each one:
 
 * [ext/](http://github.com/JeyDotC/Hirudo/tree/master/ext): Here goes the global extensions to the framework: plugins, smarty plugins, configuration, etc, those can be used by all applications.
 
-* [framework/](http://github.com/JeyDotC/Hirudo/tree/master/framework): Obviously here goes the framework classes; normally you should not
-look into this folder, unless you are very curious or even have an idea to improve
-the framework itself ;)
-
 * [src/](http://github.com/JeyDotC/Hirudo/tree/master/src): Here goes your applications. In this place you will put your fantastic 
 application code.
 
