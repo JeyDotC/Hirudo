@@ -1,0 +1,15 @@
+{
+    "name": "hirudo/for-drupal",
+    "type": "library",
+    "description": "Drupal implementation of Hirudo",
+    "keywords": ["Hirudo", "implementation", "drupal"],
+    "homepage": "https://github.com/JeyDotC/Hirudo",
+    "license": "GNU-GPL",
+    "authors": [
+        {"name": "Jeysson Jose Guevara Mendivil", "email": "jeydotc@gmail.com"}
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": { "Hirudo\\Impl\\Drupal": "src/" }
+    }
+}
