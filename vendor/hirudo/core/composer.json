@@ -1,0 +1,28 @@
+{
+    "name": "hirudo/core",
+    "type": "library",
+    "description": "Core classes of Hirudo",
+    "keywords": ["Hirudo", "core"],
+    "homepage": "https://github.com/JeyDotC/Hirudo",
+    "license": "GNU-GPL",
+    "authors": [
+        {"name": "Jeysson Jose Guevara Mendivil", "email": "jeydotc@gmail.com"}
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/class-loader": "2.2.0",
+        "symfony/dependency-injection": "2.2.0",
+        "symfony/event-dispatcher": "2.2.0",
+        "symfony/yaml": "2.2.0",
+        "doctrine/common": "2.3.0",
+        "electrolinux/phpquery": "0.9.6"
+    },
+    "autoload": {
+        "psr-0": {
+            "Hirudo\\Core": "src/",
+            "Hirudo\\Lang": "src/",
+            "Hirudo\\Serialization": "src/"
+        }
+    }
+}
