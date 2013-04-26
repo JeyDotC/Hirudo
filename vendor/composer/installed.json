@@ -327,6 +327,51 @@
         "homepage": "http://symfony.com"
     },
     {
+        "name": "smarty/smarty",
+        "version": "v3.1.13",
+        "version_normalized": "3.1.13.0",
+        "source": {
+            "type": "svn",
+            "url": "http://smarty-php.googlecode.com/svn",
+            "reference": "/tags/v3.1.13/@4699"
+        },
+        "require": {
+            "php": ">=5.2"
+        },
+        "time": "2013-01-26 12:03:52",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "distribution/libs/Smarty.class.php",
+                "distribution/libs/SmartyBC.class.php"
+            ]
+        },
+        "notification-url": "http://packagist.org/downloads/",
+        "license": [
+            "LGPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "Monte Ohrt",
+                "email": "monte@ohrt.com"
+            },
+            {
+                "name": "Uwe Tews",
+                "email": "uwe.tews@googlemail.com"
+            },
+            {
+                "name": "Rodney Rehm",
+                "email": "rodney.rehm@medialize.de"
+            }
+        ],
+        "description": "Smarty - the compiling PHP template engine",
+        "homepage": "http://www.smarty.net",
+        "keywords": [
+            "templating"
+        ]
+    },
+    {
         "name": "hirudo/core",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
@@ -401,51 +446,6 @@
         "keywords": [
             "Hirudo",
             "implementation"
-        ]
-    },
-    {
-        "name": "smarty/smarty",
-        "version": "v3.1.13",
-        "version_normalized": "3.1.13.0",
-        "source": {
-            "type": "svn",
-            "url": "http://smarty-php.googlecode.com/svn",
-            "reference": "/tags/v3.1.13/@4699"
-        },
-        "require": {
-            "php": ">=5.2"
-        },
-        "time": "2013-01-26 12:03:52",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "distribution/libs/Smarty.class.php",
-                "distribution/libs/SmartyBC.class.php"
-            ]
-        },
-        "notification-url": "http://packagist.org/downloads/",
-        "license": [
-            "LGPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "Monte Ohrt",
-                "email": "monte@ohrt.com"
-            },
-            {
-                "name": "Uwe Tews",
-                "email": "uwe.tews@googlemail.com"
-            },
-            {
-                "name": "Rodney Rehm",
-                "email": "rodney.rehm@medialize.de"
-            }
-        ],
-        "description": "Smarty - the compiling PHP template engine",
-        "homepage": "http://www.smarty.net",
-        "keywords": [
-            "templating"
         ]
     },
     {
