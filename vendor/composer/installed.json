@@ -491,10 +491,16 @@
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/JeyDotC/hirdudo-for-drupal",
-            "reference": "902ae299b1518b111a85a0d6e9425d12edfcbbe4"
+            "url": "https://github.com/JeyDotC/hirdudo-for-drupal.git",
+            "reference": "0.9.11"
         },
-        "time": "2013-04-24 02:22:12",
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/JeyDotC/hirdudo-for-drupal/zipball/0.9.11",
+            "reference": "0.9.11",
+            "shasum": ""
+        },
+        "time": "2013-04-27 20:28:38",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -502,6 +508,7 @@
                 "Hirudo\\Impl\\Drupal": "src/"
             }
         },
+        "notification-url": "http://packagist.org/downloads/",
         "license": [
             "GNU-GPL"
         ],

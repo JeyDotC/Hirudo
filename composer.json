@@ -9,24 +9,6 @@
         {"name": "Jeysson Jose Guevara Mendivil", "email": "jeydotc@gmail.com"}
     ],
     "minimum-stability": "dev",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/JeyDotC/hirudo-core"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/JeyDotC/hirudo-stand-alone"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/JeyDotC/hirdudo-for-drupal"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/JeyDotC/hirudo-templating-smarty"
-        }
-    ],
     "require": {
         "hirudo/core": "*",
         "hirudo/stand-alone": "*",
