@@ -18,8 +18,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
-if (!defined("HIRUDO_DRUPAL_MODULE")) {
-    define("HIRUDO_DRUPAL_MODULE", "hirudo6");
+if (!defined("DRUPAL_ROOT"))
+    define("DRUPAL_ROOT", realpath(null));
+
+function hirudo6_hirudo() {
+    return array(
+        "KitchenSink" => "src"
+    );
 }
 
 function hirudo6_menu() {
@@ -43,6 +48,16 @@ function hirudo6_run() {
 function hirudo6_run_manager() {
     require_once 'init.php';
     $manager = new \Hirudo\Core\ModulesManager("drupal");
+
+    $hirudos = module_implements("hirudo");
+
+    foreach ($hirudos as $hirudo) {
+        Hirudo\Lang\Loader::addPath(DRUPAL_ROOT . DS . drupal_get_path("module", $hirudo));
+        foreach (call_user_func($hirudo . "_hirudo") as $app => $src) {
+            \Hirudo\Impl\Drupal\DrupalAssets::registerApp($app, $hirudo, $src);
+        }
+    }
+
     return $manager->run();
 }
 

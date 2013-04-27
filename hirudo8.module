@@ -19,8 +19,10 @@
  *  along with Hirudo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined("HIRUDO_DRUPAL_MODULE")) {
-    define("HIRUDO_DRUPAL_MODULE", "hirudo8");
+function hirudo8_hirudo() {
+    return array(
+        "KitchenSink" => "src"
+    );
 }
 
 function hirudo8_menu() {
@@ -44,6 +46,15 @@ function hirudo8_run() {
 function run_manager() {
     require_once 'init.php';
     $manager = new \Hirudo\Core\ModulesManager("drupal");
+    $hirudos = module_implements("hirudo");
+
+    foreach ($hirudos as $hirudo) {
+        Hirudo\Lang\Loader::addPath(DRUPAL_ROOT . DS . drupal_get_path("module", $hirudo));
+        foreach (call_user_func($hirudo . "_hirudo") as $app => $src) {
+            \Hirudo\Impl\Drupal\DrupalAssets::registerApp($app, $hirudo, $src);
+        }
+    }
+
     return $manager->run();
 }
 
