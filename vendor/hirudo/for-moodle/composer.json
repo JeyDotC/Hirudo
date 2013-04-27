@@ -1,0 +1,15 @@
+{
+    "name": "hirudo/for-moodle",
+    "type": "library",
+    "description": "Moodle implementation of Hirudo",
+    "keywords": ["Hirudo", "implementation", "moodle"],
+    "homepage": "https://github.com/JeyDotC/Hirudo",
+    "license": "GNU-GPL",
+    "authors": [
+        {"name": "Jeysson Jose Guevara Mendivil", "email": "jeydotc@gmail.com"}
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": { "Hirudo\\Impl\\Moodle": "src/" }
+    }
+}

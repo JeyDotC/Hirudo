@@ -1,0 +1,18 @@
+{
+    "name": "hirudo/templating-smarty",
+    "type": "library",
+    "description": "Smarty integration for Hirudo",
+    "keywords": ["Hirudo", "smarty", "integration"],
+    "homepage": "https://github.com/JeyDotC/hirudo-templating-smarty",
+    "license": "GNU-GPL",
+    "authors": [
+        {"name": "Jeysson Jose Guevara Mendivil", "email": "jeydotc@gmail.com"}
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "smarty/smarty": "3.1.13"
+    },
+    "autoload": {
+        "psr-0": {"Hirudo\\Impl\\Templating\\Smarty": "src/"}
+    }
+}

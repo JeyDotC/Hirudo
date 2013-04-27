@@ -1,0 +1,21 @@
+metadata_manager: Hirudo\Core\DependencyInjection\AnnotationsBasedDependenciesManager
+
+cache: { type: filesystem, cache_folder: "ext::cache" }
+
+implementation_package:
+  #The request data.
+  - Hirudo\Impl\Moodle\MoodleRequest
+  #The URL builder.
+  - Hirudo\Impl\Moodle\MoodleRouting
+  #The session Manager.
+  - Hirudo\Impl\Moodle\MoodleSession
+  #The current user.
+  - Hirudo\Impl\Moodle\MoodlePrincipal
+  #The configuration manager.
+  - Hirudo\Impl\StandAlone\SAppConfig
+  #The templating system.
+  - Hirudo\Impl\Templating\Smarty\SmartyTemplating
+  #The Asset system
+  - Hirudo\Impl\Moodle\MoodleAssets
+  #The page context
+  - Hirudo\Impl\Moodle\MoodlePage
